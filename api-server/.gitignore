@@ -1,0 +1,11 @@
+# Autor: Prof. Dr. Norman Lahme-Hütig (FH Münster) 
+
+# Generated files
+src/**/*.js
+src/**/*.map
+e2e/**/*.js
+e2e/**/*.map
+db/**/*.js
+db/**/*.map
+.nyc_output/
+coverage/

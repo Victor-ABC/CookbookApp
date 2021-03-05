@@ -1,0 +1,10 @@
+{
+  "typescript.tsserver.experimental.enableProjectDiagnostics": true,
+  "files.exclude": {
+    "**/*.js": { "when": "$(basename).ts" },
+    "**/*.js.map": true
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "eslint.options": { "configFile": ".eslintrc.js" }
+}

@@ -1,0 +1,5 @@
+# Autor: Prof. Dr. Norman Lahme-Hütig (FH Münster) 
+
+dist/
+e2e/**/*.js
+coverage/
