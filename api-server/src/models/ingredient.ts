@@ -1,8 +1,6 @@
 /* Autor: Felix Schaphaus */
 
-import { Entity } from './entity';
-
-export interface Ingredient extends Entity {
+export interface Ingredient {
   name: string;
   unit: string;
   quantity: number;
