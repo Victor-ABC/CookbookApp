@@ -1,0 +1,26 @@
+h1 {
+    font-weight: lighter;
+  }
+  
+form {
+  margin-top: 1rem;
+}
+
+
+
+#nameButton {
+  display: flex;
+  flex-wrap: none;
+}
+
+#nameButton > button {
+  white-space: nowrap;
+  width: 30%;
+  min-width: 150px;
+}
+@media screen and(min-width: 300px) and (max-width: 1024px) {
+  #nameButton {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
