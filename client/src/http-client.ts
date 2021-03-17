@@ -40,7 +40,7 @@ export class HttpClient {
     if (body) {
       requestOptions.body = JSON.stringify(body);
     }
-    const response = await fetch(this.config.baseURL + url, requestOptions);
+    const response = await fetch(this.config.baseURL + (url.startsWith('/') ? url.substring(1) : url), requestOptions);
     if (response.ok) {
       return response;
     } else {
