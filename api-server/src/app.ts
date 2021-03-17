@@ -8,7 +8,7 @@ import http from 'http';
 import https from 'https';
 import fs from 'fs';
 import path from 'path';
-// TODO: Routen importieren
+import cookbooks from './routes/cookbooks';
 
 import startDB from './db';
 import { corsService } from './services/cors.service';
@@ -20,6 +20,7 @@ function configureApp(app: Express) {
   app.use(cookieParser());
   app.use(corsService.expressMiddleware);
   // TODO: Routen einbinden
+  app.use('/api/cookbooks', cookbooks);
 }
 
 export async function start(port: number, dbms = 'in-memory-db', withHttps = false) {
