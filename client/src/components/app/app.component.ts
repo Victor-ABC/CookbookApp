@@ -11,6 +11,9 @@ const componentCSS = require('./app.component.scss');
 @customElement('app-root')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class AppComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
   static styles = [
     css`
       ${unsafeCSS(sharedCSS)}
