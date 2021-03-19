@@ -21,7 +21,7 @@ class AppComponent extends LitElement {
   ];
 
   @internalProperty()
-  title = 'Aufgabenverwaltung';
+  title = 'Koch-App';
 
   @internalProperty()
   linkItems = [

@@ -1,3 +1,5 @@
+/* Autor: Victor */
+
 
 import { css, customElement, html, LitElement, query, unsafeCSS } from 'lit-element';
 import { httpClient } from '../../http-client';
