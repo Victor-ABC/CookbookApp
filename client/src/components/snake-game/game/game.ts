@@ -12,7 +12,7 @@ export class Game {
   private fruit: Fruit;
   private canvas: Canvas;
   private gameInterval: any;
-  constructor(scale: number) {
+  private constructor(scale: number) {
     this.snake = new Snake();
     this.fruit = new Fruit();
     this.canvas = new Canvas(scale);
@@ -47,7 +47,7 @@ export class Game {
     this.color = 'green';
     this.score = 0;
   }
-  public play() {
+  private play() {
     if (!this.isCurrentlyRunning) {
       this.isCurrentlyRunning = true;
 
@@ -100,37 +100,38 @@ export class Game {
   public getCanvas() {
     return this.canvas;
   }
+  public static startTheGame() {
+    const game = new Game(10);
+    window.addEventListener('keydown', event => {
+      switch (event.key) {
+        case 'ArrowRight':
+          if (game.getSnake().getCurrentDirection() !== 'Left') {
+            game.getSnake().setCurrentDirection('Right');
+            game.getSnake().setDirection(game.getCanvas().getScale(), 0);
+          }
+          break;
+        case 'ArrowLeft':
+          if (game.getSnake().getCurrentDirection() !== 'Right') {
+            game.getSnake().setCurrentDirection('Left');
+            game.getSnake().setDirection(-game.getCanvas().getScale(), 0);
+          }
+          break;
+        case 'ArrowDown':
+          if (game.getSnake().getCurrentDirection() !== 'Up') {
+            game.getSnake().setCurrentDirection('Down');
+            game.getSnake().setDirection(0, game.getCanvas().getScale());
+          }
+          break;
+        case 'ArrowUp':
+          if (game.getSnake().getCurrentDirection() !== 'Down') {
+            game.getSnake().setCurrentDirection('Up');
+            game.getSnake().setDirection(0, -game.getCanvas().getScale());
+          }
+          break;
+      }
+    });
+    game.play();
+  }
+  
 }
 
-function startTheGame() {
-  const game = new Game(10);
-  window.addEventListener('keydown', event => {
-    switch (event.key) {
-      case 'ArrowRight':
-        if (game.getSnake().getCurrentDirection() !== 'Left') {
-          game.getSnake().setCurrentDirection('Right');
-          game.getSnake().setDirection(game.getCanvas().getScale(), 0);
-        }
-        break;
-      case 'ArrowLeft':
-        if (game.getSnake().getCurrentDirection() !== 'Right') {
-          game.getSnake().setCurrentDirection('Left');
-          game.getSnake().setDirection(-game.getCanvas().getScale(), 0);
-        }
-        break;
-      case 'ArrowDown':
-        if (game.getSnake().getCurrentDirection() !== 'Up') {
-          game.getSnake().setCurrentDirection('Down');
-          game.getSnake().setDirection(0, game.getCanvas().getScale());
-        }
-        break;
-      case 'ArrowUp':
-        if (game.getSnake().getCurrentDirection() !== 'Down') {
-          game.getSnake().setCurrentDirection('Up');
-          game.getSnake().setDirection(0, -game.getCanvas().getScale());
-        }
-        break;
-    }
-  });
-  game.play();
-}

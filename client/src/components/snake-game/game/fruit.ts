@@ -22,7 +22,7 @@ export class Fruit {
     }
   }
   public draw(canvas: Canvas) {
-    canvas.draw(this.y, this.y, this.color);
+    canvas.draw(this.x, this.y, this.color);
   }
   public getX() {
     return this.x;
