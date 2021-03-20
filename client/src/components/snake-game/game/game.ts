@@ -12,10 +12,12 @@ export class Game {
   private fruit: Fruit;
   private canvas: Canvas;
   private gameInterval: any;
-  private constructor(scale: number) {
+  private gameField : HTMLElement;
+  private constructor(scale: number, gameField : HTMLElement) {
+    this.gameField = gameField;
     this.snake = new Snake();
     this.fruit = new Fruit();
-    this.canvas = new Canvas(scale);
+    this.canvas = new Canvas(scale, gameField);
     this.isCurrentlyRunning = false;
     this.rgbVerlaufIndex = 0;
     this.rgbVerlauf = [
@@ -54,7 +56,7 @@ export class Game {
       this.fruit.setRandomColor();
       this.fruit.setRandomLocation(this.canvas, this.snake);
       // hide color while playing
-      document.getElementById('color-select')!.style.visibility = 'hidden';
+      // this.gameField.getElementById('color-select')!.style.visibility = 'hidden';
 
       this.gameInterval = setInterval(() => {
         this.canvas.clean(); //feld freiräumen
@@ -100,8 +102,8 @@ export class Game {
   public getCanvas() {
     return this.canvas;
   }
-  public static startTheGame() {
-    const game = new Game(10);
+  public static startTheGame(appSnakeGame: HTMLElement) {
+    const game = new Game(10 , appSnakeGame);
     window.addEventListener('keydown', event => {
       switch (event.key) {
         case 'ArrowRight':

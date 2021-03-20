@@ -2,8 +2,8 @@ export class Canvas {
   private canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
   private scale: number;
-  constructor(scale: number) {
-    this.canvas = document.querySelector('.canvas') as HTMLCanvasElement;
+  constructor(scale: number , gameField : HTMLElement) {
+    this.canvas = gameField.querySelector("#canvas") as HTMLCanvasElement;
     this.canvas.focus();
     this.ctx = this.canvas.getContext('2d') as CanvasRenderingContext2D;
     this.scale = scale;

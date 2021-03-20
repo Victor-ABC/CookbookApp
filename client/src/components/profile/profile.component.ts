@@ -9,9 +9,6 @@ const profileCSS = require('./profile.component.scss');
 @customElement('app-profile')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class SignInComponent extends PageMixin(LitElement) {
-  createRenderRoot() {
-    return this;
-  }
   static styles = [
     css`
       ${unsafeCSS(sharedCSS)}

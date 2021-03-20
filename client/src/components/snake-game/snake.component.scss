@@ -1,12 +1,7 @@
-.game-over {
-    color: red;
-    background-color: red;
-}
 #canvas {
     background-color: grey;
-    border: solid black 2px;
 }
 #gameField {
-    display:  flex;
-    background-color: red;
+    display: flex;
+    flex-direction: column;
 }

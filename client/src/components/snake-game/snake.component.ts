@@ -7,9 +7,6 @@ const snakeCSS = require('./snake.component.scss');
 
 @customElement('app-snake-game')
 class SignInComponent extends PageMixin(LitElement) {
-  createRenderRoot() {
-    return this;
-  }
   static styles = [
     css`
       ${unsafeCSS(sharedCSS)}
@@ -21,19 +18,19 @@ class SignInComponent extends PageMixin(LitElement) {
   render() {
     return html`
       ${this.renderNotification()}
-      <h1>Snake - The Game</h1>
       <div id="gameField">
+      <h1>Snake - The Game</h1>
         <select id="color-select">
           <option class="item-class" value="green">grün</option>
           <option class="item-class" value="blue">blau</option>
           <option class="item-class" value="red">rot</option>
         </select>
         <button id="start" @click="${this.onClick}">Start</button>
-        <canvas style="background-color : grey;" id="canvas" class="canvas" width="300" height="300"></canvas>
+        <canvas id="canvas" class="canvas" width="300" height="300"></canvas>
       </div>
     `;
   }
   async onClick() {
-    Game.startTheGame();
+    Game.startTheGame(this.renderRoot.querySelector("#gameField")!);
   }
 }
