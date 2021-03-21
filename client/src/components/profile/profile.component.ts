@@ -25,6 +25,4 @@ class SignInComponent extends PageMixin(LitElement) {
       <app-snake-game></app-snake-game>
 `;
   }
-
-
 }

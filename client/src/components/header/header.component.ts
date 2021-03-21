@@ -21,22 +21,68 @@ class SignInComponent extends PageMixin(LitElement) {
     `
   ];
 
+  @property()
+  title = '';
+
+  @property()
+  linkItems: Array<{ title: string; routePath: string }> = [];
+
+  @internalProperty()
+  private navbarOpen = false;
 
   render() {
     return html`
-<header id="flex-container-box">
-    <div class="flex-item">
-        
-    </div>
-    <nav class="navbar navbar-light bg-light justify-content-between flex-item">
-        <form class="form-inline">
-        <input class="form-control mr-sm-2" type="search" placeholder="z.B. Pasta, Suppe ..." aria-label="Search">
-        <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
+      <nav class="flex-box navbar fixed-top navbar-expand-lg navbar-dark bg-success">
+        <a class="flex-item navbar-brand" href="/"><span class="logo"></span>${this.title}</a>
+        <form class="form-flex-box">
+          <input id="search-field" class="form-item form-control" type="search" placeholder="z.B. Pizza, Pasta ..." aria-label="Search">
+<select id="search-select" class="form-item form-select custom-select" id="inputGroupSelect01">
+    <option selected>in Rezepte</option>
+    <option value="1">in Kochbücher</option>
+</select>
+          <button id="search-button" class="form-item btn btn-light my-2 my-sm-0" type="submit">Search</button>
         </form>
-    </nav>
-</header>
+        <button
+          @click="${this.toggle}"
+          class="flex-item navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="flex-item icon"></span>
+        </button>
+        <div
+          class=${classMap({
+            'collapse': true,
+            'navbar-collapse': true,
+            'justify-content-end': true,
+            'show': this.navbarOpen
+          })}
+          id="navbarNav"
+        >
+          <ul class="flex-item navbar-nav">
+            ${this.linkItems.map(
+              linkItem => html`
+                <li class="nav-item">
+                  <a class="nav-link" href="${linkItem.routePath}" @click=${this.close}>${linkItem.title}</a>
+                </li>
+              `
+            )}
+          </ul>
+        </div>
+      </nav>
     `;
   }
 
+  toggle() {
+    this.navbarOpen = !this.navbarOpen;
+  }
+
+  close() {
+    this.navbarOpen = false;
+  }
 
 }

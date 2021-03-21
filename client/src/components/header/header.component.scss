@@ -1,12 +1,36 @@
 /* Autor: Victor */
 
-#flex-container-box{
+.icon::before {
+    color: white;
+    font: normal normal normal 1.25rem/1 'Font Awesome 5 Free';
+    content: '\f007';
+  }
+  
+  .icon {
+    width: 30px;
+  }
+  
+  .form-flex-box{
     display: flex;
-    width: 100%;
-    flex-wrap: wrap;
-    justify-content: space-around;
+    flex-wrap: nowrap;
     align-items: center;
 }
-.flex-item {
-    
+.form-item {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+@media screen and (min-width: 576px) {
+    #search-button {
+    border-bottom-left-radius: 0%;
+    border-top-left-radius: 0%;
+    }
+    #search-field {
+        border-bottom-right-radius: 0%;
+        border-top-right-radius: 0%;
+    }
+    #search-select {
+        border-radius: 0%;
+        margin: 1px;
+    }
 }
