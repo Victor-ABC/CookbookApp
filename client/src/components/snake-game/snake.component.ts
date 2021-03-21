@@ -17,18 +17,23 @@ class SignInComponent extends PageMixin(LitElement) {
   ];
   render() {
     return html`
-      ${this.renderNotification()}
+    <details>
+      <summary>Kuchen im Backofen? Suppe auf dem Herd?</summary>
       <div id="gameField">
+      <div id="title-container">
       <h1>Snake - The Game</h1>
+        <span class="snake-icon"></span>
+      </div>
         <select id="color-select">
-          <option class="item-class" value="green">Grün</option>
-          <option class="item-class" value="blue">Blau</option>
-          <option class="item-class" value="red">Rot</option>
-          <option class="item-class" value="rainbow">Regenbogen</option>
+          <option class="item-class item-green" value="green">Grün</option>
+          <option class="item-class item-blue" value="blue">Blau</option>
+          <option class="item-class item-red" value="red">Rot</option>
+          <option class="item-class item-rainbow" value="rainbow">Regenbogen</option>
         </select>
-        <button id="start" @click="${this.onClick}">Start</button>
+        <button id="start" class="btn btn-success" @click="${this.onClick}">Start</button>
         <canvas id="canvas" class="canvas" width="300" height="300"></canvas>
       </div>
+    </details>
     `;
   }
   async onClick() {

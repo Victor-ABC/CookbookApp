@@ -46,9 +46,9 @@ class SignUpComponent extends PageMixin(LitElement) {
           <div id="nameButton">
             <div class="name-flex-box">
               <input class="name-fley-item form-control" type="text" autofocus required id="name" name="name" />
+              <div class="invalid-feedback" id="nameBemerkung">Name ist erforderlich und muss eindeutig sein</div>
               <button id="name__button" type="button" class="name-fley-item btn btn-success">Name vergeben?</button>
             </div>
-          <div class="invalid-feedback" id="nameBemerkung">Name ist erforderlich und muss eindeutig sein</div>
           </div>
         </div>
         <div class="form-group">

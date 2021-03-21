@@ -41,7 +41,7 @@ class SignInComponent extends PageMixin(LitElement) {
     <option selected>in Rezepte</option>
     <option value="1">in Kochbücher</option>
 </select>
-          <button id="search-button" class="form-item btn btn-light my-2 my-sm-0" type="submit">Suchen</button>
+          <button id="search-button" class="form-item btn btn-light my-2 my-sm-0" type="submit"></button>
         </form>
         <button
           @click="${this.toggle}"
