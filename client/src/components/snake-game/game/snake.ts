@@ -1,4 +1,4 @@
-import { Canvas } from "./canvas.js";
+import { Canvas } from './canvas.js';
 
 export class Snake {
   private x: number;
@@ -9,25 +9,25 @@ export class Snake {
   private tailIndex;
   private tailElems: TailElement[];
   private oneDirectionPerCicle: boolean;
-  private static instance : Snake | null = null;
-  private color : string;
-  private constructor(color : string) { //singelton
+  private static instance: Snake | null = null;
+  private color: string;
+  private constructor(color: string) {
+    // Singleton - Entwurfsmuster
     this.color = color;
     this.x = 0;
     this.y = 0;
     this.moveX = 0;
     this.moveY = 0;
-    this.currentDirection = "Right";
+    this.currentDirection = 'Right';
     this.tailIndex = 0;
     this.tailElems = [];
     this.oneDirectionPerCicle = true;
   }
-  public static getInstance (color : string) : Snake {
-    if(!this.instance) {
+  public static getInstance(color: string): Snake {
+    if (!this.instance) {
       this.instance = new Snake(color);
       return this.instance;
-    }
-    else {
+    } else {
       return this.instance;
     }
   }
@@ -53,18 +53,15 @@ export class Snake {
   }
   public inItself() {
     for (let i = 0; i < this.tailIndex; i++) {
-      if (
-        this.x === this.tailElems[i].getX() &&
-        this.y === this.tailElems[i].getY()
-      ) {
+      if (this.x === this.tailElems[i].getX() && this.y === this.tailElems[i].getY()) {
         return true;
       }
     }
     return false;
   }
   public draw(canvas: Canvas) {
-    if (this.color === "rainbow") {
-      canvas.draw(this.x, this.y, "rgb(0, 204, 0)"); //Kopf
+    if (this.color === 'rainbow') {
+      canvas.draw(this.x, this.y, 'rgb(0, 204, 0)'); //Kopf
     } else {
       canvas.draw(this.x, this.y, this.color); //Kopf
     }
@@ -99,19 +96,21 @@ export class Snake {
     return false;
   }
   public fruitPlacedSuccessfully(fruitPosX: number, fruitPosY: number) {
-    if (this.isOnFruitCheck(fruitPosX, fruitPosY)) {      // Snake head
+    if (this.isOnFruitCheck(fruitPosX, fruitPosY)) {
+      // Snake head
       return false;
     }
     for (let i = 0; i < this.tailElems.length; i++) {
       if (this.x === this.tailElems[i].getX() && this.y === this.tailElems[i].getY()) {
-        console.log("neu berechnet");
+        console.log('neu berechnet');
         return false;
       }
     }
     return true;
   }
   public isOnFruitCheck(fruitPosX: number, fruitPosY: number) {
-    if (this.x === fruitPosX && this.y === fruitPosY) {      // Snake head
+    if (this.x === fruitPosX && this.y === fruitPosY) {
+      // Snake head
       return true;
     }
     return false;

@@ -2,11 +2,20 @@ export class Canvas {
   private canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
   private scale: number;
-  constructor(scale: number , gameField : HTMLElement) {
-    this.canvas = gameField.querySelector("#canvas") as HTMLCanvasElement;
+  private static instance: Canvas | null = null;
+  private constructor(scale: number, gameField: HTMLElement) {
+    this.canvas = gameField.querySelector('#canvas') as HTMLCanvasElement;
     this.canvas.focus();
     this.ctx = this.canvas.getContext('2d') as CanvasRenderingContext2D;
     this.scale = scale;
+  }
+  public static getInstance(scale: number, gameField: HTMLElement) {
+    if (!this.instance) {
+      this.instance = new Canvas(scale, gameField);
+      return this.instance;
+    } else {
+      return this.instance;
+    }
   }
   public draw(x: number, y: number, color: string) {
     this.ctx.fillStyle = color;
