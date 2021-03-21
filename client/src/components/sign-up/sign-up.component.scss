@@ -10,19 +10,22 @@ form {
 
 
 
-#nameButton {
-  display: flex;
-  flex-wrap: none;
-}
 
-#nameButton > button {
+.name-flex-box {
+  height: 38px;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+#name__button {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  flex-grow: 1n;
   white-space: nowrap;
-  width: 30%;
   min-width: 150px;
 }
-@media screen and(min-width: 300px) and (max-width: 1024px) {
-  #nameButton {
-    display: flex;
-    flex-wrap: wrap;
-  }
+#name {
+  flex-grow: 2n;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }

@@ -27,7 +27,8 @@ class AppComponent extends LitElement {
   linkItems = [
     { title: 'Konto erstellen', routePath: '/users/sign-up' },
     { title: 'Anmelden', routePath: '/users/sign-in' },
-    { title: 'Abmelden', routePath: '/users/sign-out' }
+    { title: 'Abmelden', routePath: '/users/sign-out' },
+    { title: 'Mein Profil', routePath: 'users/profile' }
   ];
 
   constructor() {
