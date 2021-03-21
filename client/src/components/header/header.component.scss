@@ -9,6 +9,16 @@
   .icon {
     width: 30px;
   }
+  .main-icon::before {
+    color: white;
+    font: normal normal normal 1.25rem/1 'Font Awesome 5 Free';
+    content: '\f2e7';
+  }
+  
+  .main-icon {
+    width: 30px;
+  }
+  
   
   .form-flex-box{
     display: flex;
