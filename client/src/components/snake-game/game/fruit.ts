@@ -6,7 +6,17 @@ export class Fruit {
   private y: number = 0;
   private colorArray: string[] = ["red", "blue", "yellow", "purple"];
   private color: string = "green";
-  constructor() {}
+  private static instance : Fruit | null = null;
+  private constructor() {} // Singelton
+  public static getInstance () : Fruit {
+    if(!this.instance){
+      this.instance = new Fruit();
+      return this.instance;
+    }
+    else {
+      return this.instance;
+    }
+  }
   public setRandomColor() {
     this.color = this.colorArray[
       Math.floor(Math.random() * this.colorArray.length)

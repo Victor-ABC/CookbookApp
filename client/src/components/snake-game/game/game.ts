@@ -6,20 +6,20 @@ export class Game {
   private isCurrentlyRunning: boolean;
   private rgbVerlaufIndex: number;
   private rgbVerlauf: string[];
-  private color: string;
   private score: number;
+  private snakeColor : string;
   private snake: Snake;
   private fruit: Fruit;
   private canvas: Canvas;
   private gameInterval: any;
-  private gameField : HTMLElement;
   private constructor(scale: number, gameField : HTMLElement) {
-    this.gameField = gameField;
-    this.snake = new Snake();
-    this.fruit = new Fruit();
+    let color = gameField.querySelector("#color-select") as HTMLSelectElement;
+    this.snakeColor = color.value;
+    this.snake = Snake.getInstance(this.snakeColor);
+    this.fruit = Fruit.getInstance();
     this.canvas = new Canvas(scale, gameField);
     this.isCurrentlyRunning = false;
-    this.rgbVerlaufIndex = 0;
+    this.rgbVerlaufIndex = 1;
     this.rgbVerlauf = [
       'rgb(0, 204, 0)',
       'rgb(0, 204, 51)',
@@ -46,7 +46,6 @@ export class Game {
       'rgb(102, 204, 0)',
       'rgb(51, 204, 0)'
     ];
-    this.color = 'green';
     this.score = 0;
   }
   private play() {
@@ -71,7 +70,13 @@ export class Game {
           this.stop();
         }
         if (this.snake.isOnFruitCheck(this.fruit.getX(), this.fruit.getY())) {
-          this.snake.addTailElement(0, 0, this.color); // !Hier nochmal schauen, ob ohne x, y geht
+          if(this.snakeColor === "rainbow") {
+            this.snake.addTailElement(0, 0, this.rgbVerlauf[this.rgbVerlaufIndex % this.rgbVerlauf.length]); // !Hier nochmal schauen, ob ohne x, y geht
+            this.rgbVerlaufIndex++ ;
+          }
+          else {
+            this.snake.addTailElement(0, 0, this.snakeColor); // !Hier nochmal schauen, ob ohne x, y geht
+          }
           this.fruit.setRandomColor();
           this.fruit.setRandomLocation(this.canvas, this.snake);
         }

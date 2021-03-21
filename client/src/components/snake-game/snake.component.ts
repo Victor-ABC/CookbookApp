@@ -21,9 +21,10 @@ class SignInComponent extends PageMixin(LitElement) {
       <div id="gameField">
       <h1>Snake - The Game</h1>
         <select id="color-select">
-          <option class="item-class" value="green">grün</option>
-          <option class="item-class" value="blue">blau</option>
-          <option class="item-class" value="red">rot</option>
+          <option class="item-class" value="green">Grün</option>
+          <option class="item-class" value="blue">Blau</option>
+          <option class="item-class" value="red">Rot</option>
+          <option class="item-class" value="rainbow">Regenbogen</option>
         </select>
         <button id="start" @click="${this.onClick}">Start</button>
         <canvas id="canvas" class="canvas" width="300" height="300"></canvas>

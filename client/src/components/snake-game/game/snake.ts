@@ -9,7 +9,10 @@ export class Snake {
   private tailIndex;
   private tailElems: TailElement[];
   private oneDirectionPerCicle: boolean;
-  constructor() {
+  private static instance : Snake | null = null;
+  private color : string;
+  private constructor(color : string) { //singelton
+    this.color = color;
     this.x = 0;
     this.y = 0;
     this.moveX = 0;
@@ -18,6 +21,15 @@ export class Snake {
     this.tailIndex = 0;
     this.tailElems = [];
     this.oneDirectionPerCicle = true;
+  }
+  public static getInstance (color : string) : Snake {
+    if(!this.instance) {
+      this.instance = new Snake(color);
+      return this.instance;
+    }
+    else {
+      return this.instance;
+    }
   }
   public getCurrentDirection() {
     return this.currentDirection;
@@ -51,10 +63,10 @@ export class Snake {
     return false;
   }
   public draw(canvas: Canvas) {
-    if (false) {
-      canvas.draw(this.x, this.y, "rgb(51, 204, 0)"); //Kopf
+    if (this.color === "rainbow") {
+      canvas.draw(this.x, this.y, "rgb(0, 204, 0)"); //Kopf
     } else {
-      canvas.draw(this.x, this.y, "green"); //Kopf
+      canvas.draw(this.x, this.y, this.color); //Kopf
     }
     for (let i = 0; i < this.tailIndex; i++) {
       this.tailElems[i].drawTailElement(canvas);
@@ -87,21 +99,19 @@ export class Snake {
     return false;
   }
   public fruitPlacedSuccessfully(fruitPosX: number, fruitPosY: number) {
-    if (this.isOnFruitCheck(fruitPosX, fruitPosY)) {
-      // Snake head
+    if (this.isOnFruitCheck(fruitPosX, fruitPosY)) {      // Snake head
       return false;
     }
-    this.tailElems.forEach((e) => {
-      // Snake body
-      if (e.getX() === fruitPosX && e.getY() === fruitPosY) {
+    for (let i = 0; i < this.tailElems.length; i++) {
+      if (this.x === this.tailElems[i].getX() && this.y === this.tailElems[i].getY()) {
+        console.log("neu berechnet");
         return false;
       }
-    });
+    }
     return true;
   }
   public isOnFruitCheck(fruitPosX: number, fruitPosY: number) {
-    if (this.x === fruitPosX && this.y === fruitPosY) {
-      // Snake head
+    if (this.x === fruitPosX && this.y === fruitPosY) {      // Snake head
       return true;
     }
     return false;
