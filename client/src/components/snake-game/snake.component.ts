@@ -18,25 +18,34 @@ class SignInComponent extends PageMixin(LitElement) {
   render() {
     return html`
     <details>
-      <summary>Kuchen im Backofen? Suppe auf dem Herd?</summary>
+      <summary id="summary-kuchen">Kuchen im Backofen? Suppe auf dem Herd?
+        <small id="text-zeitvertreib">Hier ein kleiner Zeitvertreib</small>
+      </summary>
       <div id="gameField">
       <div id="title-container">
       <h1>Snake - The Game</h1>
         <span class="snake-icon"></span>
       </div>
-        <select id="color-select">
-          <option class="item-class item-green" value="green">Grün</option>
-          <option class="item-class item-blue" value="blue">Blau</option>
-          <option class="item-class item-red" value="red">Rot</option>
-          <option class="item-class item-rainbow" value="rainbow">Regenbogen</option>
+      <div id="game-header-container">
+        <select id="color-select" class="game-header-item">
+          <option class="item-class" value="green">Grün</option>
+          <option class="item-class" value="blue">Blau</option>
+          <option class="item-class" value="red">Rot</option>
+          <option class="item-class" value="rainbow">Regenbogen</option>
         </select>
-        <button id="start" class="btn btn-success" @click="${this.onClick}">Start</button>
+        <button id="start" class="game-header-item btn btn-success" @click="${this.onClick}">Start</button>
+        </div>
         <canvas id="canvas" class="canvas" width="300" height="300"></canvas>
+        <details id="detail-box">
+          <summary>Info</summary>
+          <p id="info"> In diesem Spiel geht es darum, so viel wie möglich zu essen. Du steuerst die Schlange mit den Pfeiltasten <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Arrow_keys.jpg/150px-Arrow_keys.jpg"></p>
+        </details>
       </div>
     </details>
     `;
   }
   async onClick() {
     Game.startTheGame(this.renderRoot.querySelector("#gameField")!);
+    this.shadowRoot?.querySelector("#game-header-container")!.classList.add("hidden");
   }
 }
