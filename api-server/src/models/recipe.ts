@@ -8,4 +8,5 @@ export interface Recipe extends Entity {
   description: string;
   userId: string;
   ingredients: Ingredient[];
+  cookbookIds: string[];
 }
