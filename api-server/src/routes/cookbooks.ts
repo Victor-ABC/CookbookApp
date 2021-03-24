@@ -4,11 +4,12 @@ import express from 'express';
 import { Cookbook } from '../models/cookbook';
 import { GenericDAO } from '../models/generic.dao';
 import { Recipe } from '../models/recipe';
+import { authService } from '../services/auth.service';
 
 const router = express.Router();
 
 // get cookbooks from all users
-router.get('/', async (req, res) => {
+router.get('/', authService.expressMiddleware, async (req, res) => {
   const cookbookDAO: GenericDAO<Cookbook> = req.app.locals.cookbookDAO;
   const books = (await cookbookDAO.findAll()).map(book => {
     return { id: book.id, title: book.title };
@@ -19,79 +20,101 @@ router.get('/', async (req, res) => {
 // get cookbooks from a specified user
 router.get('/:userId', async (req, res) => {
   const cookbookDAO: GenericDAO<Cookbook> = req.app.locals.cookbookDAO;
-  const filter: Partial<Cookbook> = { userId: req.params.userId };
 
-  const books = (await cookbookDAO.findAll(filter)).map(book => {
+  // grab cookbooks from database
+  const cookbooks = await cookbookDAO.findAll({ userId: req.params.userId });
+
+  // prepare json response
+  const cookbookDTO = cookbooks.map(book => {
     return { id: book.id, title: book.title };
   });
-  res.status(200).json({ results: books });
+
+  res.status(200).json({ results: cookbookDTO });
 });
 
-// get cookbook details (including title, description and recipe list)
+// get cookbook details
 router.get('/:userId/:cookbookId', async (req, res) => {
   const cookbookDAO: GenericDAO<Cookbook> = req.app.locals.cookbookDAO;
   const recipeDAO: GenericDAO<Recipe> = req.app.locals.recipeDAO;
 
   // grab cookbook from database
-  const bookFilter: Partial<Cookbook> = { userId: req.params.userId, id: req.params.cookbookId };
-  const book = await cookbookDAO.findOne(bookFilter);
+  const cookbook = await cookbookDAO.findOne({
+    userId: req.params.userId,
+    id: req.params.cookbookId
+  });
 
-  if (!book) {
+  // validate cookbook
+  if (!cookbook) {
     res.status(404).json({ message: 'Das Kochbuch existiert nicht.' });
-  } else {
-    // grab recipes form database
-    const recipes: Partial<Recipe>[] = [];
-    for (const recipeId of book.recipeIds) {
-      const recipe = await recipeDAO.findOne({ id: recipeId });
-
-      if (recipe) {
-        recipes.push({ id: recipe.id, title: recipe.title });
-      }
-    }
-
-    res.status(200).json({
-      results: {
-        id: book.id,
-        title: book.title,
-        description: book.description,
-        userId: book.userId,
-        recipes: recipes
-      }
-    });
+    return;
   }
+
+  // grab recipes from database
+  const recipes = await recipeDAO.findAll({
+    cookbookIds: [cookbook.id]
+  });
+
+  // prepare json response
+  const recipesDTO = recipes.map(recipe => {
+    return {
+      id: recipe.id,
+      title: recipe.title,
+      description: recipe.description,
+      userId: recipe.userId,
+      ingredients: recipe.ingredients
+    };
+  });
+
+  res.status(200).json({
+    results: {
+      id: cookbook.id,
+      title: cookbook.title,
+      description: cookbook.description,
+      userId: cookbook.userId,
+      recipes: recipesDTO
+    }
+  });
 });
 
 // delete a cookbook
-router.delete('/:userId/:cookbookId', async (req, res) => {
+router.delete('/:cookbookId', authService.expressMiddleware, async (req, res) => {
   const cookbookDAO: GenericDAO<Cookbook> = req.app.locals.cookbookDAO;
 
   // grab cookbook from database
   const filter: Partial<Cookbook> = {
     id: req.params.cookbookId,
-    userId: req.params.userId // TODO replace userId with JWT token
+    userId: res.locals.user.id
   };
-  const book = await cookbookDAO.findOne(filter);
+  const cookbook = await cookbookDAO.findOne(filter);
 
   // delete cookbook
-  if (!book) {
+  if (!cookbook) {
     res.status(404).json({ message: 'Das Kochbuch existiert nicht oder Berechtigungen zum Löschen fehlen.' });
   } else {
-    cookbookDAO.delete(book.id);
+    cookbookDAO.delete(cookbook.id);
     res.status(200).end();
   }
 });
 
 // create a new empty cookbook
-router.post('/', async (req, res) => {
+router.post('/', authService.expressMiddleware, async (req, res) => {
   const cookbookDAO: GenericDAO<Cookbook> = req.app.locals.cookbookDAO;
+  const errors: string[] = [];
 
+  // validate parameters
+  if (!hasRequiredFields(req.body, ['title', 'description'], errors)) {
+    return res.status(400).json({ message: errors });
+  }
+
+  // create and store new cookbook in database
   const createdCookbook = await cookbookDAO.create({
     title: req.body.title,
     description: req.body.description,
-    userId: req.body.userId, //TODO replace with userId from JWT token
+    userId: res.locals.user.id,
     recipeIds: []
   });
 
+  // prepare json response
   res.status(201).json({
     title: createdCookbook.title,
     description: createdCookbook.description,
@@ -101,60 +124,125 @@ router.post('/', async (req, res) => {
 });
 
 // add a recipe to a cookbook
-router.patch('/:userId/:cookbookId/:recipeId', async (req, res) => {
+router.patch('/:cookbookId/:recipeId', authService.expressMiddleware, async (req, res) => {
   const cookbookDAO: GenericDAO<Cookbook> = req.app.locals.cookbookDAO;
+  const recipeDAO: GenericDAO<Recipe> = req.app.locals.recipeDAO;
 
   // grab cookbook from database
-  const filter: Partial<Cookbook> = {
+  const cookbook = await cookbookDAO.findOne({
     id: req.params.cookbookId,
-    userId: req.params.userId // TODO replace userId with JWT token
-  };
-  const cookbook = await cookbookDAO.findOne(filter);
+    userId: res.locals.user.id
+  });
 
-  // add recipe to cookbook
+  // validate cookbook
   if (!cookbook) {
     res.status(404).json({ message: 'Das Kochbuch existiert nicht oder Berechtigungen zum Ändern fehlen.' });
-  } else {
-    const recipeIds = cookbook.recipeIds;
-    if (!recipeIds.includes(req.params.recipeId)) {
-      recipeIds.push(req.params.recipeId);
-
-      // update cookbook in database
-      await cookbookDAO.update(cookbook);
-      res.status(201).end();
-    } else {
-      res.status(400).json({ message: 'Das Rezept existiert bereits im Kochbuch. Erneutes Hinzufügen nicht möglich.' });
-    }
+    return;
   }
+
+  // grab recipe from database
+  const recipe = await recipeDAO.findOne({
+    id: req.params.recipeId
+  });
+
+  // validate recipe
+  if (!recipe) {
+    res.status(404).json({ message: 'Das Rezept existiert nicht.' });
+    return;
+  }
+
+  let exists = true;
+
+  // add recipeId to cookbook
+  const recipeIds = cookbook.recipeIds;
+  if (!recipeIds.includes(req.params.recipeId)) {
+    recipeIds.push(req.params.recipeId);
+    await cookbookDAO.update(cookbook);
+    exists = false;
+  }
+
+  // add cookbookId to recipe
+  const cookbookIds = recipe.cookbookIds;
+  if (!cookbookIds.includes(req.params.cookbookId)) {
+    cookbookIds.push(req.params.cookbookId);
+    await recipeDAO.update(recipe);
+    exists = false;
+  }
+
+  if (exists) {
+    res.status(400).json({ message: 'Das Rezept existiert bereits im Kochbuch.' });
+    return;
+  }
+
+  res.status(201).end();
 });
 
 // delete a recipe from a cookbook
-router.delete('/:userId/:cookbookId/:recipeId', async (req, res) => {
+router.delete('/:cookbookId/:recipeId', authService.expressMiddleware, async (req, res) => {
   const cookbookDAO: GenericDAO<Cookbook> = req.app.locals.cookbookDAO;
+  const recipeDAO: GenericDAO<Recipe> = req.app.locals.recipeDAO;
 
   // grab cookbook from database
-  const filter: Partial<Cookbook> = {
+  const cookbook = await cookbookDAO.findOne({
     id: req.params.cookbookId,
-    userId: req.params.userId //TODO replace with userId from JWT token
-  };
-  const cookbook = await cookbookDAO.findOne(filter);
+    userId: res.locals.user.id
+  });
 
-  // remove recipe from cookbook
+  // validate cookbook
   if (!cookbook) {
     res.status(404).json({ message: 'Das Kochbuch existiert nicht oder Berechtigungen zum Ändern fehlen.' });
-  } else {
-    const recipeIds = cookbook.recipeIds;
-    const index = recipeIds.indexOf(req.params.recipeId);
-    if (index != -1) {
-      recipeIds.splice(index, 1); // remove recipe
-
-      // update cookbook in database
-      await cookbookDAO.update(cookbook);
-      res.status(200).end();
-    } else {
-      res.status(404).json({ message: 'Das Rezept existiert nicht im Kochbuch und kann daher nicht gelöscht werden.' });
-    }
+    return;
   }
+
+  // grab recipe from database
+  const recipe = await recipeDAO.findOne({
+    id: req.params.recipeId
+  });
+
+  // validate recipe
+  if (!recipe) {
+    res.status(404).json({ message: 'Das Rezept existiert nicht.' });
+    return;
+  }
+
+  let index: number;
+  let removed = false;
+
+  // remove recipeId from cookbook
+  const recipeIds = cookbook.recipeIds;
+  index = recipeIds.indexOf(req.params.recipeId);
+  if (index != -1) {
+    recipeIds.splice(index, 1);
+    await cookbookDAO.update(cookbook);
+    removed = true;
+  }
+
+  // remove cookbookId from recipe
+  const cookbookIds = recipe.cookbookIds;
+  index = cookbookIds.indexOf(req.params.cookbookId);
+  if (index != -1) {
+    cookbookIds.splice(index, 1);
+    await recipeDAO.update(recipe);
+    removed = true;
+  }
+
+  if (!removed) {
+    res.status(400).json({ message: 'Das Rezept existiert nicht mehr im Kochbuch.' });
+    return;
+  }
+
+  res.status(200).end();
 });
+
+function hasRequiredFields(object: { [key: string]: unknown }, requiredFields: string[], errors: string[]) {
+  let hasErrors = false;
+  requiredFields.forEach(fieldName => {
+    if (!object[fieldName]) {
+      errors.push(fieldName + ' darf nicht leer sein.');
+      hasErrors = true;
+    }
+  });
+  return !hasErrors;
+}
 
 export default router;
