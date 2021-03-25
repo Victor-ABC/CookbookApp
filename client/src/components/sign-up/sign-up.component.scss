@@ -7,25 +7,14 @@ h1 {
 form {
   margin-top: 1rem;
 }
-
-
-
-
-.name-flex-box {
-  height: 38px;
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
+#name-check {
+  visibility: hidden;
 }
-#name__button {
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-  flex-grow: 1n;
-  white-space: nowrap;
-  min-width: 150px;
+#name-check[class="success"] {
+  visibility: visible;
+  color: green;
 }
-#name {
-  flex-grow: 2n;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
+#name-check[class="error"] {
+  visibility: visible;
+  color: red;
 }

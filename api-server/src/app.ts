@@ -8,6 +8,8 @@ import http from 'http';
 import https from 'https';
 import fs from 'fs';
 import path from 'path';
+import  Users  from './routes/users';
+import  Message  from './routes/messages';
 // TODO: Routen importieren
 
 import startDB from './db';
@@ -20,6 +22,7 @@ function configureApp(app: Express) {
   app.use(cookieParser());
   app.use(corsService.expressMiddleware);
   // TODO: Routen einbinden
+  app.use("/api/users", Users);
 }
 
 export async function start(port: number, dbms = 'in-memory-db', withHttps = false) {

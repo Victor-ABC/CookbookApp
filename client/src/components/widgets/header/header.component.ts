@@ -2,11 +2,9 @@
 
 import { css, customElement, html, LitElement, property, internalProperty, unsafeCSS } from 'lit-element';
 import { classMap } from 'lit-html/directives/class-map';
-import { httpClient } from '../../http-client';
-import { router } from '../../router';
-import { PageMixin } from '../page.mixin';
+import { PageMixin } from '../../page.mixin';
 
-const sharedCSS = require('../shared.scss');
+const sharedCSS = require('../../shared.scss');
 const headerCSs = require('./header.component.scss');
 
 @customElement('app-header')

@@ -23,8 +23,8 @@ class SignInComponent extends PageMixin(LitElement) {
   @query('form')
   form!: HTMLFormElement;
 
-  @query('#email')
-  emailElement!: HTMLInputElement;
+  @query('#name')
+  nameElement!: HTMLInputElement;
 
   @query('#password')
   passwordElement!: HTMLInputElement;
@@ -35,9 +35,9 @@ class SignInComponent extends PageMixin(LitElement) {
       <h1>Anmelden</h1>
       <form>
         <div class="form-group">
-          <label class="control-label" for="email">E-Mail</label>
-          <input class="form-control" type="email" autofocus required id="email" name="email" />
-          <div class="invalid-feedback">E-Mail ist erforderlich und muss gültig sein</div>
+          <label class="control-label" for="name">Name</label>
+          <input class="form-control" type="" autofocus required id="name" name="name" />
+          <div class="invalid-feedback">Name ist erforderlich</div>
         </div>
         <div class="form-group">
           <label class="control-label" for="password">Passwort</label>
@@ -52,7 +52,7 @@ class SignInComponent extends PageMixin(LitElement) {
   async submit() {
     if (this.isFormValid()) {
       const authData = {
-        email: this.emailElement.value,
+        name: this.nameElement.value,
         password: this.passwordElement.value
       };
       try {

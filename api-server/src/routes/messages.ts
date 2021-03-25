@@ -8,9 +8,12 @@ import { authService } from '../services/auth.service';
 const router = express.Router();
 
 router.post('' ,  (req, res) => {
-    const messageDAO: GenericDAO<Message> = req.app.locals.messageDAO;
+    // const messageDAO: GenericDAO<Message> = req.app.locals.messageDAO;
+    res.status(201).send("Hello World");
 })
-
+router.get("/" , (req, res) => {
+    res.status(201).send("Hello World");
+})
 
 
 export default router;

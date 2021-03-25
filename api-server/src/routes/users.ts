@@ -44,7 +44,7 @@ router.post('/sign-in', async (req, res) => {
   const userDAO: GenericDAO<User> = req.app.locals.userDAO;
   const errors: string[] = [];
 
-  checkFormPromise(req.body , ['email', 'name', 'password', 'passwordCheck'] , errors)
+  checkFormPromise(req.body , ['name',  'password' ] , errors)
   .then(async () => {
     return userAuthenticate(req.body, userDAO, { name: req.body.name })
   })
@@ -54,7 +54,7 @@ router.post('/sign-in', async (req, res) => {
   })
   .catch( () => {
     authService.removeToken(res);
-    res.status(401).json({ message: 'E-Mail oder Passwort ungültig!' });
+    res.status(401).json({ message: 'Der Name oder das Passwort sind ungültig!' });
   })
 });
 
@@ -62,6 +62,18 @@ router.delete('/sign-out', (req, res) => {
   authService.removeToken(res);
   res.status(200).end();
 });
+
+router.post("/exists" , (req, res) => {
+  const userDAO: GenericDAO<User> = req.app.locals.userDAO;
+  checkIfUserAlreadyExistsPromise(req.body , userDAO )
+  .then( () => {
+    res.status(201).json(true);
+  })
+  .catch( () => {
+    res.status(401).json({ message: `Der Name ${req.body.name} ist bereits Vergeben` });
+  }
+  )
+})
 
 router.delete('/', authService.expressMiddleware, async (req, res) => {
   const userDAO: GenericDAO<User> = req.app.locals.userDAO;

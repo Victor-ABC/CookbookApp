@@ -6,5 +6,6 @@ import './components/sign-up/sign-up.component.ts';
 import './components/sign-in/sign-in.component.ts';
 import './components/sign-out/sign-out.component.ts';
 import './components/profile/profile.component.ts';
-import './components/header/header.component.ts';
 import './components/snake-game/snake.component.ts';
+import './components/widgets/header/header.component.ts';
+import './components/widgets/notification/notification.component.ts';

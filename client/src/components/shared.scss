@@ -35,7 +35,7 @@ $theme-colors: (
   input:invalid {
     border: solid var(--app-error-color) 1px;
   }
-
+  
   input:invalid ~ .invalid-feedback {
     color: var(--app-error-color);
     margin-top: 0.2rem;
