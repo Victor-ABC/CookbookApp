@@ -1,3 +1,5 @@
+/* Autor: Victor */
+
 import { Canvas } from './canvas.js';
 
 export class Snake {

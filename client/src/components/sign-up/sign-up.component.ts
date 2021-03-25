@@ -89,7 +89,7 @@ class SignUpComponent extends PageMixin(LitElement) {
         passwordCheck: this.passwordCheckElement.value
       };
       try {
-        await httpClient.post('users', accountData);
+        await httpClient.post('users/sign-up', accountData);
         router.navigate('/tasks');
       } catch ({ message }) {
         this.setNotification({ errorMessage: message });

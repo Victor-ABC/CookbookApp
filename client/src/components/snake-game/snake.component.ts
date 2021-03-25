@@ -1,9 +1,13 @@
-import { css, customElement, html, LitElement, query, unsafeCSS } from 'lit-element';
+/* Autor: Victor */
+
+import { css, customElement, html, LitElement, property, query, unsafeCSS } from 'lit-element';
 import { PageMixin } from '../page.mixin';
 import { Game } from "./game/game";
+import { internalProperty } from 'lit-element';
 
 const sharedCSS = require('../shared.scss');
 const snakeCSS = require('./snake.component.scss');
+let visibility = 'visible';
 
 @customElement('app-snake-game')
 class SignInComponent extends PageMixin(LitElement) {
@@ -15,6 +19,10 @@ class SignInComponent extends PageMixin(LitElement) {
       ${unsafeCSS(snakeCSS)}
     `
   ];
+
+  @internalProperty()
+  visible = "visible";
+
   render() {
     return html`
     <details>
@@ -34,8 +42,17 @@ class SignInComponent extends PageMixin(LitElement) {
           <option class="item-class" value="rainbow">Regenbogen</option>
         </select>
         <button id="start" class="game-header-item btn btn-success" @click="${this.onClick}">Start</button>
+        <button id="toggleVisibility" class="game-header-item btn btn-success" @click="${this.toggleVisibility}">show Arrows</button>
         </div>
         <canvas id="canvas" class="canvas" width="300" height="300"></canvas>
+        <div value="${this.visible}">
+        <div class="arrow invisible"></div>
+        <div class="arrow up"></div>
+        <div class="arrow invisible"></div>
+        <div class="arrow left"></div>
+        <div class="arrow down"></div>
+        <div class="arrow rignt"></div>
+      </div>
         <details id="detail-box">
           <summary>Info</summary>
           <p id="info"> In diesem Spiel geht es darum, so viel wie möglich zu essen. Du steuerst die Schlange mit den Pfeiltasten <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Arrow_keys.jpg/150px-Arrow_keys.jpg"></p>
@@ -47,5 +64,13 @@ class SignInComponent extends PageMixin(LitElement) {
   async onClick() {
     Game.startTheGame(this.renderRoot.querySelector("#gameField")!);
     this.shadowRoot?.querySelector("#game-header-container")!.classList.add("hidden");
+  }
+  async toggleVisibility() {
+    if(this.visible === "visible") {
+      this.visible = "invisible";
+    }
+    else {
+      this.visible = "visible";
+    }
   }
 }

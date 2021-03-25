@@ -8,6 +8,7 @@ import { InMemoryGenericDAO } from './models/in-memory-generic.dao';
 import { Recipe } from './models/recipe';
 import { User } from './models/user';
 import { MongoGenericDAO } from './models/mongo-generic.dao';
+import { Message } from './models/message';
 
 export default async function startDB(app: Express, dbms = 'in-memory-db') {
   switch (dbms) {
@@ -26,6 +27,7 @@ function startInMemoryDB(app: Express) {
   app.locals.cookbookDAO = new InMemoryGenericDAO<Cookbook>();
   app.locals.recipeDAO = new InMemoryGenericDAO<Recipe>();
   app.locals.userDAO = new InMemoryGenericDAO<User>();
+  app.locals.messageDAO = new InMemoryGenericDAO<Message>();
 }
 
 async function startMongoDB(app: Express) {
@@ -34,6 +36,7 @@ async function startMongoDB(app: Express) {
   app.locals.cookbookDAO = new MongoGenericDAO<Cookbook>(db, 'cookbooks');
   app.locals.recipeDAO = new MongoGenericDAO<Recipe>(db, 'recipes');
   app.locals.userDAO = new MongoGenericDAO<User>(db, 'users');
+  app.locals.messageDAO = new MongoGenericDAO<User>(db, 'message');
 }
 
 async function connectToMongoDB() {

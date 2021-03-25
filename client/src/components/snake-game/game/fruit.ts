@@ -1,3 +1,5 @@
+/* Autor: Victor */
+
 import { Snake } from './snake';
 import { Canvas } from './canvas';
 

@@ -37,10 +37,10 @@ class SignInComponent extends PageMixin(LitElement) {
       <a class="flex-item navbar-brand" href="/"><span class="logo"></span>${this.title}</a>
         <form class="form-flex-box">
           <input id="search-field" class="form-item form-control" type="search" placeholder="z.B. Pizza, Pasta ..." aria-label="Search">
-<select id="search-select" class="form-item form-select custom-select" id="inputGroupSelect01">
-    <option selected>in Rezepte</option>
-    <option value="1">in Kochbücher</option>
-</select>
+          <select id="search-select" class="form-item form-select custom-select" id="inputGroupSelect01">
+              <option selected>in Rezepte</option>
+              <option value="1">in Kochbücher</option>
+          </select>
           <button id="search-button" class="form-item btn btn-light my-2 my-sm-0" type="submit"></button>
         </form>
         <button

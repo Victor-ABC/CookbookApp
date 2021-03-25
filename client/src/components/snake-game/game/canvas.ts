@@ -1,3 +1,5 @@
+/* Autor: Victor */
+
 export class Canvas {
   private canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;

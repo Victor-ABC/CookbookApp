@@ -1,64 +1,61 @@
-/* Autor: Prof. Dr. Norman Lahme-Hütig (FH Münster) */
+/* Autor: Victor */
 
 import express from 'express';
 import bcrypt from 'bcryptjs';
 import { GenericDAO } from '../models/generic.dao';
 import { User } from '../models/user';
-// import { Comments, cookbooks, entitys, recipse } from '../models/task';
+import { Comment } from '../models/comment';
+import { Cookbook } from '../models/cookbook';
+import { Recipe } from '../models/recipe';
 import { authService } from '../services/auth.service';
 
+interface formType {
+  [key: string]: string | number ;
+}
 const router = express.Router();
 
-router.post('/', async (req, res) => {
+router.post('/sign-up', async (req, res) => {
   const userDAO: GenericDAO<User> = req.app.locals.userDAO;
   const errors: string[] = [];
-
-  const sendErrorMessage = (message: string) => {
+  checkFormPromise(req.body , ['email', 'name', 'password', 'passwordCheck'] , errors)
+  .then( () => {
+    return validatePasswords(req.body);
+  })
+  .then( () => {
+    return checkIfUserAlreadyExistsPromise({ name : req.body.name }, userDAO);
+  })
+  .then( async () => {
+    const createdUser = await userDAO.create({
+      name: req.body.name,
+      email: req.body.email,
+      password: await bcrypt.hash(req.body.password, 10)
+    });
+    authService.createAndSetToken({ id: createdUser.id }, res);
+    res.status(201).json(createdUser);
+  })
+  .catch( (message : string[] ) => {
     authService.removeToken(res);
+    message.join('\n');
     res.status(400).json({ message });
-  };
-
-  if (!hasRequiredFields(req.body, ['email', 'name', 'password', 'passwordCheck'], errors)) {
-    return sendErrorMessage(errors.join('\n'));
-  }
-
-  if (req.body.password !== req.body.passwordCheck) {
-    return sendErrorMessage('Die beiden Passwörter stimmen nicht überein.');
-  }
-
-  const filter: Partial<User> = { email: req.body.email };
-  if (await userDAO.findOne(filter)) {
-    return sendErrorMessage('Es existiert bereits ein Konto mit der angegebenen E-Mail-Adresse.');
-  }
-
-  const createdUser = await userDAO.create({
-    name: req.body.name,
-    email: req.body.email,
-    password: await bcrypt.hash(req.body.password, 10)
-  });
-  authService.createAndSetToken({ id: createdUser.id }, res);
-  res.status(201).json(createdUser);
+  })
 });
 
 router.post('/sign-in', async (req, res) => {
   const userDAO: GenericDAO<User> = req.app.locals.userDAO;
-  const filter: Partial<User> = { email: req.body.email };
   const errors: string[] = [];
 
-  if (!hasRequiredFields(req.body, ['email', 'password'], errors)) {
-    res.status(400).json({ message: errors.join('\n') });
-    return;
-  }
-
-  const user = await userDAO.findOne(filter);
-
-  if (user && (await bcrypt.compare(req.body.password, user.password))) {
+  checkFormPromise(req.body , ['email', 'name', 'password', 'passwordCheck'] , errors)
+  .then(async () => {
+    return userAuthenticate(req.body, userDAO, { name: req.body.name })
+  })
+  .then( (user) => {
     authService.createAndSetToken({ id: user.id }, res);
     res.status(201).json(user);
-  } else {
+  })
+  .catch( () => {
     authService.removeToken(res);
     res.status(401).json({ message: 'E-Mail oder Passwort ungültig!' });
-  }
+  })
 });
 
 router.delete('/sign-out', (req, res) => {
@@ -68,24 +65,77 @@ router.delete('/sign-out', (req, res) => {
 
 router.delete('/', authService.expressMiddleware, async (req, res) => {
   const userDAO: GenericDAO<User> = req.app.locals.userDAO;
-//   const taskDAO: GenericDAO<Task> = req.app.locals.taskDAO;
+  const commentDAO: GenericDAO<Comment> = req.app.locals.commentDAO;
+  const cookbookDAO: GenericDAO<Cookbook> = req.app.locals.cookbookDAO;
+  const recipeDAO: GenericDAO<Recipe> = req.app.locals.recipeDAO;
 
   userDAO.delete(res.locals.user.id);
-//   taskDAO.deleteAll({ userId: res.locals.user.id });
+  commentDAO.deleteAll({ userId: res.locals.user.id });
+  cookbookDAO.deleteAll({ userId: res.locals.user.id });
+  recipeDAO.deleteAll({ userId: res.locals.user.id });
 
   authService.removeToken(res);
   res.status(200).end();
 });
 
-function hasRequiredFields(object: { [key: string]: unknown }, requiredFields: string[], errors: string[]) {
-  let hasErrors = false;
-  requiredFields.forEach(fieldName => {
-    if (!object[fieldName]) {
-      errors.push(fieldName + ' darf nicht leer sein.');
-      hasErrors = true;
+function checkFormPromise(
+  form: formType,
+  requiredFields: string[],
+  errors: string[]
+): Promise<void> {
+  return new Promise<void>((resolve, reject) => {
+    let isInvalid = false;
+    for(let i = 0 ; i < requiredFields.length ; i++) {
+      if (!form[requiredFields[i]]) {
+        errors.push(requiredFields[i] + ' muss ausgefüllt sein!!!');
+        if(!isInvalid){
+          isInvalid = true;
+        }
+      }
+    }
+    if(isInvalid){
+      reject(errors);
+    } 
+    else {
+      resolve();
     }
   });
-  return !hasErrors;
+}
+function userAuthenticate(
+   form: formType,
+   userDAO: GenericDAO<User> ,
+   filter: Partial<User>
+): Promise<User> {
+  return new Promise<User>(async (resolve, reject) => {
+    const user = await userDAO.findOne(filter);
+    if(user && (await bcrypt.compare(<string>form.password, user.password))) {
+      resolve(user);
+    }
+    reject("Die zwei eingegebenen Passwörter stimmen nicht überein!!!");
+  });
+}
+function validatePasswords(
+  form: formType
+): Promise<void> {
+  return new Promise<void>((resolve, reject) => {
+    if(form.password !== form.passwordCheck) {
+      reject("Die zwei eingegebenen Passwörter stimmen nicht überein!!!");
+    }
+    resolve();
+  });
+}
+function checkIfUserAlreadyExistsPromise(
+  filter: Partial<User>,
+  userDAO: GenericDAO<User>
+): Promise<void> {
+  return new Promise<void>(async (resolve, reject) => {
+    if(await userDAO.findOne(filter)) {
+      reject("Dieser Name ist bereits vergeben");
+    }
+    else {
+      resolve();
+    }
+  });
 }
 
 export default router;

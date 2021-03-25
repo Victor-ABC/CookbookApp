@@ -1,3 +1,5 @@
+/* Autor: Victor */
+
 #canvas {
     background-color: grey;
 }
@@ -10,6 +12,19 @@
 ::after {
   box-sizing: border-box;
 }
+div[value="invisible"] {
+  display: none;
+}
+.arrow {
+  width: 20px;
+  height: 20px;
+  background-color: #1fa712;
+}
+.arrow-grid {
+  display: grid;
+  grid-template-rows: percentage($number: 33);
+}
+
 details {
   margin: 1rem auto;
   padding: 0 1rem;
