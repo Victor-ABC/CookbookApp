@@ -14,7 +14,7 @@ interface formType {
 }
 const router = express.Router();
 
-router.post('/sign-up', async (req, res) => {
+router.post("/sign-up", async (req, res) => {
   const userDAO: GenericDAO<User> = req.app.locals.userDAO;
   const errors: string[] = [];
   checkFormPromise(req.body , ['email', 'name', 'password', 'passwordCheck'] , errors)
@@ -40,7 +40,7 @@ router.post('/sign-up', async (req, res) => {
   })
 });
 
-router.post('/sign-in', async (req, res) => {
+router.post("/sign-in", async (req, res) => {
   const userDAO: GenericDAO<User> = req.app.locals.userDAO;
   const errors: string[] = [];
 
@@ -58,7 +58,7 @@ router.post('/sign-in', async (req, res) => {
   })
 });
 
-router.delete('/sign-out', (req, res) => {
+router.delete("/sign-out", (req, res) => {
   authService.removeToken(res);
   res.status(200).end();
 });

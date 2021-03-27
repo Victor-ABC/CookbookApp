@@ -12,18 +12,7 @@
 ::after {
   box-sizing: border-box;
 }
-div[value="invisible"] {
-  display: none;
-}
-.arrow {
-  width: 20px;
-  height: 20px;
-  background-color: #1fa712;
-}
-.arrow-grid {
-  display: grid;
-  grid-template-rows: percentage($number: 33);
-}
+
 
 details {
   margin: 1rem auto;
@@ -118,4 +107,41 @@ summary {
 p {
   margin: 0 0 1em;
   line-height: 1.5;
+}
+#flex-container-keys {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 160px;
+}
+#flex-container-keys[value="invisible"]{
+  display: none;
+}
+.flex-container-keys-row {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+}
+
+.arrow {
+  flex-grow: 1;
+}
+div.unseen{
+  visibility: hidden;
+}
+.arrow-up::before {
+  font: 80px 'Font Awesome 5 Free';
+  content: '\f062';
+}
+.arrow-down::before {
+  font: 80px 'Font Awesome 5 Free';
+  content: '\f063';
+}
+.arrow-left::before {
+  font: 80px 'Font Awesome 5 Free';
+  content: '\f060';
+}
+.arrow-right::before {
+  font: 80px 'Font Awesome 5 Free';
+  content: '\f061';
 }

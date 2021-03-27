@@ -7,7 +7,6 @@ import { internalProperty } from 'lit-element';
 
 const sharedCSS = require('../shared.scss');
 const snakeCSS = require('./snake.component.scss');
-
 @customElement('app-snake-game')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class SignInComponent extends PageMixin(LitElement) {
@@ -48,13 +47,17 @@ class SignInComponent extends PageMixin(LitElement) {
             </button>
           </div>
           <canvas id="canvas" class="canvas" width="300" height="300"></canvas>
-          <div value="${this.visible}">
-            <div class="arrow invisible"></div>
-            <div class="arrow up"></div>
-            <div class="arrow invisible"></div>
-            <div class="arrow left"></div>
-            <div class="arrow down"></div>
-            <div class="arrow rignt"></div>
+          <div id="flex-container-keys" value="${this.visible}">
+            <div class="flex-container-keys-row">
+              <div class="arrow unseen"></div>
+              <div class="arrow arrow-up" @click="${this.throwKeyEventUp}"></div>
+              <div class="arrow unseen"></div>
+            </div>
+            <div class="flex-container-keys-row">
+              <div class="arrow arrow-left" @click="${this.throwKeyEventLeft}"></div>
+              <div class="arrow arrow-down" @click="${this.throwKeyEventDown}"></div>
+              <div class="arrow arrow-right" @click="${this.throwKeyEventRight}"></div>
+            </div>
           </div>
           <details id="detail-box">
             <summary>Info</summary>
@@ -79,5 +82,17 @@ class SignInComponent extends PageMixin(LitElement) {
     } else {
       this.visible = 'visible';
     }
+  }
+  throwKeyEventUp() {
+    window.dispatchEvent(new KeyboardEvent("keydown" , { "key" : "ArrowUp" } ))
+  }
+  throwKeyEventDown() {
+    window.dispatchEvent(new KeyboardEvent("keydown" , { "key" : "ArrowDown" } ))
+  }
+  throwKeyEventLeft() {
+    window.dispatchEvent(new KeyboardEvent("keydown" , { "key" : "ArrowLeft" } ))
+  }
+  throwKeyEventRight() {
+    window.dispatchEvent(new KeyboardEvent("keydown" , { "key" : "ArrowRight" } ))
   }
 }
