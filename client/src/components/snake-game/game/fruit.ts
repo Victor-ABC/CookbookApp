@@ -26,13 +26,13 @@ export class Fruit {
   public setRandomColor() {
     this.color = this.colorArray[Math.floor(Math.random() * this.colorArray.length)];
   }
-  public setRandomLocation(canvas: Canvas, snake: Snake) {
-    this.x = Math.floor((Math.random() * canvas.getWidth()) / 10) * 10;
-    this.y = Math.floor((Math.random() * canvas.getHeight()) / 10) * 10;
+  public setRandomLocation(canvas: Canvas, snake: Snake, scale: number) {
+    this.x = Math.floor((Math.random() * canvas.getWidth()) / scale) * scale;
+    this.y = Math.floor((Math.random() * canvas.getHeight()) / scale) * scale;
     // Check if it spawned in snake
     if (!snake.fruitPlacedSuccessfully(this.x, this.y)) {
       // Snake head
-      this.setRandomLocation(canvas, snake);
+      this.setRandomLocation(canvas, snake, scale);
     }
   }
   public draw(canvas: Canvas) {

@@ -14,8 +14,10 @@ export class Game {
   private canvas: Canvas;
   private gameInterval: NodeJS.Timeout | null = null;
   private gameField: HTMLElement;
+  private scale: number;
   private constructor(scale: number, gameField: HTMLElement) {
     // Singleton - Entwurfsmuster
+    this.scale = scale;
     this.gameField = gameField;
     const color = gameField.querySelector('#color-select') as HTMLSelectElement;
     this.snakeColor = color.value;
@@ -51,8 +53,8 @@ export class Game {
       'rgb(51, 204, 0)'
     ];
   }
-  public static startTheGame(appSnakeGame: HTMLElement) {
-    const game = new Game(10, appSnakeGame);
+  public static startTheGame(scale: number, appSnakeGame: HTMLElement) {
+    const game = new Game(scale, appSnakeGame);
     window.addEventListener('keydown', event => {
       switch (event.key) {
         case 'ArrowRight':
@@ -93,7 +95,7 @@ export class Game {
     if (!this.isCurrentlyRunning) {
       this.isCurrentlyRunning = true;
       this.fruit.setRandomColor();
-      this.fruit.setRandomLocation(this.canvas, this.snake);
+      this.fruit.setRandomLocation(this.canvas, this.snake, this.scale);
       this.gameInterval = setInterval(() => {
         this.canvas.clean(); //feld freiräumen
         this.fruit.draw(this.canvas);
@@ -113,7 +115,7 @@ export class Game {
             this.snake.addTailElement(0, 0, this.snakeColor);
           }
           this.fruit.setRandomColor();
-          this.fruit.setRandomLocation(this.canvas, this.snake);
+          this.fruit.setRandomLocation(this.canvas, this.snake, this.scale);
         }
       }, 250);
     }
