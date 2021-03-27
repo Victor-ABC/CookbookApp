@@ -1,8 +1,10 @@
 /* Autor: Victor */
 
 import { Canvas } from './canvas.js';
+import { TailElement } from './TailElement';
 
 export class Snake {
+  private static instance: Snake | null = null;
   private x: number;
   private y: number;
   private moveX: number;
@@ -11,7 +13,6 @@ export class Snake {
   private tailIndex;
   private tailElems: TailElement[];
   private oneDirectionPerCicle: boolean;
-  private static instance: Snake | null = null;
   private color: string;
   private constructor(color: string) {
     // Singleton - Entwurfsmuster
@@ -116,31 +117,5 @@ export class Snake {
       return true;
     }
     return false;
-  }
-}
-
-class TailElement {
-  private x: number;
-  private y: number;
-  private color: string;
-  constructor(x: number, y: number, color: string) {
-    this.x = x;
-    this.y = y;
-    this.color = color;
-  }
-  public drawTailElement(canvas: Canvas) {
-    canvas.draw(this.x, this.y, this.color);
-  }
-  public getX() {
-    return this.x;
-  }
-  public getY() {
-    return this.y;
-  }
-  public setX(newX: number) {
-    this.x = newX;
-  }
-  public setY(newY: number) {
-    this.y = newY;
   }
 }

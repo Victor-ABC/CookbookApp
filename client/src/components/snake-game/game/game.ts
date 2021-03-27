@@ -12,12 +12,12 @@ export class Game {
   private snake: Snake;
   private fruit: Fruit;
   private canvas: Canvas;
-  private gameInterval: any;
+  private gameInterval: NodeJS.Timeout | null = null;
   private gameField: HTMLElement;
   private constructor(scale: number, gameField: HTMLElement) {
     // Singleton - Entwurfsmuster
     this.gameField = gameField;
-    let color = gameField.querySelector('#color-select') as HTMLSelectElement;
+    const color = gameField.querySelector('#color-select') as HTMLSelectElement;
     this.snakeColor = color.value;
     this.snake = Snake.getInstance(this.snakeColor);
     this.fruit = Fruit.getInstance();
@@ -51,6 +51,44 @@ export class Game {
       'rgb(51, 204, 0)'
     ];
   }
+  public static startTheGame(appSnakeGame: HTMLElement) {
+    const game = new Game(10, appSnakeGame);
+    window.addEventListener('keydown', event => {
+      switch (event.key) {
+        case 'ArrowRight':
+          if (game.getSnake().getCurrentDirection() !== 'Left') {
+            game.getSnake().setCurrentDirection('Right');
+            game.getSnake().setDirection(game.getCanvas().getScale(), 0);
+          }
+          break;
+        case 'ArrowLeft':
+          if (game.getSnake().getCurrentDirection() !== 'Right') {
+            game.getSnake().setCurrentDirection('Left');
+            game.getSnake().setDirection(-game.getCanvas().getScale(), 0);
+          }
+          break;
+        case 'ArrowDown':
+          if (game.getSnake().getCurrentDirection() !== 'Up') {
+            game.getSnake().setCurrentDirection('Down');
+            game.getSnake().setDirection(0, game.getCanvas().getScale());
+          }
+          break;
+        case 'ArrowUp':
+          if (game.getSnake().getCurrentDirection() !== 'Down') {
+            game.getSnake().setCurrentDirection('Up');
+            game.getSnake().setDirection(0, -game.getCanvas().getScale());
+          }
+          break;
+      }
+    });
+    game.play();
+  }
+  public getSnake() {
+    return this.snake;
+  }
+  public getCanvas() {
+    return this.canvas;
+  }
   private play() {
     if (!this.isCurrentlyRunning) {
       this.isCurrentlyRunning = true;
@@ -83,53 +121,15 @@ export class Game {
   private stop() {
     if (this.isCurrentlyRunning) {
       this.isCurrentlyRunning = false;
-      clearInterval(this.gameInterval);
+      clearInterval(<NodeJS.Timeout>this.gameInterval);
       this.printGameOver();
     }
   }
   private printGameOver() {
-    let canvas = this.gameField.querySelector('#canvas') as HTMLCanvasElement;
+    const canvas = this.gameField.querySelector('#canvas') as HTMLCanvasElement;
     canvas.style.backgroundColor = 'green';
     setTimeout(() => {
       location.reload();
     }, 1500);
-  }
-  public getSnake() {
-    return this.snake;
-  }
-  public getCanvas() {
-    return this.canvas;
-  }
-  public static startTheGame(appSnakeGame: HTMLElement) {
-    const game = new Game(10, appSnakeGame);
-    window.addEventListener('keydown', event => {
-      switch (event.key) {
-        case 'ArrowRight':
-          if (game.getSnake().getCurrentDirection() !== 'Left') {
-            game.getSnake().setCurrentDirection('Right');
-            game.getSnake().setDirection(game.getCanvas().getScale(), 0);
-          }
-          break;
-        case 'ArrowLeft':
-          if (game.getSnake().getCurrentDirection() !== 'Right') {
-            game.getSnake().setCurrentDirection('Left');
-            game.getSnake().setDirection(-game.getCanvas().getScale(), 0);
-          }
-          break;
-        case 'ArrowDown':
-          if (game.getSnake().getCurrentDirection() !== 'Up') {
-            game.getSnake().setCurrentDirection('Down');
-            game.getSnake().setDirection(0, game.getCanvas().getScale());
-          }
-          break;
-        case 'ArrowUp':
-          if (game.getSnake().getCurrentDirection() !== 'Down') {
-            game.getSnake().setCurrentDirection('Up');
-            game.getSnake().setDirection(0, -game.getCanvas().getScale());
-          }
-          break;
-      }
-    });
-    game.play();
   }
 }

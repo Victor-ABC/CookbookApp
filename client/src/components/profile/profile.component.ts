@@ -1,6 +1,6 @@
 /* Autor: Victor */
 
-import { css, customElement, html, LitElement, query, unsafeCSS } from 'lit-element';
+import { css, customElement, html, LitElement, unsafeCSS } from 'lit-element';
 import { PageMixin } from '../page.mixin';
 
 const sharedCSS = require('../shared.scss');
@@ -23,6 +23,6 @@ class SignInComponent extends PageMixin(LitElement) {
       ${this.renderNotification()}
       <h1>This is the Profile section</h1>
       <app-snake-game></app-snake-game>
-`;
+    `;
   }
 }

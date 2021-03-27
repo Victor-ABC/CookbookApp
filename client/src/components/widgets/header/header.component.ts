@@ -31,13 +31,19 @@ class SignInComponent extends PageMixin(LitElement) {
   render() {
     return html`
       <nav class="flex-box navbar fixed-top navbar-expand-lg navbar-dark bg-success">
-      <span class="flex-item main-icon"></span>
-      <a class="flex-item navbar-brand" href="/"><span class="logo"></span>${this.title}</a>
+        <span class="flex-item main-icon"></span>
+        <a class="flex-item navbar-brand" href="/"><span class="logo"></span>${this.title}</a>
         <form class="form-flex-box">
-          <input id="search-field" class="form-item form-control" type="search" placeholder="z.B. Pizza, Pasta ..." aria-label="Search">
+          <input
+            id="search-field"
+            class="form-item form-control"
+            type="search"
+            placeholder="z.B. Pizza, Pasta ..."
+            aria-label="Search"
+          />
           <select id="search-select" class="form-item form-select custom-select" id="inputGroupSelect01">
-              <option selected>in Rezepte</option>
-              <option value="1">in Kochbücher</option>
+            <option selected>in Rezepte</option>
+            <option value="1">in Kochbücher</option>
           </select>
           <button id="search-button" class="form-item btn btn-light my-2 my-sm-0" type="submit"></button>
         </form>
@@ -83,5 +89,4 @@ class SignInComponent extends PageMixin(LitElement) {
   close() {
     this.navbarOpen = false;
   }
-
 }

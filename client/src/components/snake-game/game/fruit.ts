@@ -4,12 +4,17 @@ import { Snake } from './snake';
 import { Canvas } from './canvas';
 
 export class Fruit {
-  private x: number = 0;
-  private y: number = 0;
-  private colorArray: string[] = ['red', 'blue', 'yellow', 'purple'];
-  private color: string = 'green';
   private static instance: Fruit | null = null;
-  private constructor() {} // Singleton - Entwurfsmuster
+  private x;
+  private y;
+  private colorArray: string[];
+  private color;
+  private constructor() {
+    this.x = 0;
+    this.y = 0;
+    this.colorArray = ['red', 'blue', 'yellow', 'purple'];
+    this.color = 'green';
+  } // Singleton - Entwurfsmuster
   public static getInstance(): Fruit {
     if (!this.instance) {
       this.instance = new Fruit();

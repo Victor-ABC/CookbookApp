@@ -1,6 +1,5 @@
 /* Autor: TODO */
 
-
 import { css, customElement, html, LitElement, internalProperty, unsafeCSS } from 'lit-element';
 import { router } from '../../router';
 import { httpClient } from '../../http-client';
@@ -47,7 +46,7 @@ class AppComponent extends LitElement {
         '/users/sign-in': () => html`<app-sign-in></app-sign-in>`,
         '/users/sign-up': () => html`<app-sign-up></app-sign-up>`,
         '/users/sign-out': () => html`<app-sign-out></app-sign-out>`,
-        '/users/profile' : () => html`<app-profile></app-profile>`
+        '/users/profile': () => html`<app-profile></app-profile>`
       },
       () => html`<app-tasks></app-tasks>`
     );
@@ -60,4 +59,3 @@ class AppComponent extends LitElement {
     `;
   }
 }
-

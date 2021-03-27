@@ -1,10 +1,10 @@
 /* Autor: Victor */
 
 export class Canvas {
+  private static instance: Canvas | null = null;
   private canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
   private scale: number;
-  private static instance: Canvas | null = null;
   private constructor(scale: number, gameField: HTMLElement) {
     this.canvas = gameField.querySelector('#canvas') as HTMLCanvasElement;
     this.canvas.focus();
@@ -26,9 +26,9 @@ export class Canvas {
   public clean() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
   }
-  public drawImage(image: any, x: number, y: number, height: number, width: number) {
-    this.ctx.drawImage(image, x, y, height, width);
-  }
+  // public drawImage(image: any, x: number, y: number, height: number, width: number) {
+  //   this.ctx.drawImage(image, x, y, height, width);
+  // }
   public getWidth(): number {
     return this.canvas.width;
   }
