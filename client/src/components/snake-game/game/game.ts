@@ -53,7 +53,7 @@ export class Game {
       'rgb(51, 204, 0)'
     ];
   }
-  public static startTheGame(scale: number, appSnakeGame: HTMLElement) {
+  public static startTheGame(scale: number, appSnakeGame: HTMLElement, speed: number) {
     const game = new Game(scale, appSnakeGame);
     window.addEventListener('keydown', event => {
       switch (event.key) {
@@ -83,7 +83,7 @@ export class Game {
           break;
       }
     });
-    game.play();
+    game.play(speed);
   }
   public getSnake() {
     return this.snake;
@@ -91,7 +91,7 @@ export class Game {
   public getCanvas() {
     return this.canvas;
   }
-  private play() {
+  private play(speed : number) {
     if (!this.isCurrentlyRunning) {
       this.isCurrentlyRunning = true;
       this.fruit.setRandomColor();
@@ -107,7 +107,7 @@ export class Game {
         if (this.snake.outOfMap(this.canvas)) {
           this.stop();
         }
-        if (this.snake.isOnFruitCheck(this.fruit.getX(), this.fruit.getY())) {
+        if (this.snake.isOnFruit(this.fruit.getX(), this.fruit.getY())) {
           if (this.snakeColor === 'rainbow') {
             this.snake.addTailElement(0, 0, this.rgbVerlauf[this.rgbVerlaufIndex % this.rgbVerlauf.length]);
             this.rgbVerlaufIndex++;
@@ -117,7 +117,7 @@ export class Game {
           this.fruit.setRandomColor();
           this.fruit.setRandomLocation(this.canvas, this.snake, this.scale);
         }
-      }, 250);
+      }, speed);
     }
   }
   private stop() {

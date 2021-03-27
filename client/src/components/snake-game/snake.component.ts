@@ -25,6 +25,9 @@ class SignInComponent extends PageMixin(LitElement) {
   @query('#scale-select')
   scaleElement!: HTMLSelectElement;
 
+  @query('#speed-select')
+  speedElement!: HTMLSelectElement;
+
   render() {
     return html`
       <details>
@@ -49,6 +52,11 @@ class SignInComponent extends PageMixin(LitElement) {
               <option class="item-class" value="20">Mittel</option>
               <option class="item-class" value="30">Groß</option>
               <option class="item-class" value="50">XXL</option>
+            </select>
+            <select id="speed-select" class="game-header-item">
+              <option class="item-class" value="400">Langsam</option>
+              <option class="item-class" value="250" selected>Normal</option>
+              <option class="item-class" value="180">Schnell</option>
             </select>
             <button id="start" class="game-header-item btn btn-success" @click="${this.onClick}">Start</button>
             <button id="toggleVisibility" class="game-header-item btn btn-success" @click="${this.toggleVisibility}">
@@ -82,7 +90,7 @@ class SignInComponent extends PageMixin(LitElement) {
     `;
   }
   async onClick() {
-    Game.startTheGame(Number(this.scaleElement.value), this.renderRoot.querySelector('#gameField')!);
+    Game.startTheGame(Number(this.scaleElement.value), this.renderRoot.querySelector('#gameField')! , Number(this.speedElement.value));
     this.shadowRoot?.querySelector('#game-header-container')!.classList.add('hidden');
   }
   async toggleVisibility() {

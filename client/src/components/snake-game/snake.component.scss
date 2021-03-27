@@ -64,7 +64,7 @@ img {
   border-radius: 6px;
 }
 
-#color-select {
+#color-select , #scale-select, #speed-select{
   border-radius: 3px;
   text-align: center;
   color: #1fa712;
@@ -72,9 +72,9 @@ img {
 #game-header-container {
   width: 100%;
   display: flex;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
-  align-items: stretch;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start, stretch;
   &[class="hidden"]{
     display: none;
   }

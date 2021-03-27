@@ -30,8 +30,7 @@ export class Fruit {
     this.x = Math.floor((Math.random() * canvas.getWidth()) / scale) * scale;
     this.y = Math.floor((Math.random() * canvas.getHeight()) / scale) * scale;
     // Check if it spawned in snake
-    if (!snake.fruitPlacedSuccessfully(this.x, this.y)) {
-      // Snake head
+    if (snake.fruitPlacedSuccessfully(this.x, this.y) == false) {
       this.setRandomLocation(canvas, snake, scale);
     }
   }

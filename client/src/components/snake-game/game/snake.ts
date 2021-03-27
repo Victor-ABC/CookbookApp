@@ -99,19 +99,18 @@ export class Snake {
     return false;
   }
   public fruitPlacedSuccessfully(fruitPosX: number, fruitPosY: number) {
-    if (this.isOnFruitCheck(fruitPosX, fruitPosY)) {
+    if (this.isOnFruit(fruitPosX, fruitPosY)) {
       // Snake head
       return false;
     }
-    for (let i = 0; i < this.tailElems.length; i++) {
-      if (this.x === this.tailElems[i].getX() && this.y === this.tailElems[i].getY()) {
-        console.log('neu berechnet');
+    for (let i = 0; i < this.tailIndex ; i++) {
+      if (fruitPosX === this.tailElems[i].getX() && fruitPosY === this.tailElems[i].getY()) {
         return false;
       }
     }
     return true;
   }
-  public isOnFruitCheck(fruitPosX: number, fruitPosY: number) {
+  public isOnFruit(fruitPosX: number, fruitPosY: number) {
     if (this.x === fruitPosX && this.y === fruitPosY) {
       // Snake head
       return true;
