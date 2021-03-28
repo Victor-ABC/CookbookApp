@@ -47,9 +47,9 @@ class AppComponent extends LitElement {
         '/users/sign-up': () => html`<app-sign-up></app-sign-up>`,
         '/users/sign-out': () => html`<app-sign-out></app-sign-out>`,
         '/users/profile': () => html`<app-profile></app-profile>`,
-        '/cookbooks': () => html`<app-cookbooks></app-cookbooks>`,
-        '/cookbooks/all': () => html`<app-cookbooks></app-cookbooks>`,
-        '/cookbooks/details/:id': params => html`<app-cookbook-details .cookbookId=${params.id}></app-cookbook-details>`
+        '/cookbooks/details/:id': params =>
+          html`<app-cookbook-details .cookbookId=${params.id}></app-cookbook-details>`,
+        '/cookbooks/:id': params => html`<app-cookbooks .userId=${params.id}></app-cookbooks>`
       },
       () => html`<app-tasks></app-tasks>`
     );

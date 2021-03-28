@@ -18,16 +18,16 @@ class CookbookComponent extends LitElement {
     `
   ];
 
-  @property({ attribute: 'data-id', type: String }) bookId = '';
+  @property({ attribute: 'data-id', type: String }) bookId!: string;
+
+  @property({ attribute: 'data-own-cookbooks', type: String }) ownCookbooks!: string;
 
   render() {
     return html`
-      <span data-id="${this.bookId}"><slot name="title"></slot></span>
-      <button class="btn btn-sm btn-info" @click="${() => this.emit('appcookbookdetailsclick')}">Details</button>
-      ${location.pathname !== '/app/cookbooks/all'
-        ? html`<button class="btn btn-sm btn-danger" @click="${() => this.emit('appcookbookdeleteclick')}">
-            Entfernen
-          </button>`
+      <span class="book-id" data-id="${this.bookId}"><slot name="title"></slot></span>
+      <span class="show-details" @click="${() => this.emit('appcookbookdetailsclick')}"></span>
+      ${this.ownCookbooks === 'true'
+        ? html`<span class="remove-cookbook" @click="${() => this.emit('appcookbookdeleteclick')}"></span>`
         : nothing}
     `;
   }

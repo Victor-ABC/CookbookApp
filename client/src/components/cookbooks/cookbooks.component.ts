@@ -4,6 +4,7 @@ import { nothing } from 'lit-html';
 import { css, customElement, html, LitElement, internalProperty, query, unsafeCSS, property } from 'lit-element';
 import { PageMixin } from '../page.mixin';
 import { router } from '../../router';
+import { httpClient } from '../../http-client';
 
 interface Cookbook {
   id: string;
@@ -25,26 +26,37 @@ class CookbooksComponent extends PageMixin(LitElement) {
     `
   ];
 
-  @query('#title') titleElement!: HTMLInputElement;
+  @query('#title')
+  titleElement!: HTMLInputElement;
+
+  @property()
+  userId!: string;
 
   @internalProperty()
-  private cookbooks: Cookbook[] = [
-    { id: 'id1', title: 'Mein veganes Kochbuch' },
-    { id: 'id2', title: 'Gesunde Ernährung' },
-    { id: 'id3', title: 'Leckere Backrezepte' },
-    { id: 'id4', title: 'Die beliebtesten Gerichte Deutschlands' },
-    { id: 'id5', title: 'Französische Küche mit Pierre' }
-  ];
+  cookbooks: Cookbook[] = [];
 
   @internalProperty()
-  private isMyCookbooks: boolean = location.pathname !== '/app/cookbooks/all';
+  title!: string;
+
+  ownCookbooks!: boolean;
+
+  async firstUpdated() {
+    this.ownCookbooks = this.userId === localStorage.getItem('user-id');
+
+    // fetch cookbooks
+    if (this.userId === 'all') {
+      await this.fetchAllCookbooks();
+    } else {
+      await this.fetchUserCookbooks();
+    }
+  }
 
   render() {
     return html`
       ${this.renderNotification()}
-      <h1>${this.isMyCookbooks ? 'Meine Kochbücher' : 'Alle Kochbücher'}</h1>
-      ${this.isMyCookbooks
-        ? html`<form @submit="${this.submit}">
+      <h1>${this.title}</h1>
+      ${this.ownCookbooks
+        ? html`<form @submit="${this.addCookbook}">
             <input
               class="form-control form-control-lg"
               type="text"
@@ -59,6 +71,7 @@ class CookbooksComponent extends PageMixin(LitElement) {
       <div class="cookbooks">
         ${this.cookbooks.map(
           book => html`<app-cookbook
+            data-own-cookbooks="${this.ownCookbooks}"
             data-id="${book.id}"
             @appcookbookdetailsclick=${() => this.showDetails(book)}
             @appcookbookdeleteclick=${() => this.deleteCookbook(book)}
@@ -69,19 +82,50 @@ class CookbooksComponent extends PageMixin(LitElement) {
     `;
   }
 
-  async submit(event: Event) {
+  async addCookbook(event: Event) {
     event.preventDefault();
     const partialCookbook: Cookbook = { title: this.titleElement.value } as Cookbook;
-    this.cookbooks = [...this.cookbooks, partialCookbook];
-    this.titleElement.value = '';
+
+    try {
+      const response = await httpClient.post('/cookbooks', partialCookbook);
+      const cookbook: Cookbook = await response.json();
+      this.cookbooks = [...this.cookbooks, cookbook];
+      this.titleElement.value = '';
+    } catch ({ message }) {
+      this.setNotification({ errorMessage: message });
+    }
   }
 
-  async showDetails(bookToOpen: Cookbook) {
-    router.navigate(`/cookbooks/details/${bookToOpen.id}`);
+  async showDetails(cookbook: Cookbook) {
+    router.navigate(`/cookbooks/details/${cookbook.id}`);
   }
 
   async deleteCookbook(bookToRemove: Cookbook) {
-    this.cookbooks = this.cookbooks.filter(book => book.id !== bookToRemove.id);
-    Promise.resolve();
+    try {
+      await httpClient.delete(`/cookbooks/${bookToRemove.id}`);
+      this.cookbooks = this.cookbooks.filter(book => book.id !== bookToRemove.id);
+    } catch ({ message }) {
+      this.setNotification({ errorMessage: message });
+    }
+  }
+
+  async fetchAllCookbooks() {
+    const response = await httpClient.get('/cookbooks');
+    const json = (await response.json()).results;
+    this.cookbooks = json.cookbooks;
+    this.title = 'Alle Kochbücher';
+  }
+
+  async fetchUserCookbooks() {
+    try {
+      const response = await httpClient.get(`/cookbooks/${this.userId}`);
+      const json = (await response.json()).results;
+      this.cookbooks = json.cookbooks;
+      this.title = `${json.creator}'s Kochbücher`;
+    } catch ({ message }) {
+      this.setNotification({ errorMessage: 'Der Benutzer existiert nicht. Hier siehst du alle Kochbücher.' });
+      router.navigate('/cookbooks/all');
+      this.fetchAllCookbooks();
+    }
   }
 }

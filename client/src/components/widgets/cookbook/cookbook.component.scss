@@ -21,10 +21,26 @@
   border-bottom-left-radius: 0.25rem;
 }
 
-button {
+.remove-cookbook {
   margin-left: 0.75rem;
 }
 
-span {
+.remove-cookbook::before {
+  color: red;
+  font: normal normal normal 1.25rem/1 'Font Awesome 5 Free';
+  content: '\f2ed';
+}
+
+.show-details::before {
+  color: blue;
+  font: normal normal normal 1.25rem/1 'Font Awesome 5 Free';
+  content: '\f05a';
+}
+
+.book-id {
   flex-grow: 1;
+}
+
+:host(:hover) {
+  background-color: rgba(0, 0, 0, 0.125);
 }
