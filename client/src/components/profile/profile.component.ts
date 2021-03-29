@@ -60,7 +60,7 @@ class SignInComponent extends PageMixin(LitElement) {
       ${guard([this.messages] , () => html`
       ${repeat(
         this.messages,
-        message => message.date,
+        message => message.id,
         message => html`
         <div id="container-one-message">
           <h5 class="item"> ${message.title}</h5>
@@ -77,7 +77,7 @@ class SignInComponent extends PageMixin(LitElement) {
 
   async deleteMessage (message : Message) {
     try {
-      await httpClient.delete('/tasks/' + message.id);
+      await httpClient.delete('/message' + message.id);
       this.messages = this.messages.filter(m => m.id !== message.id);
     } catch ({ message }) {
       this.setNotification({ errorMessage: message });
