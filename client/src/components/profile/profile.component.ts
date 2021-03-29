@@ -66,7 +66,7 @@ class SignInComponent extends PageMixin(LitElement) {
           <h5 class="item"> ${message.title}</h5>
           <p class="item">${message.content}</p>
           <small class="item">${message.date}</small>
-          <button class="btn btn-secondary" @click="${this.deleteMessage(message)}">löschen</button>
+          <button class="btn btn-secondary" @click="${() => this.deleteMessage(message)}">löschen</button>
         </div>
         `
       )}`)
@@ -77,7 +77,7 @@ class SignInComponent extends PageMixin(LitElement) {
 
   async deleteMessage (message : Message) {
     try {
-      await httpClient.delete('/message' + message.id);
+      await httpClient.delete('/message/' + message.id);
       this.messages = this.messages.filter(m => m.id !== message.id);
     } catch ({ message }) {
       this.setNotification({ errorMessage: message });
