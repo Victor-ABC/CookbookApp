@@ -69,6 +69,7 @@ class CreateMessageComponent extends PageMixin(LitElement) {
     `;
   }
 
+
   async checkIfNameExists() {
     if (this.nameElement.value) {
       try {
@@ -96,11 +97,13 @@ class CreateMessageComponent extends PageMixin(LitElement) {
 
   async submit() {
     if (this.isFormValid()) {
+      let date = new Date;
+      let dateString = `am ${date.getDate()}.${date.getMonth()}.${date.getFullYear()} um ${date.getHours()}:${date.getMinutes()} Uhr`
       const message = {
         to: this.nameElement.value,
         title: this.titleElement.value,
         content: this.contentElement.value,
-        date: Date.now()
+        date: dateString
       };
       try {
         await httpClient.post('/message/', message);

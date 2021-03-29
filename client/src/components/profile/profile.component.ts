@@ -11,6 +11,7 @@ const sharedCSS = require('../shared.scss');
 const profileCSS = require('./profile.component.scss');
 
 interface Message {
+  id: string,
   to: string;
   title: string;
   content: string;
@@ -50,26 +51,39 @@ class SignInComponent extends PageMixin(LitElement) {
     return html`
       <app-snake-game></app-snake-game>
       <details>
-      <summary>Anderen Usern ein Kompliment machen  <button class="btn btn-success" @click="${this.refresh}">refresh</button></summary>
+      <summary>Nachricht Senden  <button class="btn btn-success" @click="${this.refresh}">refresh</button></summary>
       <app-message-create></app-message-create>
       </details>
       ${this.renderNotification()}
-      <h1>Profile</h1>
-      <div class="messages">
+      <h1>Meine Nachrichten</h1>
+      <div id="container-all-message">
       ${guard([this.messages] , () => html`
       ${repeat(
         this.messages,
         message => message.date,
         message => html`
-          <div>${message.title}</div>
-          <div>${message.content}</div>
-          <div>${message.date}</div>
+        <div id="container-one-message">
+          <h5 class="item"> ${message.title}</h5>
+          <p class="item">${message.content}</p>
+          <small class="item">${message.date}</small>
+          <button class="btn btn-secondary" @click="${this.deleteMessage(message)}">löschen</button>
+        </div>
         `
       )}`)
       }
       </div>
     `;
   }
+
+  async deleteMessage (message : Message) {
+    try {
+      await httpClient.delete('/tasks/' + message.id);
+      this.messages = this.messages.filter(m => m.id !== message.id);
+    } catch ({ message }) {
+      this.setNotification({ errorMessage: message });
+    }
+  }
+
   async refresh () {
     try {
       const response = await httpClient.get('/message');

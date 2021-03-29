@@ -1,6 +1,11 @@
 /* Autor: Victor Corbet */
 
-details {
+
+h1 {
+    text-align: center;
+}
+
+details , #container-all-message {
     margin: 1rem auto;
     padding: 0 1rem;
     width: 35em;
@@ -28,5 +33,32 @@ details {
     font-size: 1.33em;
     font-weight: bold;
     cursor: pointer;
+}
+
+
+#container-one-message {
+    align-items: center;
+    background-color: white;
+    margin: 10px;
+    padding: 10px;
+    border:#1fa712 solid 2px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+}
+#container-one-message  > button {
+    margin: 10px;
+}
+#container-one-message  > p {
+    border: solid #1fa712 1px;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+
+.item {
+    max-width: 300px;
+    word-wrap: break-word;
+    align-self: auto;
 }
   
