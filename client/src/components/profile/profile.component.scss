@@ -1,2 +1,32 @@
-/* Autor: Victor */
+/* Autor: Victor Corbet */
 
+details {
+    margin: 1rem auto;
+    padding: 0 1rem;
+    width: 35em;
+    max-width: calc(100% - 2rem);
+    position: relative;
+    border: 1px solid #39703f;
+    transition: background-color .4s;
+    background-color: rgb(168, 255, 168);
+    color: #1fa712;
+    text-align: center;
+    align-items: center;
+    
+    &[open] {
+      background-color: white;
+      #text-zeitvertreib {
+        display: none;
+      }
+    }
+  }
+
+  summary {
+    padding: 1rem 2em 1rem 0;
+    display: block;
+    position: relative;
+    font-size: 1.33em;
+    font-weight: bold;
+    cursor: pointer;
+}
+  

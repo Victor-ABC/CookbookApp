@@ -1,4 +1,4 @@
-/* Autor: Victor */
+/* Autor: Victor Corbet */
 
 import express from 'express';
 import bcrypt from 'bcryptjs';
@@ -14,31 +14,7 @@ interface formType {
 }
 const router = express.Router();
 
-router.post("/sign-up", async (req, res) => {
-  const userDAO: GenericDAO<User> = req.app.locals.userDAO;
-  const errors: string[] = [];
-  checkFormPromise(req.body , ['email', 'name', 'password', 'passwordCheck'] , errors)
-  .then( () => {
-    return validatePasswords(req.body);
-  })
-  .then( () => {
-    return checkIfUserAlreadyExistsPromise({ name : req.body.name }, userDAO);
-  })
-  .then( async () => {
-    const createdUser = await userDAO.create({
-      name: req.body.name,
-      email: req.body.email,
-      password: await bcrypt.hash(req.body.password, 10)
-    });
-    authService.createAndSetToken({ id: createdUser.id }, res);
-    res.status(201).json(createdUser);
-  })
-  .catch( (message : string[] ) => {
-    authService.removeToken(res);
-    message.join('\n');
-    res.status(400).json({ message });
-  })
-});
+
 
 router.post("/sign-in", async (req, res) => {
   const userDAO: GenericDAO<User> = req.app.locals.userDAO;
@@ -75,6 +51,32 @@ router.post("/exists" , (req, res) => {
   )
 })
 
+router.post("/sign-up", (req, res) => {
+  const userDAO: GenericDAO<User> = req.app.locals.userDAO;
+  const errors: string[] = [];
+  checkFormPromise(req.body , ['email', 'name', 'password', 'passwordCheck'] , errors)
+  .then( () => {
+    return validatePasswords(req.body);
+  })
+  .then( () => {
+    return checkIfUserAlreadyExistsPromise({ name : req.body.name }, userDAO);
+  })
+  .then( async () => {
+    const createdUser = await userDAO.create({
+      name: req.body.name,
+      email: req.body.email,
+      password: await bcrypt.hash(req.body.password, 10)
+    });
+    authService.createAndSetToken({ id: createdUser.id }, res);
+    res.status(201).json(createdUser);
+  })
+  .catch( (message : string[] ) => {
+    authService.removeToken(res);
+    message.join('\n');
+    res.status(400).json({ message });
+  })
+});
+
 router.delete('/', authService.expressMiddleware, async (req, res) => {
   const userDAO: GenericDAO<User> = req.app.locals.userDAO;
   const commentDAO: GenericDAO<Comment> = req.app.locals.commentDAO;
@@ -90,7 +92,7 @@ router.delete('/', authService.expressMiddleware, async (req, res) => {
   res.status(200).end();
 });
 
-function checkFormPromise(
+export function checkFormPromise(
   form: formType,
   requiredFields: string[],
   errors: string[]

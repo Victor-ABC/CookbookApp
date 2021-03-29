@@ -1,4 +1,4 @@
-/* Autor: Victor */
+/* Autor: Victor Corbet */
 
 import { Snake } from './snake';
 import { Canvas } from './canvas';

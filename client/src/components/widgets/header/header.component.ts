@@ -1,4 +1,4 @@
-/* Autor: Victor */
+/* Autor: Victor Corbet */
 
 import { css, customElement, html, LitElement, property, internalProperty, unsafeCSS } from 'lit-element';
 import { classMap } from 'lit-html/directives/class-map';

@@ -37,6 +37,7 @@ class SignUpComponent extends PageMixin(LitElement) {
 
   @query('#name-check')
   messageDiv!: HTMLDivElement;
+  
   render() {
     return html`
       ${this.renderNotification()}
@@ -79,7 +80,7 @@ class SignUpComponent extends PageMixin(LitElement) {
             name="passwordCheck"
           />
           <div class="invalid-feedback">
-            Erneute Passworteingabe ist erforderlich und muss mit der ersten Passworteingabe übereinstimmen
+            Eine erneute Eingabe ist erforderlich und muss mit der ersten Passworteingabe übereinstimmen
           </div>
         </div>
         <button class="btn btn-success" type="button" @click="${this.submit}">Konto erstellen</button>

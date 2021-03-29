@@ -1,9 +1,10 @@
-/* Autor: Victor */
+/* Autor: Prof. Dr. Norman Lahme-Hütig (FH Münster) */
 
-import { css, customElement, html, LitElement, query, unsafeCSS } from 'lit-element';
-import { httpClient } from '../../http-client';
 import { router } from '../../router';
 import { PageMixin } from '../page.mixin';
+import { css, customElement, html, LitElement, query, unsafeCSS } from 'lit-element';
+import { httpClient } from '../../http-client';
+
 
 const sharedCSS = require('../shared.scss');
 const componentCSS = require('./sign-in.component.scss');
@@ -20,14 +21,14 @@ class SignInComponent extends PageMixin(LitElement) {
     `
   ];
 
-  @query('form')
-  form!: HTMLFormElement;
-
   @query('#name')
   nameElement!: HTMLInputElement;
 
   @query('#password')
   passwordElement!: HTMLInputElement;
+
+  @query('form')
+  form!: HTMLFormElement;
 
   render() {
     return html`

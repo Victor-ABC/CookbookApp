@@ -1,4 +1,4 @@
-/* Autor: Victor */
+/* Autor: Victor Corbet */
 
 import { Canvas } from './canvas.js';
 import { TailElement } from './TailElement';

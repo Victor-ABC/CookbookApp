@@ -1,4 +1,4 @@
-/* Autor: Victor */
+/* Autor: Victor Corbet */
 
 export class Canvas {
   private static instance: Canvas | null = null;

@@ -1,4 +1,4 @@
-/* Autor: Victor */
+/* Autor: Victor Corbet */
 
 import { css, customElement, html, LitElement, query, unsafeCSS } from 'lit-element';
 import { PageMixin } from '../page.mixin';

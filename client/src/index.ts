@@ -9,3 +9,4 @@ import './components/profile/profile.component.ts';
 import './components/snake-game/snake.component.ts';
 import './components/widgets/header/header.component.ts';
 import './components/widgets/notification/notification.component.ts';
+import './components/messages/sent.component.ts'
