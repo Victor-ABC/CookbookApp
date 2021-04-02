@@ -121,7 +121,9 @@ class SignUpComponent extends PageMixin(LitElement) {
         passwordCheck: this.passwordCheckElement.value
       };
       try {
-        await httpClient.post('/users/sign-up', accountData);
+        const response = await httpClient.post('/users/sign-up', accountData);
+        const json = await response.json();
+        localStorage.setItem('user-id' , json.id);
         router.navigate('api');
       } catch ({ message }) {
         this.setNotification({ errorMessage: message });
