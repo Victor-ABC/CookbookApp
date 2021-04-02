@@ -138,7 +138,7 @@ function validatePasswords(
     resolve();
   });
 }
-function checkIfUserAlreadyExistsPromise(
+export function checkIfUserAlreadyExistsPromise(
   filter: Partial<User>,
   userDAO: GenericDAO<User>
 ): Promise<void> {

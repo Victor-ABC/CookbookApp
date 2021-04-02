@@ -63,9 +63,9 @@ class SignInComponent extends PageMixin(LitElement) {
         message => message.id,
         message => html`
         <div id="container-one-message">
-          <h5 class="item"> ${message.title}</h5>
-          <p class="item">${message.content}</p>
-          <small class="item">${message.date}</small>
+          <h5 class="item title"> ${message.title}</h5>
+          <p class="item content">${message.content}</p>
+          <small class="item date">${message.date}</small>
           <button class="btn btn-secondary" @click="${() => this.deleteMessage(message)}">löschen</button>
         </div>
         `

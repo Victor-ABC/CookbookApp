@@ -6,7 +6,7 @@ import { httpClient } from '../../http-client';
 
 
 const sharedCSS = require('../shared.scss');
-const componentCSS = require('./sent.component.scss');
+const componentCSS = require('./message-create.component.scss');
 
 @customElement('app-message-create')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -78,10 +78,12 @@ class CreateMessageComponent extends PageMixin(LitElement) {
           .then(() => {
             this.messageDiv.textContent = 'Benutzer existiert nicht';
             this.messageDiv.setAttribute('class', 'error');
+            // this.setNotification({ errorMessage: "Benutzer existiert nicht" })
           })
           .catch(() => {
             this.messageDiv.textContent = 'Benutzer existiert';
             this.messageDiv.setAttribute('class', 'success');
+            // this.setNotification({ infoMessage: "Benutzer existiert" })
           })
           .finally(() => {
             setTimeout(() => {
@@ -108,7 +110,7 @@ class CreateMessageComponent extends PageMixin(LitElement) {
       try {
         await httpClient.post('/message/', message);
       } catch ({ message }) {
-        this.setNotification({ errorMessage: message });
+        this.setNotification({ infoMessage: message });
       }
     } else {
       this.form.classList.add('was-validated');

@@ -6,5 +6,5 @@ export interface Message extends Entity {
     to : string;
     title: string;
     content : string;
-    date: number;
+    date: string;
 }

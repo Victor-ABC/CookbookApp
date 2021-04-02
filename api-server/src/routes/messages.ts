@@ -12,8 +12,15 @@ const router = express.Router();
 
 router.post('' , authService.expressMiddleware , async (req, res) => {
     const messageDAO: GenericDAO<Message> = req.app.locals.messageDAO;
+    const userDAO: GenericDAO<User> = req.app.locals.userDAO;
     const errors: string[] = [];
     checkFormPromise(req.body , ['to', 'title', 'content', 'date'] , errors)
+    .then( async () => {
+        let me : User = <User> await userDAO.findOne({id : res.locals.user.id});
+        if(me.name === req.body.to) {
+            return Promise.reject("Sie können sich selbst keine Nachrichten schicken")
+        }
+    })
     .then( () => {
         let message = {
             to: req.body.to,
@@ -27,12 +34,12 @@ router.post('' , authService.expressMiddleware , async (req, res) => {
         res.status(200).json({ results : message}  );
     })
     .catch( (message : string[] ) => {
-        res.status(400).json({ message });
+        res.status(401).json({ message });
     })
 })
 
 
-router.get("" , authService.expressMiddleware ,  async (req, res) => {
+router.get('' , authService.expressMiddleware ,  async (req, res) => {
     const messageDAO: GenericDAO<Message> = req.app.locals.messageDAO;
     const userDAO: GenericDAO<User> = req.app.locals.userDAO;
     let user = await userDAO.findOne({ id : res.locals.user.id })
