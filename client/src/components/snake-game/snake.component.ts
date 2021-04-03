@@ -89,7 +89,11 @@ export class SnakeGameComponent extends PageMixin(LitElement) {
     `;
   }
   async onClick() {
-    Game.startTheGame(Number(this.scaleElement.value), this.renderRoot.querySelector('#gameField')! , Number(this.speedElement.value));
+    Game.startTheGame(
+      Number(this.scaleElement.value),
+      this.renderRoot.querySelector('#gameField')!,
+      Number(this.speedElement.value)
+    );
     this.shadowRoot?.querySelector('#game-header-container')!.classList.add('hidden');
   }
   async toggleVisibility() {
@@ -100,15 +104,15 @@ export class SnakeGameComponent extends PageMixin(LitElement) {
     }
   }
   throwKeyEventUp() {
-    window.dispatchEvent(new KeyboardEvent("keydown" , { "key" : "ArrowUp" } ))
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
   }
   throwKeyEventDown() {
-    window.dispatchEvent(new KeyboardEvent("keydown" , { "key" : "ArrowDown" } ))
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
   }
   throwKeyEventLeft() {
-    window.dispatchEvent(new KeyboardEvent("keydown" , { "key" : "ArrowLeft" } ))
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' }));
   }
   throwKeyEventRight() {
-    window.dispatchEvent(new KeyboardEvent("keydown" , { "key" : "ArrowRight" } ))
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
   }
 }

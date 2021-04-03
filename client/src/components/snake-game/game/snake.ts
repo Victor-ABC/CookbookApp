@@ -103,7 +103,7 @@ export class Snake {
       // Snake head
       return false;
     }
-    for (let i = 0; i < this.tailIndex ; i++) {
+    for (let i = 0; i < this.tailIndex; i++) {
       if (fruitPosX === this.tailElems[i].getX() && fruitPosY === this.tailElems[i].getY()) {
         return false;
       }

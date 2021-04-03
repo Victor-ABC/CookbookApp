@@ -26,10 +26,16 @@ export const PageMixin = <T extends new (...args: any[]) => LitElement>(base: T)
     }
 
     protected renderNotification() {
-      return html` <app-notification error="${this.errorMessage}" success="${this.successMessage}" info="${this.infoMessage}"></app-notification> `;
+      return html`
+        <app-notification
+          error="${this.errorMessage}"
+          success="${this.successMessage}"
+          info="${this.infoMessage}"
+        ></app-notification>
+      `;
     }
 
-    protected setNotification({ errorMessage = '', infoMessage = '' , successMessage = ''}) {
+    protected setNotification({ errorMessage = '', infoMessage = '', successMessage = '' }) {
       this.successMessage = successMessage;
       this.errorMessage = errorMessage;
       this.infoMessage = infoMessage;

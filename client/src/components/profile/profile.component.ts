@@ -11,7 +11,7 @@ const sharedCSS = require('../shared.scss');
 const profileCSS = require('./profile.component.scss');
 
 export interface Message {
-  id: string,
+  id: string;
   to: string;
   title: string;
   content: string;
@@ -28,7 +28,6 @@ export class ProfileComponent extends PageMixin(LitElement) {
       ${unsafeCSS(profileCSS)}
     `
   ];
-
 
   @internalProperty()
   private messages: Message[] = [];
@@ -50,34 +49,36 @@ export class ProfileComponent extends PageMixin(LitElement) {
     return html`
       <app-snake-game></app-snake-game>
       <details>
-      <summary>Nachricht Senden  <button class="btn btn-success" @click="${this.refresh}">refresh</button></summary>
-      <app-message-create></app-message-create>
+        <summary>Nachricht Senden <button class="btn btn-success" @click="${this.refresh}">refresh</button></summary>
+        <app-message-create></app-message-create>
       </details>
       ${this.renderNotification()}
       <h1>Meine Nachrichten</h1>
       <div id="container-all-message">
-      ${guard([this.messages] , () => html`
-      ${repeat(
-        this.messages,
-        message => message.id,
-        message => html`
-        <div id="container-one-message">
-          <h5 class="item title"> ${message.title}</h5>
-          <p class="item content">${message.content}</p>
-          <small class="item date">${message.date}</small>
-          <button class="btn btn-secondary" @click="${() => this.deleteMessage(message)}">löschen</button>
-        </div>
-        `
-      )}`)
-      }
+        ${guard(
+          [this.messages],
+          () =>
+            html` ${repeat(
+              this.messages,
+              message => message.id,
+              message => html`
+                <div id="container-one-message">
+                  <h5 class="item title">${message.title}</h5>
+                  <p class="item content">${message.content}</p>
+                  <small class="item date">${message.date}</small>
+                  <button class="btn btn-secondary" @click="${() => this.deleteMessage(message)}">löschen</button>
+                </div>
+              `
+            )}`
+        )}
       </div>
     `;
   }
 
-  async deleteMessage (message : Message) {
+  async deleteMessage(message: Message) {
     try {
       const response = await httpClient.delete('/message/' + message.id);
-      if(response.status === 200) {
+      if (response.status === 200) {
         this.messages = this.messages.filter(m => m.id !== message.id);
       }
     } catch ({ message }) {
@@ -85,7 +86,7 @@ export class ProfileComponent extends PageMixin(LitElement) {
     }
   }
 
-  async refresh () {
+  async refresh() {
     try {
       const response = await httpClient.get('/message');
       this.messages = (await response.json()).results;

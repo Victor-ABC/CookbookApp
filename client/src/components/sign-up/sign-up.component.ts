@@ -37,7 +37,7 @@ class SignUpComponent extends PageMixin(LitElement) {
 
   @query('#name-check')
   messageDiv!: HTMLDivElement;
-  
+
   render() {
     return html`
       ${this.renderNotification()}
@@ -123,7 +123,7 @@ class SignUpComponent extends PageMixin(LitElement) {
       try {
         const response = await httpClient.post('/users/sign-up', accountData);
         const json = await response.json();
-        localStorage.setItem('user-id' , json.id);
+        localStorage.setItem('user-id', json.id);
         router.navigate('api');
       } catch ({ message }) {
         this.setNotification({ errorMessage: message });

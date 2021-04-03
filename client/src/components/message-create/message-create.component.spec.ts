@@ -1,9 +1,7 @@
 /* Autor: Victor */
 
 import { LitElement } from 'lit-element';
-import { httpClient } from '../../http-client';
 import './message-create.component';
-
 
 describe('app-message-create', () => {
   let element: LitElement;
@@ -23,7 +21,7 @@ describe('app-message-create', () => {
   });
 
   it('value should initially be empty', () => {
-    let div = element.shadowRoot!.querySelector('#name-check') as HTMLDivElement;
+    const div = element.shadowRoot!.querySelector('#name-check') as HTMLDivElement;
     expect(div.getAttribute('value')).toBe('');
   });
 });

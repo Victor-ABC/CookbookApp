@@ -22,10 +22,10 @@ describe('app-snake-game', () => {
     element.remove();
   });
   it('should call the static Method start the Game', () => {
-    let gameComp : SnakeGameComponent = <SnakeGameComponent> element;
+    const gameComp: SnakeGameComponent = <SnakeGameComponent>element;
     gameComp.onClick();
     expect(Game.startTheGame).toHaveBeenCalledTimes(1);
-  })
+  });
   it('should render the title "text-zeitvertreib"', async () => {
     const h1Elem = element.shadowRoot!.querySelector('#text-zeitvertreib') as HTMLElement;
     expect(h1Elem.innerText).toBe('Hier ein kleiner Zeitvertreib');
@@ -33,31 +33,31 @@ describe('app-snake-game', () => {
 
   it('should set default value on "Normal"', async () => {
     const h1Elem = element.shadowRoot!.querySelector('option[value="250"]') as HTMLElement;
-    expect(h1Elem.innerText).toBe("Normal");
+    expect(h1Elem.innerText).toBe('Normal');
   });
   it('Canvas should be a singleton', async () => {
-    let gameField = <HTMLElement> await element.renderRoot.querySelector('#gameField')
+    const gameField = <HTMLElement>await element.renderRoot.querySelector('#gameField');
     spyOn(Canvas, 'getInstance');
-    let instanceA = Canvas.getInstance(1,gameField);
-    let instanceB = Canvas.getInstance(6,gameField);
+    const instanceA = Canvas.getInstance(1, gameField);
+    const instanceB = Canvas.getInstance(6, gameField);
     expect(instanceA).not.toBeNull();
     expect(instanceA).toBe(instanceB); // Test auf Identität
     expect(Canvas.getInstance).toHaveBeenCalledTimes(2);
-  })
+  });
   it('Fruit should be a singleton', async () => {
     spyOn(Fruit, 'getInstance');
-    let instanceA = Fruit.getInstance();
-    let instanceB = Fruit.getInstance();
+    const instanceA = Fruit.getInstance();
+    const instanceB = Fruit.getInstance();
     expect(instanceA).not.toBeNull();
     expect(instanceA).toBe(instanceB); // Test auf Identität
     expect(Fruit.getInstance).toHaveBeenCalledTimes(2);
-  })
+  });
   it('Snake should be a singleton', async () => {
     spyOn(Snake, 'getInstance');
-    let instanceA = Snake.getInstance("green");
-    let instanceB = Snake.getInstance("blue");
+    const instanceA = Snake.getInstance('green');
+    const instanceB = Snake.getInstance('blue');
     expect(instanceA).not.toBeNull();
     expect(instanceA).toBe(instanceB); // Test auf Identität
     expect(Snake.getInstance).toHaveBeenCalledTimes(2);
-  })
+  });
 });
