@@ -59,10 +59,10 @@ describe('app-profile', () => {
     LitElement.requestUpdate();
     await LitElement.updateComplete;
 
-    let titleElements = LitElement.shadowRoot!.querySelectorAll('.title'); // = is live ... keine neuberechnung nötig
+    let titleElements = LitElement.shadowRoot!.querySelectorAll('.title');
     expect(titleElements.length).toBe(3);
     spyOn(httpClient, 'delete').and.returnValue(
-      Promise.resolve(<Response>{}) // Return value not important -> just dont throw error
+      Promise.resolve(<Response>{ status : 200}) // Return value not important -> just dont throw error
     );
     let profileComponent : ProfileComponent = <ProfileComponent> LitElement;
     await profileComponent.deleteMessage(<Message>messages[0]);
