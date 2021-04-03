@@ -30,7 +30,7 @@ export class CreateMessageComponent extends PageMixin(LitElement) {
   contentElement!: HTMLInputElement;
 
   @query('form')
-  form!: HTMLFormElement;
+  formElement!: HTMLFormElement;
 
   @query('#name-check')
   messageDiv!: HTMLDivElement;
@@ -59,9 +59,17 @@ export class CreateMessageComponent extends PageMixin(LitElement) {
           <input class="form-control" type="" required id="title" name="title" />
           <div class="invalid-feedback">Titel ist erforderlich</div>
         </div>
+        <button
+              @click="${this.textTemplate}"
+              id="textvorlage__button"
+              type="button"
+              class="name-fley-item btn btn-success"
+            >
+              Textvorlage
+            </button>
         <div class="form-group">
           <label class="control-label" for="content">Inhalt</label>
-          <textarea class="form-control" type="text" required id="content" name="content"></textarea>
+          <textarea rows="8" class="form-control" type="text" required id="content" name="content"></textarea>
           <div class="invalid-feedback">Das Textfeld sollte nicht leer sein</div>
         </div>
         <button class="btn btn-success" type="button" @click="${this.submit}">Senden</button>
@@ -69,6 +77,21 @@ export class CreateMessageComponent extends PageMixin(LitElement) {
     `;
   }
 
+  textTemplate () {
+    if(this.contentElement.value === '' || this.contentElement.value === null) {
+    this.contentElement.value = `Sehr geehrter Herr Müller
+
+
+Ihr Rezept für Erdbeerkuchen hat mir sehr gut gefallen.
+Ich hab beim zweiten mal Bananen genommen. Auch eine leckere kombination.
+
+Liebe Grüße,
+Vorname Nachname`
+  }
+  else {
+    this.setNotification({ infoMessage: 'Der Inhaltbereich muss leer sein' });
+  }
+}
 
   async checkIfNameExists() {
     if (this.nameElement.value) {
@@ -109,16 +132,23 @@ export class CreateMessageComponent extends PageMixin(LitElement) {
       };
       try {
         await httpClient.post('/message/', message);
+        this.setNotification( {successMessage : `Nachricht erfolgreich an ${ message.to } versandt` } )
+        this.formElement.reset();
       } catch ({ message }) {
-        this.setNotification({ infoMessage: message });
+        if(message.errorMessage) {
+          this.setNotification({ errorMessage: message.errorMessage });
+        }
+        else {
+          this.setNotification({ infoMessage: message.infoMessage });
+        }
       }
     } else {
-      this.form.classList.add('was-validated');
+      this.formElement.classList.add('was-validated');
     }
   }
 
   isFormValid() {
-    return this.form.checkValidity();
+    return this.formElement.checkValidity();
   }
 
 

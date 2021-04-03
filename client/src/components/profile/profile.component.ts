@@ -10,17 +10,16 @@ import { repeat } from 'lit-html/directives/repeat';
 const sharedCSS = require('../shared.scss');
 const profileCSS = require('./profile.component.scss');
 
-interface Message {
+export interface Message {
   id: string,
   to: string;
   title: string;
   content: string;
-  date: number;
+  date: string;
 }
 
 @customElement('app-profile')
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export class SignInComponent extends PageMixin(LitElement) {
+export class ProfileComponent extends PageMixin(LitElement) {
   static styles = [
     css`
       ${unsafeCSS(sharedCSS)}
@@ -77,8 +76,10 @@ export class SignInComponent extends PageMixin(LitElement) {
 
   async deleteMessage (message : Message) {
     try {
-      await httpClient.delete('/message/' + message.id);
-      this.messages = this.messages.filter(m => m.id !== message.id);
+      const response = await httpClient.delete('/message/' + message.id);
+      if(response.status === 200) {
+        this.messages = this.messages.filter(m => m.id !== message.id);
+      }
     } catch ({ message }) {
       this.setNotification({ errorMessage: message });
     }

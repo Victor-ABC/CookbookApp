@@ -1,24 +1,23 @@
-/* Autor: Victor Corbet */
+/* Autor: Prof. Dr. Norman Lahme-Hütig (FH Münster) */
 
 import { LitElement } from 'lit-element';
-import { SignInComponent } from './sign-in.component';
 import './sign-in.component';
 
 describe('app-sign-in', () => {
-  let litElement: LitElement;
+  let element: LitElement;
 
   beforeEach(async () => {
-    litElement = document.createElement('app-sign-in') as LitElement;
-    document.body.appendChild(litElement);
-    await litElement.updateComplete;
+    element = document.createElement('app-sign-in') as LitElement;
+    document.body.appendChild(element);
+    await element.updateComplete;
   });
 
   afterEach(() => {
-    litElement.remove();
+    element.remove();
   });
 
   it('should render the title "Anmelden"', async () => {
-    const h1Elem = litElement.shadowRoot!.querySelector('h1') as HTMLElement;
+    const h1Elem = element.shadowRoot!.querySelector('h1') as HTMLElement;
     expect(h1Elem.innerText).toBe('Anmelden');
   });
 });

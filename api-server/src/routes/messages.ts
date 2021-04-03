@@ -7,6 +7,7 @@ import { GenericDAO } from '../models/generic.dao';
 import { authService } from '../services/auth.service';
 import { cryptoService } from '../services/crypto.service';
 import { checkFormPromise } from './users';
+import { rejects } from 'node:assert';
 
 const router = express.Router();
 
@@ -16,9 +17,15 @@ router.post('' , authService.expressMiddleware , async (req, res) => {
     const errors: string[] = [];
     checkFormPromise(req.body , ['to', 'title', 'content', 'date'] , errors)
     .then( async () => {
-        let me : User = <User> await userDAO.findOne({id : res.locals.user.id});
+        const user : User | null = await userDAO.findOne({ name : req.body.to});
+        if(!user) {
+            return Promise.reject({ errorMessage : "dieser Benutzer existiert nicht"});
+        }
+    })
+    .then( async () => {
+        const me : User = <User> await userDAO.findOne({id : res.locals.user.id});
         if(me.name === req.body.to) {
-            return Promise.reject("Sie können sich selbst keine Nachrichten schicken")
+            return Promise.reject({ infoMessage : "Sie können sich selbst keine Nachrichten schicken"});
         }
     })
     .then( () => {
@@ -55,8 +62,18 @@ router.get('' , authService.expressMiddleware ,  async (req, res) => {
 })
 router.delete('/:id', authService.expressMiddleware, async (req, res) => {
     const messageDAO: GenericDAO<Message> = req.app.locals.messageDAO;
-    await messageDAO.delete(req.params.id);
-    res.status(200).end();
+    messageDAO.delete(req.params.id)
+    .then( (result) => {
+        if(result) {
+            res.status(200).end();
+        }
+        else {
+            return Promise.reject("count not delete message");
+        }
+    })
+    .catch( (error) => {
+        res.status(401).json({ message : error });
+    })
   });
 
 
