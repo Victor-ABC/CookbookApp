@@ -20,7 +20,7 @@ interface Message {
 
 @customElement('app-profile')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-class SignInComponent extends PageMixin(LitElement) {
+export class SignInComponent extends PageMixin(LitElement) {
   static styles = [
     css`
       ${unsafeCSS(sharedCSS)}

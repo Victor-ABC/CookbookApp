@@ -8,8 +8,7 @@ import { internalProperty } from 'lit-element';
 const sharedCSS = require('../shared.scss');
 const snakeCSS = require('./snake.component.scss');
 @customElement('app-snake-game')
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-class SignInComponent extends PageMixin(LitElement) {
+export class SnakeGameComponent extends PageMixin(LitElement) {
   static styles = [
     css`
       ${unsafeCSS(sharedCSS)}
