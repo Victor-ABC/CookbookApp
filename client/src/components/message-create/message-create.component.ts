@@ -8,7 +8,6 @@ const sharedCSS = require('../shared.scss');
 const componentCSS = require('./message-create.component.scss');
 
 @customElement('app-message-create')
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class CreateMessageComponent extends PageMixin(LitElement) {
   static styles = [
     css`
