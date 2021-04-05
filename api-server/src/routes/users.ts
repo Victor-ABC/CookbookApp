@@ -79,7 +79,7 @@ router.delete('/', authService.expressMiddleware, async (req, res) => {
   const commentDAO: GenericDAO<Comment> = req.app.locals.commentDAO;
   const cookbookDAO: GenericDAO<Cookbook> = req.app.locals.cookbookDAO;
   const recipeDAO: GenericDAO<Recipe> = req.app.locals.recipeDAO;
-  const messageDAO : GenericDAO<Message> = req.app.locals.messageDAO;
+  const messageDAO: GenericDAO<Message> = req.app.locals.messageDAO;
 
   userDAO.delete(res.locals.user.id);
   commentDAO.deleteAll({ userId: res.locals.user.id });
@@ -110,7 +110,7 @@ export function checkFormPromise(form: formType, requiredFields: string[], error
   });
 }
 function userAuthenticate(form: formType, userDAO: GenericDAO<User>, filter: Partial<User>): Promise<User> {
-  return new Promise<User>(async (resolve, reject) => {
+  return new Promise<User>(async (resolve, reject) => { //eslint-disable-line
     const user = await userDAO.findOne(filter);
     if (user && (await bcrypt.compare(<string>form.password, user.password))) {
       resolve(user);
@@ -127,7 +127,7 @@ function validatePasswords(form: formType): Promise<void> {
   });
 }
 export function checkIfUserAlreadyExistsPromise(filter: Partial<User>, userDAO: GenericDAO<User>): Promise<void> {
-  return new Promise<void>(async (resolve, reject) => {
+  return new Promise<void>(async (resolve, reject) => { //eslint-disable-line
     if (await userDAO.findOne(filter)) {
       reject('Dieser Name ist bereits vergeben');
     } else {

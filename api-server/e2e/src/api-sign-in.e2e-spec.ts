@@ -4,7 +4,7 @@ import { UserSession } from './user-session';
 
 describe('sign-in', () => {
   let userSession: UserSession;
-  
+
   beforeEach(async () => {
     userSession = new UserSession();
   });

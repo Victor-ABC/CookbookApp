@@ -5,9 +5,7 @@ import { Message } from '../models/message';
 import { User } from '../models/user';
 import { GenericDAO } from '../models/generic.dao';
 import { authService } from '../services/auth.service';
-import { cryptoService } from '../services/crypto.service';
 import { checkFormPromise } from './users';
-import { rejects } from 'node:assert';
 
 const router = express.Router();
 

@@ -2,7 +2,6 @@
 
 import { UserSession } from './user-session';
 
-
 describe('sign-up', () => {
   let userSession: UserSession;
 
@@ -18,5 +17,4 @@ describe('sign-up', () => {
     const response = await userSession.post('/users/sign-up', userSession.signUpData());
     expect(response.status).toBe(400);
   });
-
 });

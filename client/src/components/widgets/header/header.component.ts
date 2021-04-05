@@ -9,7 +9,7 @@ const headerCSs = require('./header.component.scss');
 
 @customElement('app-header')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-class SignInComponent extends PageMixin(LitElement) {
+class HeaderComponent extends PageMixin(LitElement) {
   static styles = [
     css`
       ${unsafeCSS(sharedCSS)}

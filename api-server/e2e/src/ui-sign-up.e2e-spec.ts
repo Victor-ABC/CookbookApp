@@ -1,14 +1,13 @@
 /* Autor: Victor Corbet */
 
-import { chromium, ChromiumBrowser, Page , ChromiumBrowserContext } from 'playwright';
+import { chromium, ChromiumBrowser, Page, ChromiumBrowserContext } from 'playwright';
 const configFile = require('./config.json');
 
 let browser: ChromiumBrowser;
-let browserContext : ChromiumBrowserContext;
+let browserContext: ChromiumBrowserContext;
 let page: Page;
 
-describe('User-Interface: Testing sing-up' , () => {
-
+describe('User-Interface: Testing sing-up', () => {
   beforeAll(async () => {
     browser = await chromium.launch({
       headless: configFile.headless
@@ -48,8 +47,8 @@ describe('User-Interface: Testing sing-up' , () => {
     await page.click('input[name="name"]');
     await page.fill('input[name="name"]', 'simon');
     await page.click('text=Name vergeben?');
-    let message = await page.textContent('#name-check');
-    let classAttribute = await page.getAttribute('#name-check' , "class");
+    const message = await page.textContent('#name-check');
+    const classAttribute = await page.getAttribute('#name-check', 'class');
     expect(message).toBe('Name ist bereits vergeben');
     expect(classAttribute).toBe('error');
   });
@@ -60,10 +59,9 @@ describe('User-Interface: Testing sing-up' , () => {
     await page.click('input[name="name"]');
     await page.fill('input[name="name"]', 'Maximilian');
     await page.click('text=Name vergeben?');
-    let message = await page.textContent('#name-check');
-    let classAttribute = await page.getAttribute('#name-check' , "class");
+    const message = await page.textContent('#name-check');
+    const classAttribute = await page.getAttribute('#name-check', 'class');
     expect(message).toBe('Name ist noch nicht vergeben');
     expect(classAttribute).toBe('success');
   });
-
-})
+});

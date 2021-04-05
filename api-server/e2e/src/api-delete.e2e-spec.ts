@@ -2,7 +2,6 @@
 
 import { UserSession } from './user-session';
 
-
 describe('sign-up', () => {
   let userSession: UserSession;
 
@@ -12,7 +11,7 @@ describe('sign-up', () => {
   });
 
   it('should delete a user', async () => {
-    let response = await userSession.delete('/users');
+    const response = await userSession.delete('/users');
     expect(response.status).toBe(200);
   });
 
@@ -21,5 +20,4 @@ describe('sign-up', () => {
     const response = await userSession.delete('/users');
     expect(response.status).toBe(401);
   });
-
 });
