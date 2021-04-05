@@ -17,7 +17,7 @@ describe('app-profile', () => {
     LitElement.remove();
   });
 
-  it('should render 3 messages after get-request and do no post request', async () => {
+  it('should render three messages after GET-request and do no POST request', async () => {
     const messages = [
       {
         to: 'me',

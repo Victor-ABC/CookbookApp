@@ -1,37 +1,34 @@
 /* Autor: Victor Corbet */
 
 import { chromium, ChromiumBrowser, Page, ChromiumBrowserContext } from 'playwright';
+import { singUpUserAndGoToProfile } from './ui-snake.e2e-spec';
+import { v4 as uuidv4 } from 'uuid';
 const configFile = require('./config.json');
 
 let browser: ChromiumBrowser;
 let browserContext: ChromiumBrowserContext;
 let page: Page;
-const name = 'Jonathan';
 const password = 'h4llo?flo+M';
+let name : string;
 
-async function singUpUser(name: string, password: string, browser: ChromiumBrowser) {
-  browserContext = await browser.newContext();
-  page = await browserContext.newPage();
-  await page.goto('http://localhost:8080/');
-  await page.click('text=Konto erstellen');
-  await page.fill('input[name="name"]', name);
-  await page.fill('input[name="email"]', `${name}@${name}.de`);
-  await page.fill('input[name="password"]', password);
-  await page.fill('input[name="passwordCheck"]', password);
-  await page.click('button:has-text("Konto erstellen")');
-  return page;
-}
+
 
 describe('User-Interface: Testing sing-in / sign-out: ', () => {
   beforeAll(async () => {
     browser = await chromium.launch({
       headless: configFile.headless
     });
-    page = await singUpUser(name, password, browser);
   });
-  afterAll(async () => {
+  beforeEach(async () => {
+    name = uuidv4();
+    browserContext = await browser.newContext();
+    page = await singUpUserAndGoToProfile(name, password,  browserContext);
+  });
+  afterEach( async () => {
     await page.close();
     await browserContext.close();
+  })
+  afterAll(async () => {
     await browser.close();
   });
 

@@ -17,7 +17,7 @@ describe('app-message-create', () => {
     LitElement.remove();
   });
 
-  it('should NOT send post request to api-server because HTMLInputElement is empty so post would be useless', async () => {
+  it('should not be possible to send POST-request to api-server because HTMLInputElement is empty', async () => {
     spyOn(httpClient, 'post').and.returnValue(
       Promise.resolve(<Response>{
         json() {
@@ -31,7 +31,7 @@ describe('app-message-create', () => {
     expect(httpClient.post).toHaveBeenCalledTimes(0);
   });
 
-  it('should send post request to api-server one time and render errorTEXT', async () => {
+  it('should send POST-request to api-server one time and render errortext', async () => {
     const onPostSpy = spyOn(httpClient, 'post').and.returnValue(
       Promise.resolve(<Response>{
         json() {
@@ -47,7 +47,7 @@ describe('app-message-create', () => {
     expect(createMessageComponent.shadowRoot!.querySelector('#name-check')?.innerHTML).toBe('Benutzer existiert nicht');
   });
 
-  it('should send one-post request to api-server one time and render successTEXT', async () => {
+  it('should send one POST-Request to api-server and render successtext', async () => {
     const onPostSpy = spyOn(httpClient, 'post').and.returnValue(
       Promise.reject(<Response>{
         json() {
@@ -63,7 +63,7 @@ describe('app-message-create', () => {
     expect(createMessageComponent.shadowRoot!.querySelector('#name-check')?.innerHTML).toBe('Benutzer existiert');
   });
 
-  it('value should initially be empty', () => {
+  it('value (custom attribute) should initially be empty', () => {
     const div = LitElement.shadowRoot!.querySelector('#name-check') as HTMLDivElement;
     expect(div.getAttribute('value')).toBe('');
   });

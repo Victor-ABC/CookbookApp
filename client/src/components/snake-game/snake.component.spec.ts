@@ -21,7 +21,7 @@ describe('app-snake-game', () => {
   afterEach(() => {
     element.remove();
   });
-  it('should call the static Method start the Game', () => {
+  it('should call the static method "start the Game" ', () => {
     const gameComp: SnakeGameComponent = <SnakeGameComponent>element;
     gameComp.onClick();
     expect(Game.startTheGame).toHaveBeenCalledTimes(1);
@@ -35,7 +35,7 @@ describe('app-snake-game', () => {
     const h1Elem = element.shadowRoot!.querySelector('option[value="250"]') as HTMLElement;
     expect(h1Elem.innerText).toBe('Normal');
   });
-  it('should create only one Object in RAM because Canvas should be a singleton', async () => {
+  it('should create only one object in RAM because "Canvas" ("Canvas" = Class Canvas = its only job is to interact with the real HTMLCanvasElement [Seperation of Concerns]) should be a singleton', async () => {
     const gameField = <HTMLElement>await element.renderRoot.querySelector('#gameField');
     spyOn(Canvas, 'getInstance');
     const instanceA = Canvas.getInstance(1, gameField);
@@ -44,7 +44,7 @@ describe('app-snake-game', () => {
     expect(instanceA).toBe(instanceB); // Test auf Identität
     expect(Canvas.getInstance).toHaveBeenCalledTimes(2);
   });
-  it('should create only one Object in RAM because Fruit should be a singleton', async () => {
+  it('should create only one object in RAM because "Fruit" should be a singleton', async () => {
     spyOn(Fruit, 'getInstance');
     const instanceA = Fruit.getInstance();
     const instanceB = Fruit.getInstance();
@@ -52,7 +52,7 @@ describe('app-snake-game', () => {
     expect(instanceA).toBe(instanceB); // Test auf Identität
     expect(Fruit.getInstance).toHaveBeenCalledTimes(2);
   });
-  it('should create only one Object in RAM because Snake should be a singleton', async () => {
+  it('should create only one object in RAM because "Snake" should be a singleton', async () => {
     spyOn(Snake, 'getInstance');
     const instanceA = Snake.getInstance('green');
     const instanceB = Snake.getInstance('blue');

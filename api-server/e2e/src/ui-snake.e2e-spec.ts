@@ -9,8 +9,7 @@ let browserContext: ChromiumBrowserContext;
 let page: Page;
 const password = 'h4llo?flo+M';
 
-async function singUpUserAndGoToProfile(name: string, password: string, browser: ChromiumBrowser) {
-  browserContext = await browser.newContext();
+export async function singUpUserAndGoToProfile(name: string, password: string, browserContext : ChromiumBrowserContext) {
   page = await browserContext.newPage();
   await page.goto('http://localhost:8080/');
   await page.click('text=Konto erstellen');
@@ -37,7 +36,8 @@ describe('User-Interface: Snake-Game: ', () => {
   });
   beforeEach(async () => {
     const uuid = uuidv4();
-    page = await singUpUserAndGoToProfile(uuid, password, browser);
+    browserContext = await browser.newContext();
+    page = await singUpUserAndGoToProfile(uuid, password, browserContext);
   });
   afterEach( async () => {
     await page.close();
@@ -47,7 +47,7 @@ describe('User-Interface: Snake-Game: ', () => {
     await browser.close();
   });
 
-  it('should start the game', async () => {
+  it('should start the game and hide header-section while playing', async () => {
     await page.click('text=Kuchen im Backofen? Suppe auf dem Herd? Hier ein kleiner Zeitvertreib');
     await page.selectOption(
       'text=Grün Blau Rot Regenbogen Klein Mittel Groß XXL Langsam Normal Schnell Start show >> select',
