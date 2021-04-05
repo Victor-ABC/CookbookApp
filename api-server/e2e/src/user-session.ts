@@ -40,7 +40,7 @@ export class UserSession {
   }
 
   signInData() {
-    return { email: this.email, password: this.password };
+    return { name: this.name, password: this.password };
   }
 
   signUpData() {
@@ -48,7 +48,7 @@ export class UserSession {
   }
 
   async registerUser() {
-    await this.post('users', this.signUpData());
+    await this.post('users/sign-up', this.signUpData());
     if (!this.hasCookie('jwt-token')) {
       throw new Error('Failed to extract jwt-token');
     }

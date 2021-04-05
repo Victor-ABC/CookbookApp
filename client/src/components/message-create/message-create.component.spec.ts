@@ -17,7 +17,7 @@ describe('app-message-create', () => {
     LitElement.remove();
   });
 
-  it('should NOT send post request to api-server', async () => {
+  it('should NOT send post request to api-server because HTMLInputElement is empty so post would be useless', async () => {
     spyOn(httpClient, 'post').and.returnValue(
       Promise.resolve(<Response>{
         json() {

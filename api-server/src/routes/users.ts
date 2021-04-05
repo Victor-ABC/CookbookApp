@@ -8,6 +8,7 @@ import { Comment } from '../models/comment';
 import { Cookbook } from '../models/cookbook';
 import { Recipe } from '../models/recipe';
 import { authService } from '../services/auth.service';
+import { Message } from '../models/message';
 
 interface formType {
   [key: string]: string | number;
@@ -69,7 +70,6 @@ router.post('/sign-up', (req, res) => {
     })
     .catch((message: string[]) => {
       authService.removeToken(res);
-      message.join('\n');
       res.status(400).json({ message });
     });
 });
@@ -79,11 +79,13 @@ router.delete('/', authService.expressMiddleware, async (req, res) => {
   const commentDAO: GenericDAO<Comment> = req.app.locals.commentDAO;
   const cookbookDAO: GenericDAO<Cookbook> = req.app.locals.cookbookDAO;
   const recipeDAO: GenericDAO<Recipe> = req.app.locals.recipeDAO;
+  const messageDAO : GenericDAO<Message> = req.app.locals.messageDAO;
 
   userDAO.delete(res.locals.user.id);
   commentDAO.deleteAll({ userId: res.locals.user.id });
   cookbookDAO.deleteAll({ userId: res.locals.user.id });
   recipeDAO.deleteAll({ userId: res.locals.user.id });
+  messageDAO.deleteAll({ to: res.locals.user.id });
 
   authService.removeToken(res);
   res.status(200).end();
