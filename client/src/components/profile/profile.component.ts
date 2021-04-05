@@ -62,7 +62,7 @@ export class ProfileComponent extends PageMixin(LitElement) {
               this.messages,
               message => message.id,
               message => html`
-                <div id="container-one-message">
+                <div class="container-one-message">
                   <h5 class="item title">${message.title}</h5>
                   <p class="item content">${message.content}</p>
                   <small class="item date">${message.date}</small>

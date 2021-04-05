@@ -1,4 +1,5 @@
 /* Autor: Victor Corbet */
+// npx playwright codegen http://localhost:8080 -o code.js
 
 import { chromium, ChromiumBrowser, Page, ChromiumBrowserContext } from 'playwright';
 import { v4 as uuidv4 } from 'uuid';
@@ -61,14 +62,15 @@ describe('User-Interface: Snake-Game: ', () => {
     expect(gameHeaderClass).toContain('hidden');
   });
 
-  it('should enable arrow keys', async () => {
+  it('should show/hide arrow keys for smartphone devices by clicking the "#toggleVisibility" button ', async () => {
     await page.click('text=Kuchen im Backofen? Suppe auf dem Herd? Hier ein kleiner Zeitvertreib');
     await page.selectOption(
       'text=Grün Blau Rot Regenbogen Klein Mittel Groß XXL Langsam Normal Schnell Start show >> select',
       'blue'
     );
     await page.selectOption('#scale-select', '30');
-    const visibility = await page.getAttribute('#flex-container-keys', 'value');
-    expect(visibility).not.toBeNull();
+    expect(await page.getAttribute('#flex-container-keys', 'value')).toBe('visible');
+    await page.click('#toggleVisibility');
+    expect(await page.getAttribute('#flex-container-keys', 'value')).toBe('invisible');
   });
 });

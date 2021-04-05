@@ -36,7 +36,7 @@ details , #container-all-message {
 }
 
 
-#container-one-message {
+.container-one-message {
     align-items: center;
     background-color: white;
     margin: 10px;
@@ -46,10 +46,10 @@ details , #container-all-message {
     display: flex;
     flex-direction: column;
 }
-#container-one-message  > button {
+.container-one-message  > button {
     margin: 10px;
 }
-#container-one-message  > p {
+.container-one-message  > p {
     border: solid #1fa712 1px;
     border-radius: 5px;
     padding: 10px;
@@ -61,4 +61,3 @@ details , #container-all-message {
     word-wrap: break-word;
     align-self: auto;
 }
-  

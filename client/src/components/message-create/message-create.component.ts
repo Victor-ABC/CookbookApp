@@ -97,12 +97,12 @@ Vorname Nachname`;
           .post('/users/exists', { name: this.nameElement.value })
           .then(() => {
             this.messageDiv.textContent = 'Benutzer existiert nicht';
-            this.messageDiv.setAttribute('class', 'error');
+            this.messageDiv.setAttribute('value', 'error');
             // this.setNotification({ errorMessage: "Benutzer existiert nicht" })
           })
           .catch(() => {
             this.messageDiv.textContent = 'Benutzer existiert';
-            this.messageDiv.setAttribute('class', 'success');
+            this.messageDiv.setAttribute('value', 'success');
             // this.setNotification({ infoMessage: "Benutzer existiert" })
           })
           .finally(() => {
