@@ -1,12 +1,12 @@
 /* Autor: Victor Corbet */
 
 import { chromium, ChromiumBrowser, Page, ChromiumBrowserContext } from 'playwright';
+import { v4 as uuidv4 } from 'uuid';
 const configFile = require('./config.json');
 
 let browser: ChromiumBrowser;
 let browserContext: ChromiumBrowserContext;
 let page: Page;
-const name = 'Max';
 const password = 'h4llo?flo+M';
 
 async function singUpUserAndGoToProfile(name: string, password: string, browser: ChromiumBrowser) {
@@ -34,11 +34,16 @@ describe('User-Interface: Snake-Game: ', () => {
     browser = await chromium.launch({
       headless: configFile.headless
     });
-    page = await singUpUserAndGoToProfile(name, password, browser);
   });
-  afterAll(async () => {
+  beforeEach(async () => {
+    const uuid = uuidv4();
+    page = await singUpUserAndGoToProfile(uuid, password, browser);
+  });
+  afterEach( async () => {
     await page.close();
     await browserContext.close();
+  })
+  afterAll(async () => {
     await browser.close();
   });
 
@@ -54,5 +59,16 @@ describe('User-Interface: Snake-Game: ', () => {
 
     const gameHeaderClass = await page.getAttribute('#game-header-container', 'class');
     expect(gameHeaderClass).toContain('hidden');
+  });
+
+  it('should enable arrow keys', async () => {
+    await page.click('text=Kuchen im Backofen? Suppe auf dem Herd? Hier ein kleiner Zeitvertreib');
+    await page.selectOption(
+      'text=Grün Blau Rot Regenbogen Klein Mittel Groß XXL Langsam Normal Schnell Start show >> select',
+      'blue'
+    );
+    await page.selectOption('#scale-select', '30');
+    const visibility = await page.getAttribute('#flex-container-keys', 'value');
+    expect(visibility).not.toBeNull();
   });
 });

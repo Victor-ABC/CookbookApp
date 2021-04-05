@@ -35,7 +35,7 @@ describe('User-Interface: Testing sing-in / sign-out: ', () => {
     await browser.close();
   });
 
-  it('should sign out when pressing sign out button', async () => {
+  it('(the user Profile) should only be accessable for signed-in Users', async () => {
     await page.click('text=Abmelden');
     await Promise.all([
       page.waitForNavigation({ url: 'http://localhost:8080/app/users/sign-in' }),
@@ -45,7 +45,7 @@ describe('User-Interface: Testing sing-in / sign-out: ', () => {
     expect(await page.url()).toBe('http://localhost:8080/app/users/sign-in'); // whenever a user is not signed-in; he should be redirected to sign-in.
   });
 
-  it('should be able to sign in after creating an account and log out', async () => {
+  it('should be able to sign in after creating an account and being loged out', async () => {
     await page.click('text=Anmelden');
     await page.click('input[name="name"]');
     await page.fill('input[name="name"]', name);
