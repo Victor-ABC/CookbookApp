@@ -1,6 +1,5 @@
 /* Autor: TODO */
 
-
 import { css, customElement, html, LitElement, internalProperty, unsafeCSS } from 'lit-element';
 import { router } from '../../router';
 import { httpClient } from '../../http-client';
@@ -21,13 +20,14 @@ class AppComponent extends LitElement {
   ];
 
   @internalProperty()
-  title = 'Aufgabenverwaltung';
+  title = 'Koch-App';
 
   @internalProperty()
   linkItems = [
     { title: 'Konto erstellen', routePath: '/users/sign-up' },
     { title: 'Anmelden', routePath: '/users/sign-in' },
-    { title: 'Abmelden', routePath: '/users/sign-out' }
+    { title: 'Abmelden', routePath: '/users/sign-out' },
+    { title: 'Mein Profil', routePath: 'users/profile' }
   ];
 
   constructor() {

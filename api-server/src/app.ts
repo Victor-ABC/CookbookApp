@@ -9,6 +9,8 @@ import https from 'https';
 import fs from 'fs';
 import path from 'path';
 import cookbooks from './routes/cookbooks';
+import users from './routes/users';
+import message from './routes/messages';
 
 import startDB from './db';
 import { corsService } from './services/cors.service';
@@ -21,6 +23,8 @@ function configureApp(app: Express) {
   app.use(corsService.expressMiddleware);
   // TODO: Routen einbinden
   app.use('/api/cookbooks', cookbooks);
+  app.use('/api/users', users);
+  app.use('/api/message', message);
 }
 
 export async function start(port: number, dbms = 'in-memory-db', withHttps = false) {

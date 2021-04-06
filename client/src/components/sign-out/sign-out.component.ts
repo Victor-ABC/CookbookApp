@@ -1,3 +1,5 @@
+/* Autor: Prof. Dr. Norman Lahme-Hütig (FH Münster) */
+
 import { customElement, html, LitElement } from 'lit-element';
 import { httpClient } from '../../http-client';
 import { PageMixin } from '../page.mixin';

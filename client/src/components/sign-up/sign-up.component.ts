@@ -1,3 +1,4 @@
+/* Autor: Victor */
 
 import { css, customElement, html, LitElement, query, unsafeCSS } from 'lit-element';
 import { httpClient } from '../../http-client';
@@ -34,6 +35,9 @@ class SignUpComponent extends PageMixin(LitElement) {
   @query('#password-check')
   passwordCheckElement!: HTMLInputElement;
 
+  @query('#name-check')
+  messageDiv!: HTMLDivElement;
+  
   render() {
     return html`
       ${this.renderNotification()}
@@ -42,9 +46,17 @@ class SignUpComponent extends PageMixin(LitElement) {
         <div class="form-group">
           <label class="control-label" for="name">User-Name</label>
           <div id="nameButton">
-            <input class="form-control" type="text" autofocus required id="name" name="name" />
+            <div id="name-check" value="">placeHolder</div>
+            <input class="name-fley-item form-control" type="text" autofocus required id="name" name="name" />
             <div class="invalid-feedback" id="nameBemerkung">Name ist erforderlich und muss eindeutig sein</div>
-            <button id="name__button" type="button" class="btn btn-success">Name vergeben?</button>
+            <button
+              @click="${this.checkIfNameExists}"
+              id="name__button"
+              type="button"
+              class="name-fley-item btn btn-success"
+            >
+              Name vergeben?
+            </button>
           </div>
         </div>
         <div class="form-group">
@@ -68,7 +80,7 @@ class SignUpComponent extends PageMixin(LitElement) {
             name="passwordCheck"
           />
           <div class="invalid-feedback">
-            Erneute Passworteingabe ist erforderlich und muss mit der ersten Passworteingabe übereinstimmen
+            Eine erneute Eingabe ist erforderlich und muss mit der ersten Passworteingabe übereinstimmen
           </div>
         </div>
         <button class="btn btn-success" type="button" @click="${this.submit}">Konto erstellen</button>
@@ -76,6 +88,30 @@ class SignUpComponent extends PageMixin(LitElement) {
     `;
   }
 
+  async checkIfNameExists() {
+    if (this.nameElement.value) {
+      try {
+        await httpClient
+          .post('/users/exists', { name: this.nameElement.value })
+          .then(() => {
+            this.messageDiv.textContent = 'Name ist noch nicht vergeben';
+            this.messageDiv.setAttribute('class', 'success');
+          })
+          .catch(() => {
+            this.messageDiv.textContent = 'Name ist bereits vergeben';
+            this.messageDiv.setAttribute('class', 'error');
+          })
+          .finally(() => {
+            setTimeout(() => {
+              this.messageDiv.textContent = 'placeHolder';
+              this.messageDiv.setAttribute('class', '');
+            }, 1500);
+          });
+      } catch ({ message }) {
+        this.setNotification({ errorMessage: message });
+      }
+    }
+  }
   async submit() {
     if (this.isFormValid()) {
       const accountData = {
@@ -85,8 +121,8 @@ class SignUpComponent extends PageMixin(LitElement) {
         passwordCheck: this.passwordCheckElement.value
       };
       try {
-        await httpClient.post('users', accountData);
-        router.navigate('/tasks');
+        await httpClient.post('/users/sign-up', accountData);
+        router.navigate('api');
       } catch ({ message }) {
         this.setNotification({ errorMessage: message });
       }
