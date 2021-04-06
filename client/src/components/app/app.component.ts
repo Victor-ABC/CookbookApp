@@ -49,6 +49,7 @@ class AppComponent extends LitElement {
         '/users/profile': () => html`<app-profile></app-profile>`,
         '/cookbooks/details/:id': params =>
           html`<app-cookbook-details .cookbookId=${params.id}></app-cookbook-details>`,
+        '/cookbooks': () => html`<app-cookbooks></app-cookbooks>`,
         '/cookbooks/:id': params => html`<app-cookbooks .userId=${params.id}></app-cookbooks>`
       },
       () => html`<app-tasks></app-tasks>`

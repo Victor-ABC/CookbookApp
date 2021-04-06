@@ -38,16 +38,15 @@ class CookbooksComponent extends PageMixin(LitElement) {
   @internalProperty()
   title!: string;
 
-  ownCookbooks!: boolean;
+  ownCookbooks = false;
 
   async firstUpdated() {
-    this.ownCookbooks = this.userId === localStorage.getItem('user-id');
-
     // fetch cookbooks
-    if (this.userId === 'all') {
-      await this.fetchAllCookbooks();
-    } else {
+    if (this.userId) {
+      this.ownCookbooks = this.userId === localStorage.getItem('user-id');
       await this.fetchUserCookbooks();
+    } else {
+      await this.fetchAllCookbooks();
     }
   }
 
@@ -96,10 +95,6 @@ class CookbooksComponent extends PageMixin(LitElement) {
     }
   }
 
-  async showDetails(cookbook: Cookbook) {
-    router.navigate(`/cookbooks/details/${cookbook.id}`);
-  }
-
   async deleteCookbook(bookToRemove: Cookbook) {
     try {
       await httpClient.delete(`/cookbooks/${bookToRemove.id}`);
@@ -123,9 +118,11 @@ class CookbooksComponent extends PageMixin(LitElement) {
       this.cookbooks = json.cookbooks;
       this.title = `${json.creator}'s Kochbücher`;
     } catch ({ message }) {
-      this.setNotification({ errorMessage: 'Der Benutzer existiert nicht. Hier siehst du alle Kochbücher.' });
-      router.navigate('/cookbooks/all');
-      this.fetchAllCookbooks();
+      router.navigate('/cookbooks');
     }
+  }
+
+  async showDetails(cookbook: Cookbook) {
+    router.navigate(`/cookbooks/details/${cookbook.id}`);
   }
 }

@@ -1,2 +1,47 @@
 /* Autor: Felix Schaphaus */
 
+.header {
+  #toggle-edit-icon {
+    float: right;
+  }
+  #toggle-edit-icon::before {
+    color: gray;
+    font: normal normal normal 1.25rem/1 'Font Awesome 5 Free';
+    content: '\f303';
+  }
+  form {
+    display:none;
+  }
+  #toggle-edit {
+    display: none;
+  }
+  #toggle-edit:checked ~ form {
+    display: block;
+  }
+}
+
+.cookbooks-container {
+  display: flex;
+  justify-content: start;
+  flex-wrap: wrap;
+}
+
+/* smartphone */
+@media screen and (max-width: 812px) {
+  .cookbooks-container {
+    flex-direction: column;
+  }
+}
+
+/* computer */
+@media screen and (min-width: 812px) {
+  .cookbooks-container {
+    flex-direction: row;
+  }
+}
+
+.cookbooks-item {
+  background-color: aqua;
+  flex-basis: 33%;
+  padding: 0.5rem;
+}
