@@ -41,6 +41,10 @@ class CookbooksComponent extends PageMixin(LitElement) {
   ownCookbooks = false;
 
   async firstUpdated() {
+    if (location.pathname === '/app/my-cookbooks' && !this.userId) {
+      router.navigate('/users/sign-in');
+    }
+
     // fetch cookbooks
     if (this.userId) {
       this.ownCookbooks = this.userId === localStorage.getItem('user-id');

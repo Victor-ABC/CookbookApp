@@ -27,7 +27,9 @@ class AppComponent extends LitElement {
     { title: 'Konto erstellen', routePath: '/users/sign-up' },
     { title: 'Anmelden', routePath: '/users/sign-in' },
     { title: 'Abmelden', routePath: '/users/sign-out' },
-    { title: 'Mein Profil', routePath: 'users/profile' }
+    { title: 'Mein Profil', routePath: '/users/profile' },
+    { title: 'Meine Kochbücher', routePath: '/my-cookbooks' },
+    { title: 'Kochbücher', routePath: '/cookbooks' }
   ];
 
   constructor() {
@@ -50,7 +52,8 @@ class AppComponent extends LitElement {
         '/cookbooks/details/:id': params =>
           html`<app-cookbook-details .cookbookId=${params.id}></app-cookbook-details>`,
         '/cookbooks': () => html`<app-cookbooks></app-cookbooks>`,
-        '/cookbooks/:id': params => html`<app-cookbooks .userId=${params.id}></app-cookbooks>`
+        '/cookbooks/:id': params => html`<app-cookbooks .userId=${params.id}></app-cookbooks>`,
+        '/my-cookbooks': () => html`<app-cookbooks .userId=${localStorage.getItem('user-id')}></app-cookbooks>`
       },
       () => html`<app-tasks></app-tasks>`
     );

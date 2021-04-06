@@ -21,14 +21,14 @@ class CookbookComponent extends LitElement {
   @property({ attribute: 'data-id', type: String })
   bookId!: string;
 
-  @property({ attribute: 'data-own-cookbooks', type: Boolean })
-  ownCookbooks!: boolean;
+  @property({ attribute: 'data-own-cookbooks', type: String })
+  ownCookbooks!: string;
 
   render() {
     return html`
       <span class="book-id" data-id="${this.bookId}"><slot name="title"></slot></span>
       <span class="show-details" @click="${() => this.emit('appcookbookdetailsclick')}"></span>
-      ${this.ownCookbooks
+      ${this.ownCookbooks === 'true'
         ? html`<span class="remove-cookbook" @click="${() => this.emit('appcookbookdeleteclick')}"></span>`
         : nothing}
     `;
