@@ -10,7 +10,7 @@ let browserContext: ChromiumBrowserContext;
 let page: Page;
 const password = 'h4llo?flo+M';
 
-export async function singUpUserAndGoToProfile(name: string, password: string, browserContext : ChromiumBrowserContext) {
+export async function singUpUserAndGoToProfile(name: string, password: string, browserContext: ChromiumBrowserContext) {
   page = await browserContext.newPage();
   await page.goto('http://localhost:8080/');
   await page.click('text=Konto erstellen');
@@ -40,10 +40,10 @@ describe('User-Interface: Snake-Game: ', () => {
     browserContext = await browser.newContext();
     page = await singUpUserAndGoToProfile(uuid, password, browserContext);
   });
-  afterEach( async () => {
+  afterEach(async () => {
     await page.close();
     await browserContext.close();
-  })
+  });
   afterAll(async () => {
     await browser.close();
   });

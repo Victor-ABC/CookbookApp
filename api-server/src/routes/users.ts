@@ -42,7 +42,7 @@ router.post('/exists', (req, res) => {
   const userDAO: GenericDAO<User> = req.app.locals.userDAO;
   checkIfUserAlreadyExistsPromise(req.body, userDAO)
     .then(() => {
-      res.status(201).json(true);
+      res.status(200).json(true);
     })
     .catch(() => {
       res.status(401).json({ message: `Der Name ${req.body.name} ist bereits Vergeben` });

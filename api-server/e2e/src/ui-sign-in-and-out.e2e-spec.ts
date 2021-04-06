@@ -9,9 +9,7 @@ let browser: ChromiumBrowser;
 let browserContext: ChromiumBrowserContext;
 let page: Page;
 const password = 'h4llo?flo+M';
-let name : string;
-
-
+let name: string;
 
 describe('User-Interface: Testing sing-in / sign-out: ', () => {
   beforeAll(async () => {
@@ -22,12 +20,12 @@ describe('User-Interface: Testing sing-in / sign-out: ', () => {
   beforeEach(async () => {
     name = uuidv4();
     browserContext = await browser.newContext();
-    page = await singUpUserAndGoToProfile(name, password,  browserContext);
+    page = await singUpUserAndGoToProfile(name, password, browserContext);
   });
-  afterEach( async () => {
+  afterEach(async () => {
     await page.close();
     await browserContext.close();
-  })
+  });
   afterAll(async () => {
     await browser.close();
   });
