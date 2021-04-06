@@ -1,6 +1,7 @@
 /* Autor: Victor Corbet */
 
 import { chromium, ChromiumBrowser, Page, ChromiumBrowserContext } from 'playwright';
+import { singUpUserAndGoToProfile } from './ui-snake.e2e-spec';
 const configFile = require('./config.json');
 
 let browser: ChromiumBrowser;
@@ -13,40 +14,26 @@ describe('User-Interface: Testing sing-up', () => {
       headless: configFile.headless
     });
   });
-  afterAll(async () => {
-    await browser.close();
-  });
   beforeEach(async () => {
     browserContext = await browser.newContext();
-    page = await browserContext.newPage();
   });
   afterEach(async () => {
     await page.close();
+    await browserContext.close();
+  });
+  afterAll(async () => {
+    await browser.close();
   });
 
   it('should not be possible to create two users with the same Name', async () => {
-    await page.goto('http://localhost:8080/');
+    const page = await singUpUserAndGoToProfile('victor', '1234567890', browserContext);
     await page.click('text=Konto erstellen');
     await page.click('input[name="name"]');
-    await page.fill('input[name="name"]', 'simon');
-    await page.press('input[name="name"]', 'Tab');
-    await page.press('text=Name vergeben?', 'Enter');
-    await page.press('text=Name vergeben?', 'Tab');
-    await page.fill('input[name="email"]', 'simon');
-    await page.press('input[name="email"]', 'AltGraph');
-    await page.fill('input[name="email"]', 'simon@simon.de');
-    await page.press('input[name="email"]', 'Tab');
-    await page.fill('input[name="password"]', '1234512345');
-    await page.press('input[name="password"]', 'Tab');
-    await page.fill('input[name="passwordCheck"]', '1234512345');
-    await Promise.all([
-      page.waitForNavigation({ url: 'http://localhost:8080/app/api' }),
-      page.click('button:has-text("Konto erstellen")')
-    ]);
-    await page.click('text=Konto erstellen');
-    await page.click('input[name="name"]');
-    await page.fill('input[name="name"]', 'simon');
+    await page.fill('input[name="name"]', 'victor');
     await page.click('text=Name vergeben?');
+    await page.waitForResponse(
+      response => response.url() === 'http://localhost:3000/api/users/exists' && response.status() === 401
+    );
     const message = await page.textContent('#name-check');
     const classAttribute = await page.getAttribute('#name-check', 'class');
     expect(message).toBe('Name ist bereits vergeben');
@@ -54,11 +41,15 @@ describe('User-Interface: Testing sing-up', () => {
   });
 
   it('should render a green text saying that this name is available', async () => {
+    page = await browserContext.newPage();
     await page.goto('http://localhost:8080/');
     await page.click('text=Konto erstellen');
     await page.click('input[name="name"]');
     await page.fill('input[name="name"]', 'Maximilian');
     await page.click('text=Name vergeben?');
+    await page.waitForResponse(
+      response => response.url() === 'http://localhost:3000/api/users/exists' && response.status() === 200
+    );
     const message = await page.textContent('#name-check');
     const classAttribute = await page.getAttribute('#name-check', 'class');
     expect(message).toBe('Name ist noch nicht vergeben');

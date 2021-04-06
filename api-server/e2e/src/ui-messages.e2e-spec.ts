@@ -17,7 +17,6 @@ describe('User-Interface: Message-Service: ', () => {
     });
   });
   beforeEach(async () => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
     browserContext = await browser.newContext();
   });
   afterEach(async () => {
@@ -171,5 +170,45 @@ describe('User-Interface: Message-Service: ', () => {
     await page.click('button:has-text("Senden")');
     const sendResponse = await page.waitForResponse('http://localhost:3000/api/message/');
     expect(sendResponse.status()).toBe(401);
+  });
+
+  it('should update all messages by clicking update button', async () => {
+    const userA = 'arne4';
+    const message = {
+      to: 'steve4', // user B
+      title: 'Apfelkuchen',
+      content: 'das Apfelkuchenrezept ist super'
+    };
+    const page2 = await singUpUserAndGoToProfile(message.to, password, browserContext);
+
+    page = await singUpUserAndGoToProfile(userA, password, browserContext);
+
+    await page.click('text=Nachricht Senden refresh');
+    await page.click('input[name="name"]');
+    await page.fill('input[name="name"]', message.to);
+    await page.press('input[name="name"]', 'Tab');
+    await page.press('text=Name existiert?', 'Enter');
+    const existsResponse = await page.waitForResponse('http://localhost:3000/api/users/**');
+    expect(existsResponse.status()).toBe(401);
+    expect(await page.textContent('#name-check')).toBe('Benutzer existiert');
+    await page.press('text=Name existiert?', 'Tab');
+    await page.fill('input[name="title"]', message.title);
+    await page.click('textarea[name="content"]');
+    await page.fill('textarea[name="content"]', message.content);
+    await page.click('button:has-text("Senden")');
+
+    await page2.click('button:has-text("refresh")');
+    const refreshResponse = await page2.waitForResponse('http://localhost:3000/api/message');
+    expect(refreshResponse.status()).toBe(200);
+  });
+
+  it('should update all messages by clicking update button but no message was sent', async () => {
+    const userA = 'arne5';
+    const page = await singUpUserAndGoToProfile(userA, password, browserContext);
+    await page.click('button:has-text("refresh")');
+    const refreshResponse = await page.waitForResponse('http://localhost:3000/api/message');
+    expect(refreshResponse.status()).toBe(200);
+    const titleElement = await page.$('.title');
+    expect(titleElement).toBeNull();
   });
 });
