@@ -6,33 +6,17 @@ import { GenericDAO } from '../models/generic.dao';
 import { Recipe } from '../models/recipe';
 import { User } from '../models/user';
 import { authService } from '../services/auth.service';
-import bcrypt from 'bcryptjs';
 
 const router = express.Router();
-router.post('/sign-in', async (req, res) => {
-  const userDAO: GenericDAO<User> = req.app.locals.userDAO;
-  const filter: Partial<User> = { email: req.body.email };
 
-  const user = await userDAO.findOne(filter);
-
-  if (user && (await bcrypt.compare(req.body.password, user.password))) {
-    authService.createAndSetToken({ id: user.id }, res);
-    res.status(201).json(user);
-  } else {
-    authService.removeToken(res);
-    res.status(401).json({ message: 'E-Mail oder Passwort ungültig!' });
-  }
-});
-
-// ----------------------------
 // get cookbooks from all users
-router.get('/', authService.expressMiddleware, async (req, res) => {
+router.get('/', async (req, res) => {
   const cookbookDAO: GenericDAO<Cookbook> = req.app.locals.cookbookDAO;
   const cookbooks = await cookbookDAO.findAll();
 
   // prepare json response
   const dto = {
-    cookbooks: cookbooks.map(book => {
+    cookbooks: cookbooks?.map(book => {
       return { id: book.id, title: book.title };
     })
   };
@@ -173,7 +157,7 @@ router.patch('/', authService.expressMiddleware, async (req, res) => {
   const errors: string[] = [];
 
   // validate parameters
-  if (!hasRequiredFields(req.body, ['id', 'title', 'description'], errors)) {
+  if (!hasRequiredFields(req.body, ['id', 'title'], errors)) {
     return res.status(400).json({ message: errors });
   }
 
@@ -193,12 +177,7 @@ router.patch('/', authService.expressMiddleware, async (req, res) => {
   cookbook!.title = req.body.title;
   cookbook!.description = req.body.description;
 
-  const success = await cookbookDAO.update(cookbook);
-
-  if (!success) {
-    res.status(404).json({ message: 'Das Kochbuch konnte nicht aktualisiert werden.' });
-    return;
-  }
+  await cookbookDAO.update(cookbook);
 
   res.status(200).end();
 });

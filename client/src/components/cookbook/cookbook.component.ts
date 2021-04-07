@@ -11,11 +11,11 @@ interface Recipe {
 }
 
 const sharedCSS = require('../shared.scss');
-const componentCSS = require('./cookbook-details.component.scss');
+const componentCSS = require('./cookbook.component.scss');
 
-@customElement('app-cookbook-details')
+@customElement('app-cookbook')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-class CookbookDetailsComponent extends PageMixin(LitElement) {
+class CookbookComponent extends PageMixin(LitElement) {
   static styles = [
     css`
       ${unsafeCSS(sharedCSS)}
@@ -34,6 +34,9 @@ class CookbookDetailsComponent extends PageMixin(LitElement) {
   @query('#new-description')
   newDescriptionElement!: HTMLInputElement;
 
+  @query('form')
+  form!: HTMLFormElement;
+
   @internalProperty()
   recipes: Recipe[] = [];
 
@@ -50,10 +53,10 @@ class CookbookDetailsComponent extends PageMixin(LitElement) {
 
   async firstUpdated() {
     try {
-      const response = await httpClient.get(`/cookbooks/details/${this.cookbookId}`);
-      const json = (await response.json()).results;
+      const resp = await httpClient.get(`/cookbooks/details/${this.cookbookId}`);
+      const json = (await resp.json()).results;
       console.log(JSON.stringify(json));
-      this.ownCookbooks = json.owner.id === localStorage.getItem('user-id');
+      this.ownCookbooks = json.owner.id === sessionStorage.getItem('user-id');
       this.title = json.title;
       this.description = json.description;
       this.recipes = json.recipes;
@@ -66,11 +69,12 @@ class CookbookDetailsComponent extends PageMixin(LitElement) {
   render() {
     return html`${this.renderNotification()}
     <div class="header">
-      ${this.ownCookbooks ? html`<label id="toggle-edit-icon" for="toggle-edit"></label>` : nothing}
       <input type="checkbox" id="toggle-edit" />
+      ${this.ownCookbooks ? html`<label class="btn btn-success" for="toggle-edit">Bearbeiten</label>` : nothing}
       <h1>${this.title}</h1>
       <p>${this.description}</p>
-      <form>
+      
+      <form novalidate>
         <div class="form-group">
           <label class="control-label" for="new-title">Neuer Titel</label>
           <input
@@ -90,38 +94,41 @@ class CookbookDetailsComponent extends PageMixin(LitElement) {
             class="form-control"
             id="new-description"
             name="new-description"
-            rows="5"
+            rows="6"
             placeholder="Füge deinem Kochbuch eine kurze Beschreibung hinzu."
             .value=${this.description}
           /></textarea>
         </div>
-        <button class="btn btn-primary" type="button" @click="${this.submit}">Speichern</button>
+        <button class="btn btn-success" type="button" @click="${this.updateCookbook}">Speichern</button>
         <button class="btn btn-secondary" type="button" @click="${this.cancel}">Abbrechen</button>
       </form>
     </div>
     <div class="cookbooks-container">
-      ${this.recipes.map(recipe => html`<div class="cookbooks-item">${recipe.id} und ${recipe.title}</div>`)}
+      ${this.recipes.map(recipe => html`<div class="cookbooks-item-wrapper"><div class="cookbooks-item">${recipe.id} und ${recipe.title}</div></div>`)}
     </div>
     `;
   }
 
-  async submit(event: Event) {
+  async updateCookbook(event: Event) {
     event.preventDefault();
 
-    const updatedCookbook = {
-      id: this.cookbookId,
-      description: this.newDescriptionElement.value,
-      title: this.newTitleElement.value
-    };
+    if (this.form.checkValidity()) {
+      const updatedCookbook = {
+        id: this.cookbookId,
+        description: this.newDescriptionElement.value,
+        title: this.newTitleElement.value
+      };
 
-    try {
-      await httpClient.patch('/cookbooks', updatedCookbook);
-      this.title = updatedCookbook.title;
-      this.description = updatedCookbook.description;
-      this.toggleEditElement.checked = false;
-    } catch ({ message }) {
-      console.log(message);
-      this.setNotification({ errorMessage: message });
+      try {
+        await httpClient.patch('/cookbooks', updatedCookbook);
+        this.title = updatedCookbook.title;
+        this.description = updatedCookbook.description;
+        this.toggleEditElement.checked = false;
+      } catch ({ message }) {
+        this.setNotification({ errorMessage: message });
+      }
+    } else {
+      this.setNotification({ errorMessage: 'Das Kochbuch benötigt einen Titel.' });
     }
   }
 

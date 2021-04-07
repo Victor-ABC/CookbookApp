@@ -1,13 +1,8 @@
 /* Autor: Felix Schaphaus */
 
 .header {
-  #toggle-edit-icon {
+  label[for="toggle-edit"] {
     float: right;
-  }
-  #toggle-edit-icon::before {
-    color: gray;
-    font: normal normal normal 1.25rem/1 'Font Awesome 5 Free';
-    content: '\f303';
   }
   form {
     display:none;
@@ -27,21 +22,28 @@
 }
 
 /* smartphone */
-@media screen and (max-width: 812px) {
+@media screen and (max-width: 600px) {
   .cookbooks-container {
     flex-direction: column;
+    flex-grow: 1;
   }
 }
 
 /* computer */
-@media screen and (min-width: 812px) {
+@media screen and (min-width: 600px) {
   .cookbooks-container {
     flex-direction: row;
   }
 }
 
-.cookbooks-item {
-  background-color: aqua;
+.cookbooks-item-wrapper {
+  min-width: 300px;
   flex-basis: 33%;
-  padding: 0.5rem;
+  padding-right: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+.cookbooks-item {
+  height: 220px;
+  background-color: aqua;
 }

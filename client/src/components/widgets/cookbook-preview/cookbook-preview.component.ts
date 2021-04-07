@@ -4,11 +4,11 @@ import { nothing } from 'lit-html';
 import { css, customElement, html, LitElement, property, unsafeCSS } from 'lit-element';
 
 const sharedCSS = require('../../shared.scss');
-const componentCSS = require('./cookbook.component.scss');
+const componentCSS = require('./cookbook-preview.component.scss');
 
-@customElement('app-cookbook')
+@customElement('app-cookbook-preview')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-class CookbookComponent extends LitElement {
+class CookbookPreviewComponent extends LitElement {
   static styles = [
     css`
       ${unsafeCSS(sharedCSS)}
