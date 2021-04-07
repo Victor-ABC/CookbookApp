@@ -108,7 +108,7 @@ Vorname Nachname`;
           .finally(() => {
             setTimeout(() => {
               this.messageDiv.textContent = 'placeHolder';
-              this.messageDiv.setAttribute('class', '');
+              this.messageDiv.setAttribute('value', '');
             }, 1500);
           });
       } catch ({ message }) {

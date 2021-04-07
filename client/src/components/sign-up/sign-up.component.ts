@@ -4,7 +4,7 @@ import { css, customElement, html, LitElement, query, unsafeCSS } from 'lit-elem
 import { httpClient } from '../../http-client';
 import { router } from '../../router';
 import { PageMixin } from '../page.mixin';
-import { myEmitter } from '../widgets/header/header.component';
+import { headerEmitter } from '../widgets/header/header.component';
 
 const sharedCSS = require('../shared.scss');
 const componentCSS = require('./sign-up.component.scss');
@@ -125,7 +125,7 @@ class SignUpComponent extends PageMixin(LitElement) {
         const response = await httpClient.post('/users/sign-up', accountData);
         const json = await response.json();
         localStorage.setItem('user-id', json.id);
-        myEmitter.emit('setId', json.id);
+        headerEmitter.emit('setId', json.id);
         router.navigate('api');
       } catch ({ message }) {
         this.setNotification({ errorMessage: message });

@@ -32,12 +32,14 @@ describe('User-Interface: Testing sing-in / sign-out: ', () => {
 
   it('(the user Profile) should only be accessable for signed-in Users', async () => {
     await page.click('text=Abmelden');
-    await Promise.all([
-      page.waitForNavigation({ url: 'http://localhost:8080/app/users/sign-in' }),
-      page.click('text=Mein Profil')
-    ]);
-    expect(await page.url()).not.toBe('http://localhost:8080/app/users/profile'); // should redirect because user is logged out.
-    expect(await page.url()).toBe('http://localhost:8080/app/users/sign-in'); // whenever a user is not signed-in; he should be redirected to sign-in.
+    const element = await page.$('text=Mein Profil');
+    expect(element).toBeNull();
+  });
+
+  it('should not be possible to sign-out, if you are not signed in', async () => {
+    await page.click('text=Abmelden');
+    const element = await page.$('text=Abmelden');
+    expect(element).toBeNull();
   });
 
   it('should be able to sign in after creating an account and being loged out', async () => {

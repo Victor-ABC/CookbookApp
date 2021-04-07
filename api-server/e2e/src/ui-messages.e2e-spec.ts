@@ -200,11 +200,12 @@ describe('User-Interface: Message-Service: ', () => {
     await page2.click('button:has-text("refresh")');
     const refreshResponse = await page2.waitForResponse('http://localhost:3000/api/message');
     expect(refreshResponse.status()).toBe(200);
+    await page2.close();
   });
 
   it('should update all messages by clicking update button but no message was sent', async () => {
     const userA = 'arne5';
-    const page = await singUpUserAndGoToProfile(userA, password, browserContext);
+    page = await singUpUserAndGoToProfile(userA, password, browserContext);
     await page.click('button:has-text("refresh")');
     const refreshResponse = await page.waitForResponse('http://localhost:3000/api/message');
     expect(refreshResponse.status()).toBe(200);

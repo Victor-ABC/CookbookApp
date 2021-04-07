@@ -4,22 +4,22 @@ import { css, customElement, html, LitElement, property, internalProperty, unsaf
 import { classMap } from 'lit-html/directives/class-map';
 import { PageMixin } from '../../page.mixin';
 import { EventEmitter } from 'events';
-class MyEmitter extends EventEmitter {}
-export const myEmitter = new MyEmitter();
+class HeaderEmitter extends EventEmitter {}
+export const headerEmitter = new HeaderEmitter();
 
 const sharedCSS = require('../../shared.scss');
 const headerCSs = require('./header.component.scss');
 
 @customElement('app-header')
 export class HeaderComponent extends PageMixin(LitElement) {
-  private myEmitter;
+  private headerEmitter;
   constructor() {
     super();
-    this.myEmitter = myEmitter;
-    this.myEmitter.on('setId', (id: string) => {
+    this.headerEmitter = headerEmitter;
+    this.headerEmitter.on('setId', (id: string) => {
       this.userId = id;
     });
-    this.myEmitter.on('deleteId', () => {
+    this.headerEmitter.on('deleteId', () => {
       this.userId = '';
     });
   }
