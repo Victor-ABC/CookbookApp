@@ -8,6 +8,7 @@ import { httpClient } from '../../http-client';
 interface Recipe {
   id: string;
   title: string;
+  description: string;
 }
 
 const sharedCSS = require('../shared.scss');
@@ -104,7 +105,17 @@ class CookbookComponent extends PageMixin(LitElement) {
       </form>
     </div>
     <div class="cookbooks-container">
-      ${this.recipes.map(recipe => html`<div class="cookbooks-item-wrapper"><div class="cookbooks-item">${recipe.id} und ${recipe.title}</div></div>`)}
+      ${this.recipes.map(
+        recipe =>
+          html`<app-cookbook-details
+            data-id=${recipe.id}
+            @appcookbookopenclick=${() => this.openRecipe(recipe)}
+            @appcookbookdeleteclick=${() => this.deleteRecipe(recipe)}
+          >
+            <span slot="title">${recipe.title}</span>
+            <span slot="description">${recipe.description}</span>
+          </app-cookbook-details>`
+      )}
     </div>
     `;
   }
@@ -136,5 +147,13 @@ class CookbookComponent extends PageMixin(LitElement) {
     this.toggleEditElement.checked = false;
     this.newTitleElement.value = this.title;
     this.newDescriptionElement.value = this.description;
+  }
+
+  openRecipe(recipe: Recipe) {
+    this.setNotification({ errorMessage: 'Noch nicht implementiert.' });
+  }
+
+  deleteRecipe(recipe: Recipe) {
+    this.setNotification({ errorMessage: 'Noch nicht implementiert.' });
   }
 }

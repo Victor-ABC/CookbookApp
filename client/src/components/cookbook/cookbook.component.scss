@@ -1,6 +1,7 @@
 /* Autor: Felix Schaphaus */
 
 .header {
+  margin-bottom: 0.75rem;
   label[for="toggle-edit"] {
     float: right;
   }
@@ -34,16 +35,4 @@
   .cookbooks-container {
     flex-direction: row;
   }
-}
-
-.cookbooks-item-wrapper {
-  min-width: 300px;
-  flex-basis: 33%;
-  padding-right: 0.25rem;
-  padding-bottom: 0.25rem;
-}
-
-.cookbooks-item {
-  height: 220px;
-  background-color: aqua;
 }

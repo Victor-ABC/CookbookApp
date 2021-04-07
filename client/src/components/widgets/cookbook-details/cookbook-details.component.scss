@@ -1,0 +1,65 @@
+/* Autor: Felix Schaphaus */
+
+:host {
+  min-width: 300px;
+  flex-basis: 33.33%;
+  padding-right: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+.item {
+  height: 230px;
+  background-color: #5cb85c;
+}
+
+img {
+  height: 230px;
+  width: 100%;
+}
+
+.item:hover {
+  img {
+    opacity: 0.35;
+  }
+  .description {
+    visibility: visible;
+  }
+  .remove-recipe {
+    visibility: visible;
+  }
+}
+
+.recipe-id {
+  background-color: #5cb85c;
+  height: 30px;
+  width: 100%;
+  position: relative;
+  display: inline-block;
+  padding: 5px;
+  top: -30px;
+  opacity: 0.85;
+}
+
+.description {
+  height: 170px;
+  width: 100%;
+  position: relative;
+  display: inline-block;
+  padding: 5px;
+  top: -230px;
+  opacity: 0.85;
+  visibility: hidden;
+}
+
+.remove-recipe {
+  position: relative;
+  top: -425px;
+  left: 5px;
+  visibility: hidden;
+}
+
+.remove-recipe::before {
+  font: normal normal normal 1.25rem/1 'Font Awesome 5 Free';
+  color: red;
+  content: '\f2ed';
+}
