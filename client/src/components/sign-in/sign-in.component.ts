@@ -4,6 +4,7 @@ import { router } from '../../router';
 import { PageMixin } from '../page.mixin';
 import { css, customElement, html, LitElement, query, unsafeCSS } from 'lit-element';
 import { httpClient } from '../../http-client';
+import { myEmitter } from '../widgets/header/header.component';
 
 const sharedCSS = require('../shared.scss');
 const componentCSS = require('./sign-in.component.scss');
@@ -58,6 +59,7 @@ export class SignInComponent extends PageMixin(LitElement) {
         const response = await httpClient.post('/users/sign-in', authData);
         const json = await response.json();
         localStorage.setItem('user-id', json.id);
+        myEmitter.emit('setId', json.id);
         router.navigate('/rezepte');
       } catch ({ message }) {
         this.setNotification({ errorMessage: message });

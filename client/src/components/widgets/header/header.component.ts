@@ -3,13 +3,26 @@
 import { css, customElement, html, LitElement, property, internalProperty, unsafeCSS } from 'lit-element';
 import { classMap } from 'lit-html/directives/class-map';
 import { PageMixin } from '../../page.mixin';
+import { EventEmitter } from 'events';
+class MyEmitter extends EventEmitter {}
+export const myEmitter = new MyEmitter();
 
 const sharedCSS = require('../../shared.scss');
 const headerCSs = require('./header.component.scss');
 
 @customElement('app-header')
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-class HeaderComponent extends PageMixin(LitElement) {
+export class HeaderComponent extends PageMixin(LitElement) {
+  private myEmitter;
+  constructor() {
+    super();
+    this.myEmitter = myEmitter;
+    this.myEmitter.on('setId', (id: string) => {
+      this.userId = id;
+    });
+    this.myEmitter.on('deleteId', () => {
+      this.userId = '';
+    });
+  }
   static styles = [
     css`
       ${unsafeCSS(sharedCSS)}
@@ -21,6 +34,9 @@ class HeaderComponent extends PageMixin(LitElement) {
 
   @property()
   title = '';
+
+  @property()
+  userId = '';
 
   @property()
   linkItems: Array<{ title: string; routePath: string }> = [];
@@ -69,13 +85,24 @@ class HeaderComponent extends PageMixin(LitElement) {
           id="navbarNav"
         >
           <ul class="flex-item navbar-nav">
-            ${this.linkItems.map(
-              linkItem => html`
-                <li class="nav-item">
-                  <a class="nav-link" href="${linkItem.routePath}" @click=${this.close}>${linkItem.title}</a>
-                </li>
-              `
-            )}
+            ${this.linkItems.map(linkItem => {
+              if (this.userId) {
+                console.log(localStorage.getItem('user-id'));
+                return html`
+                  <li class="nav-item">
+                    <a class="nav-link" href="${linkItem.routePath}" @click=${this.close}>${linkItem.title}</a>
+                  </li>
+                `;
+              } else {
+                if (linkItem.title === 'Konto erstellen' || linkItem.title === 'Anmelden') {
+                  return html`
+                    <li class="nav-item">
+                      <a class="nav-link" href="${linkItem.routePath}" @click=${this.close}>${linkItem.title}</a>
+                    </li>
+                  `;
+                }
+              }
+            })}
           </ul>
         </div>
       </nav>
