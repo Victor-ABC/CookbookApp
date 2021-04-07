@@ -43,6 +43,7 @@ describe('User-Interface: Testing sing-in / sign-out: ', () => {
   });
 
   it('should be able to sign in after creating an account and being loged out', async () => {
+    await page.click('text=Abmelden');
     await page.click('text=Anmelden');
     await page.click('input[name="name"]');
     await page.fill('input[name="name"]', name);

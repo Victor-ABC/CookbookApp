@@ -27,6 +27,7 @@ describe('User-Interface: Testing sing-up', () => {
 
   it('should not be possible to create two users with the same Name', async () => {
     page = await singUpUserAndGoToProfile('victor', '1234567890', browserContext);
+    await page.click('text=Abmelden');
     await page.click('text=Konto erstellen');
     await page.click('input[name="name"]');
     await page.fill('input[name="name"]', 'victor');

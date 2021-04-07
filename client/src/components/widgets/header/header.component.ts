@@ -12,17 +12,6 @@ const headerCSs = require('./header.component.scss');
 
 @customElement('app-header')
 export class HeaderComponent extends PageMixin(LitElement) {
-  private headerEmitter;
-  constructor() {
-    super();
-    this.headerEmitter = headerEmitter;
-    this.headerEmitter.on('setId', (id: string) => {
-      this.userId = id;
-    });
-    this.headerEmitter.on('deleteId', () => {
-      this.userId = '';
-    });
-  }
   static styles = [
     css`
       ${unsafeCSS(sharedCSS)}
@@ -31,7 +20,6 @@ export class HeaderComponent extends PageMixin(LitElement) {
       ${unsafeCSS(headerCSs)}
     `
   ];
-
   @property()
   title = '';
 
@@ -43,6 +31,21 @@ export class HeaderComponent extends PageMixin(LitElement) {
 
   @internalProperty()
   private navbarOpen = false;
+
+  private headerEmitter;
+  private exclude : string[]; 
+
+  constructor() {
+    super();
+    this.exclude = ["Konto erstellen" , "Anmelden"];
+    this.headerEmitter = headerEmitter;
+    this.headerEmitter.on('setId', (id: string) => {
+      this.userId = id;
+    });
+    this.headerEmitter.on('deleteId', () => {
+      this.userId = '';
+    });
+  }
 
   render() {
     return html`
@@ -87,14 +90,15 @@ export class HeaderComponent extends PageMixin(LitElement) {
           <ul class="flex-item navbar-nav">
             ${this.linkItems.map(linkItem => {
               if (this.userId) {
-                console.log(localStorage.getItem('user-id'));
-                return html`
-                  <li class="nav-item">
-                    <a class="nav-link" href="${linkItem.routePath}" @click=${this.close}>${linkItem.title}</a>
-                  </li>
-                `;
+                if (!this.exclude.includes(linkItem.title)) {
+                    return html`
+                      <li class="nav-item">
+                        <a class="nav-link" href="${linkItem.routePath}" @click=${this.close}>${linkItem.title}</a>
+                      </li>
+                    `;
+              }
               } else {
-                if (linkItem.title === 'Konto erstellen' || linkItem.title === 'Anmelden') {
+                if (this.exclude.includes(linkItem.title)) {
                   return html`
                     <li class="nav-item">
                       <a class="nav-link" href="${linkItem.routePath}" @click=${this.close}>${linkItem.title}</a>
