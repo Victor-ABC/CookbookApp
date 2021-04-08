@@ -4,6 +4,7 @@ import { nothing } from 'lit-html';
 import { css, customElement, html, LitElement, internalProperty, query, unsafeCSS, property } from 'lit-element';
 import { PageMixin } from '../page.mixin';
 import { httpClient } from '../../http-client';
+import { router } from '../../router';
 
 interface Recipe {
   id: string;
@@ -52,16 +53,17 @@ class CookbookComponent extends PageMixin(LitElement) {
 
   ownCookbooks!: boolean;
 
+  empty!: boolean;
+
   async firstUpdated() {
     try {
       const resp = await httpClient.get(`/cookbooks/details/${this.cookbookId}`);
       const json = (await resp.json()).results;
-      console.log(JSON.stringify(json));
       this.ownCookbooks = json.owner.id === sessionStorage.getItem('user-id');
+      this.recipes = json.recipes;
+      this.empty = this.recipes.length === 0;
       this.title = json.title;
       this.description = json.description;
-      this.recipes = json.recipes;
-      this.requestUpdate();
     } catch ({ message }) {
       this.setNotification({ errorMessage: message });
     }
@@ -117,6 +119,7 @@ class CookbookComponent extends PageMixin(LitElement) {
           </app-cookbook-details>`
       )}
     </div>
+    ${this.empty ? html`<div class="alert alert-info">Das Kochbuch ist noch leer.</div>` : nothing}
     `;
   }
 
@@ -150,10 +153,16 @@ class CookbookComponent extends PageMixin(LitElement) {
   }
 
   openRecipe(recipe: Recipe) {
-    this.setNotification({ errorMessage: 'Noch nicht implementiert.' });
+    router.navigate(`/recipes/${recipe.id}`);
   }
 
-  deleteRecipe(recipe: Recipe) {
-    this.setNotification({ errorMessage: 'Noch nicht implementiert.' });
+  async deleteRecipe(recipeToRemove: Recipe) {
+    try {
+      await httpClient.delete(`/cookbooks/${this.cookbookId}/${recipeToRemove.id}`);
+      this.recipes = this.recipes.filter(recipe => recipe.id !== recipeToRemove.id);
+      this.empty = this.recipes.length === 0;
+    } catch ({ message }) {
+      this.setNotification({ errorMessage: message });
+    }
   }
 }

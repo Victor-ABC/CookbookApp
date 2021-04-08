@@ -27,8 +27,8 @@ class CookbookDetailsComponent extends LitElement {
         <span class="recipe-id" data-id="${this.recipeId}" @click="${() => this.emit('appcookbookopenclick')}">
           <slot name="title"></slot>
         </span>
-        <span class="description" @click="${() => this.emit('appcookbookopenclick')}"
-          ><slot name="description"></slot>
+        <span class="description" @click="${() => this.emit('appcookbookopenclick')}">
+          <slot name="description"></slot>
         </span>
         <span class="remove-recipe" @click="${() => this.emit('appcookbookdeleteclick')}"></span>
       </div>

@@ -3,18 +3,19 @@
 :host {
   min-width: 300px;
   flex-basis: 33.33%;
-  padding-right: 0.25rem;
-  padding-bottom: 0.25rem;
+  padding: 0.20rem;
 }
 
 .item {
   height: 230px;
   background-color: #5cb85c;
+  border-radius: 0.25rem;
 }
 
 img {
   height: 230px;
   width: 100%;
+  border-radius: 0.25rem;
 }
 
 .item:hover {
@@ -38,6 +39,8 @@ img {
   padding: 5px;
   top: -30px;
   opacity: 0.85;
+  border-bottom-left-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
 }
 
 .description {
@@ -53,13 +56,13 @@ img {
 
 .remove-recipe {
   position: relative;
-  top: -425px;
-  left: 5px;
+  top: -430px;
+  left: 8px;
   visibility: hidden;
 }
 
 .remove-recipe::before {
-  font: normal normal normal 1.25rem/1 'Font Awesome 5 Free';
-  color: red;
+  font: normal normal normal 1rem/30px 'Font Awesome 5 Free';
+  color: var(--app-error-color);
   content: '\f2ed';
 }

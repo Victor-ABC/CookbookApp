@@ -26,13 +26,13 @@
 }
 
 .remove-cookbook::before {
-  color: red;
+  color: var(--app-error-color);
   font: normal normal normal 1.25rem/1 'Font Awesome 5 Free';
   content: '\f2ed';
 }
 
 .show-details::before {
-  color: blue;
+  color: var(--app-primary-color);
   font: normal normal normal 1.25rem/1 'Font Awesome 5 Free';
   content: '\f05a';
 }
