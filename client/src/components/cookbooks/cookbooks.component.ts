@@ -35,42 +35,34 @@ class CookbooksComponent extends PageMixin(LitElement) {
   cookbooks: Cookbook[] = [];
 
   @internalProperty()
-  title!: string;
+  headline!: string;
 
   async firstUpdated() {
-    await this.fetchCookbooks(this.userId);
+    try {
+      const url = this.userId ? `/cookbooks/${this.userId}` : '/cookbooks';
+      const resp = await httpClient.get(url);
+      const json = (await resp.json()).results;
+      this.cookbooks = json.cookbooks;
+      this.headline = json.author ? `${json.author}'s Kochbücher` : 'Alle Kochbücher';
+    } catch ({ message }) {
+      router.navigate('/cookbooks');
+    }
   }
 
   render() {
     return html`
       ${this.renderNotification()}
-      <h1>${this.title}</h1>
+      <h1>${this.headline}</h1>
       <div class="cookbooks">
         ${this.cookbooks.map(
           book => html`<app-cookbook-preview
             data-own-cookbooks="false"
-            data-id="${book.id}"
             @appcookbookdetailsclick=${() => this.showDetails(book)}
             ><span slot="title">${book.title}</span></app-cookbook-preview
           >`
         )}
       </div>
     `;
-  }
-
-  async fetchCookbooks(userId?: string) {
-    const url = userId ? `/cookbooks/${userId}` : '/cookbooks';
-    try {
-      const resp = await httpClient.get(url);
-      const json = (await resp.json()).results;
-      this.cookbooks = json.cookbooks;
-      this.title = userId ? `${json.creator}'s Kochbücher` : 'Alle Kochbücher';
-    } catch ({ message }) {
-      this.setNotification({
-        errorMessage: 'Der Benutzer existiert nicht. Du wirst zur Liste aller Kochbücher weitergeleitet.'
-      });
-      setTimeout(() => router.navigate('/cookbooks'), 3000);
-    }
   }
 
   async showDetails(cookbook: Cookbook) {

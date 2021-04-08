@@ -1,5 +1,6 @@
 /* Autor: Felix Schaphaus */
 
+import { nothing } from 'lit-html';
 import { css, customElement, html, LitElement, property, unsafeCSS } from 'lit-element';
 
 const sharedCSS = require('../../shared.scss');
@@ -17,20 +18,22 @@ class CookbookDetailsComponent extends LitElement {
     `
   ];
 
-  @property({ attribute: 'recipe-id', type: String })
-  recipeId!: string;
+  @property({ attribute: 'data-own-cookbooks', type: String })
+  ownCookbooks!: string;
 
   render() {
     return html`
       <div class="item">
         <img src="https://picsum.photos/400/300" />
-        <span class="recipe-id" data-id="${this.recipeId}" @click="${() => this.emit('appcookbookopenclick')}">
+        <span class="recipe-id" @click="${() => this.emit('appcookbookopenclick')}">
           <slot name="title"></slot>
         </span>
         <span class="description" @click="${() => this.emit('appcookbookopenclick')}">
           <slot name="description"></slot>
         </span>
-        <span class="remove-recipe" @click="${() => this.emit('appcookbookdeleteclick')}"></span>
+        ${this.ownCookbooks === 'true'
+          ? html`<span class="remove-recipe" @click="${() => this.emit('appcookbookdeleteclick')}"></span>`
+          : nothing}
       </div>
     `;
   }

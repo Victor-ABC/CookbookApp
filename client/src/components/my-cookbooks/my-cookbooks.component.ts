@@ -35,11 +35,13 @@ class CookbooksComponent extends PageMixin(LitElement) {
   cookbooks: Cookbook[] = [];
 
   async firstUpdated() {
-    if (!sessionStorage.getItem('user-id')) {
+    try {
+      const resp = await httpClient.get('/cookbooks/own');
+      const json = (await resp.json()).results;
+      this.cookbooks = json.cookbooks;
+    } catch ({ message }) {
       router.navigate('/users/sign-in');
     }
-
-    await this.fetchOwnCookbooks();
   }
 
   render() {
@@ -62,7 +64,6 @@ class CookbooksComponent extends PageMixin(LitElement) {
         ${this.cookbooks.map(
           book => html`<app-cookbook-preview
             data-own-cookbooks="true"
-            data-id="${book.id}"
             @appcookbookdetailsclick=${() => this.showDetails(book)}
             @appcookbookdeleteclick=${() => this.deleteCookbook(book)}
             ><span slot="title">${book.title}</span></app-cookbook-preview
@@ -100,17 +101,7 @@ class CookbooksComponent extends PageMixin(LitElement) {
     }
   }
 
-  async fetchOwnCookbooks() {
-    try {
-      const resp = await httpClient.get(`/cookbooks/${sessionStorage.getItem('user-id')}`);
-      const json = (await resp.json()).results;
-      this.cookbooks = json.cookbooks;
-    } catch ({ message }) {
-      router.navigate('/users/sign-in');
-    }
-  }
-
   async showDetails(cookbook: Cookbook) {
-    router.navigate(`/cookbooks/details/${cookbook.id}`);
+    router.navigate(`/cookbooks/details/${cookbook.id}?own`);
   }
 }

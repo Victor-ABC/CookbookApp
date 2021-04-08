@@ -9,25 +9,22 @@ import { authService } from '../services/auth.service';
 
 const router = express.Router();
 
-// get cookbooks from all users
+// get cookbook list from all users
 router.get('/', async (req, res) => {
-  const cookbookDAO: GenericDAO<Cookbook> = req.app.locals.cookbookDAO;
-  const cookbooks = await cookbookDAO.findAll();
-
-  // prepare json response
-  const dto = {
-    cookbooks: cookbooks?.map(book => {
-      return { id: book.id, title: book.title };
-    })
-  };
-
-  res.status(200).json({ results: dto });
+  const cookbooks = await getCookbooks(req.app.locals.cookbookDAO);
+  res.status(200).json({ results: { cookbooks } });
 });
 
-// get cookbooks from a specified user
+// get list of own cookbooks
+router.get('/own', authService.expressMiddleware, async (req, res) => {
+  const cookbooks = await getCookbooks(req.app.locals.cookbookDAO, { userId: res.locals.user.id });
+  res.status(200).json({ results: { cookbooks } });
+});
+
+// get cookbook list from a user
 router.get('/:userId', async (req, res) => {
-  const cookbookDAO: GenericDAO<Cookbook> = req.app.locals.cookbookDAO;
   const userDAO: GenericDAO<User> = req.app.locals.userDAO;
+  const cookbooks = await getCookbooks(req.app.locals.cookbookDAO);
 
   // grab user form database
   const user = await userDAO.findOne({ id: req.params.userId });
@@ -38,92 +35,7 @@ router.get('/:userId', async (req, res) => {
     return;
   }
 
-  // grab cookbooks from database
-  const cookbooks = await cookbookDAO.findAll({ userId: req.params.userId });
-
-  // prepare json response
-  const dto = {
-    creator: user?.name,
-    cookbooks: cookbooks.map(book => {
-      return { id: book.id, title: book.title };
-    })
-  };
-
-  res.status(200).json({ results: dto });
-});
-
-// get cookbook details
-router.get('/details/:cookbookId', async (req, res) => {
-  const cookbookDAO: GenericDAO<Cookbook> = req.app.locals.cookbookDAO;
-  const recipeDAO: GenericDAO<Recipe> = req.app.locals.recipeDAO;
-  const userDAO: GenericDAO<User> = req.app.locals.userDAO;
-
-  // grab cookbook from database
-  const cookbook = await cookbookDAO.findOne({ id: req.params.cookbookId });
-
-  // validate cookbook
-  if (!cookbook) {
-    res.status(404).json({ message: 'Das Kochbuch existiert nicht.' });
-    return;
-  }
-
-  // grab recipes from database
-  const recipes = await recipeDAO.findAll({
-    cookbookIds: [cookbook.id]
-  });
-
-  // grab user form database
-  const user = await userDAO.findOne({ id: cookbook.userId });
-
-  // validate user
-  if (!user) {
-    res.status(404).json({ message: 'Der Benutzer existiert nicht.' });
-    return;
-  }
-
-  // prepare json response
-  const recipesDTO = recipes.map(recipe => {
-    return {
-      id: recipe.id,
-      title: recipe.title,
-      description: recipe.description,
-      userId: recipe.userId,
-      ingredients: recipe.ingredients
-    };
-  });
-
-  res.status(200).json({
-    results: {
-      id: cookbook.id,
-      title: cookbook.title,
-      description: cookbook.description,
-      owner: {
-        id: user.id,
-        name: user.name
-      },
-      recipes: recipesDTO
-    }
-  });
-});
-
-// delete a cookbook
-router.delete('/:cookbookId', authService.expressMiddleware, async (req, res) => {
-  const cookbookDAO: GenericDAO<Cookbook> = req.app.locals.cookbookDAO;
-
-  // grab cookbook from database
-  const filter: Partial<Cookbook> = {
-    id: req.params.cookbookId,
-    userId: res.locals.user.id
-  };
-  const cookbook = await cookbookDAO.findOne(filter);
-
-  // delete cookbook
-  if (!cookbook) {
-    res.status(404).json({ message: 'Das Kochbuch existiert nicht oder Berechtigungen zum Löschen fehlen.' });
-  } else {
-    cookbookDAO.delete(cookbook.id);
-    res.status(200).end();
-  }
+  res.status(200).json({ results: { author: user.name, cookbooks } });
 });
 
 // create a new empty cookbook
@@ -151,7 +63,7 @@ router.post('/', authService.expressMiddleware, async (req, res) => {
   });
 });
 
-// update a cookbook
+// update cookbook title or description
 router.patch('/', authService.expressMiddleware, async (req, res) => {
   const cookbookDAO: GenericDAO<Cookbook> = req.app.locals.cookbookDAO;
   const errors: string[] = [];
@@ -174,12 +86,31 @@ router.patch('/', authService.expressMiddleware, async (req, res) => {
   }
 
   // update cookbook
-  cookbook!.title = req.body.title;
-  cookbook!.description = req.body.description;
+  cookbook.title = req.body.title;
+  cookbook.description = req.body.description;
 
   await cookbookDAO.update(cookbook);
 
   res.status(200).end();
+});
+
+// delete a cookbook
+router.delete('/:cookbookId', authService.expressMiddleware, async (req, res) => {
+  const cookbookDAO: GenericDAO<Cookbook> = req.app.locals.cookbookDAO;
+
+  // grab cookbook from database
+  const cookbook = await cookbookDAO.findOne({
+    id: req.params.cookbookId,
+    userId: res.locals.user.id
+  });
+
+  // delete cookbook
+  if (!cookbook) {
+    res.status(404).json({ message: 'Das Kochbuch existiert nicht oder Berechtigungen zum Löschen fehlen.' });
+  } else {
+    cookbookDAO.delete(cookbook.id);
+    res.status(200).end();
+  }
 });
 
 // add a recipe to a cookbook
@@ -293,6 +224,58 @@ router.delete('/:cookbookId/:recipeId', authService.expressMiddleware, async (re
   res.status(200).end();
 });
 
+// get cookbook details
+router.get('/details/:cookbookId', async (req, res) => {
+  const cookbookDAO: GenericDAO<Cookbook> = req.app.locals.cookbookDAO;
+  const recipeDAO: GenericDAO<Recipe> = req.app.locals.recipeDAO;
+  const userDAO: GenericDAO<User> = req.app.locals.userDAO;
+
+  // grab cookbook from database
+  const cookbook = await cookbookDAO.findOne({ id: req.params.cookbookId });
+
+  // validate cookbook
+  if (!cookbook) {
+    res.status(404).json({ message: 'Das Kochbuch existiert nicht.' });
+    return;
+  }
+
+  // grab recipes from database
+  const recipes = await recipeDAO.findAll({
+    cookbookIds: [cookbook.id]
+  });
+
+  // grab user form database
+  const user = await userDAO.findOne({ id: cookbook.userId });
+
+  // validate user
+  if (!user) {
+    res.status(404).json({ message: 'Der Benutzer existiert nicht.' });
+    return;
+  }
+
+  // prepare json response
+  const recipesDto = recipes.map(recipe => {
+    return {
+      id: recipe.id,
+      title: recipe.title,
+      description: recipe.description
+    };
+  });
+
+  res.status(200).json({
+    results: {
+      id: cookbook.id,
+      title: cookbook.title,
+      description: cookbook.description,
+      author: {
+        id: user.id,
+        name: user.name
+      },
+      recipes: recipesDto
+    }
+  });
+});
+
 function hasRequiredFields(object: { [key: string]: unknown }, requiredFields: string[], errors: string[]) {
   let hasErrors = false;
   requiredFields.forEach(fieldName => {
@@ -302,6 +285,14 @@ function hasRequiredFields(object: { [key: string]: unknown }, requiredFields: s
     }
   });
   return !hasErrors;
+}
+
+async function getCookbooks(dao: GenericDAO<Cookbook>, filter?: Partial<Cookbook>) {
+  const cookbooks = await dao.findAll(filter);
+
+  return cookbooks.map(book => {
+    return { id: book.id, title: book.title };
+  });
 }
 
 export default router;

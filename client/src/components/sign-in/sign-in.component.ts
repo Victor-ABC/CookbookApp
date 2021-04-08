@@ -57,10 +57,8 @@ class SignInComponent extends PageMixin(LitElement) {
         password: this.passwordElement.value
       };
       try {
-        const response = await httpClient.post('/users/sign-in', authData);
-        const user = await response.json();
-        sessionStorage.setItem('user-id', user.id);
-        router.navigate('/cookbooks');
+        await httpClient.post('/users/sign-in', authData);
+        router.navigate('/my-cookbooks');
       } catch ({ message }) {
         this.setNotification({ errorMessage: message });
       }

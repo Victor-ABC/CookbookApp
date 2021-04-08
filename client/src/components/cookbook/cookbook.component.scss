@@ -2,15 +2,19 @@
 
 .header {
   margin-bottom: 0.75rem;
+
   label[for="toggle-edit"] {
     float: right;
   }
+
   form {
     display:none;
   }
+
   #toggle-edit {
     display: none;
   }
+  
   #toggle-edit:checked ~ form {
     display: block;
   }
@@ -35,4 +39,9 @@
   .cookbooks-container {
     flex-direction: row;
   }
+}
+
+.author {
+  color: #5cb85c;
+  font-variant: small-caps;
 }

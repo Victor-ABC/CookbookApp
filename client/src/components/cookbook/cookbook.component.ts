@@ -6,6 +6,11 @@ import { PageMixin } from '../page.mixin';
 import { httpClient } from '../../http-client';
 import { router } from '../../router';
 
+interface Author {
+  id: string;
+  name: string;
+}
+
 interface Recipe {
   id: string;
   title: string;
@@ -51,7 +56,10 @@ class CookbookComponent extends PageMixin(LitElement) {
   @property()
   description!: string;
 
-  ownCookbooks!: boolean;
+  @property()
+  author: Author = {} as Author;
+
+  ownCookbooks = location.search === '?own';
 
   empty!: boolean;
 
@@ -59,10 +67,10 @@ class CookbookComponent extends PageMixin(LitElement) {
     try {
       const resp = await httpClient.get(`/cookbooks/details/${this.cookbookId}`);
       const json = (await resp.json()).results;
-      this.ownCookbooks = json.owner.id === sessionStorage.getItem('user-id');
       this.recipes = json.recipes;
       this.empty = this.recipes.length === 0;
       this.title = json.title;
+      this.author = json.author;
       this.description = json.description;
     } catch ({ message }) {
       this.setNotification({ errorMessage: message });
@@ -75,7 +83,7 @@ class CookbookComponent extends PageMixin(LitElement) {
       <input type="checkbox" id="toggle-edit" />
       ${this.ownCookbooks ? html`<label class="btn btn-success" for="toggle-edit">Bearbeiten</label>` : nothing}
       <h1>${this.title}</h1>
-      <p>${this.description}</p>
+      <p>${this.description} <span class="author" @click="${this.openCookbook}">von ${this.author.name}<span></p>
       
       <form novalidate>
         <div class="form-group">
@@ -110,7 +118,7 @@ class CookbookComponent extends PageMixin(LitElement) {
       ${this.recipes.map(
         recipe =>
           html`<app-cookbook-details
-            data-id=${recipe.id}
+            data-own-cookbooks=${this.ownCookbooks}
             @appcookbookopenclick=${() => this.openRecipe(recipe)}
             @appcookbookdeleteclick=${() => this.deleteRecipe(recipe)}
           >
@@ -164,5 +172,9 @@ class CookbookComponent extends PageMixin(LitElement) {
     } catch ({ message }) {
       this.setNotification({ errorMessage: message });
     }
+  }
+
+  openCookbook() {
+    router.navigate(`/cookbooks/${this.author.id}`);
   }
 }
