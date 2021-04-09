@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import config from './config';
 
 export class UserSession {
+  id?: string;
   name: string;
   email: string;
   password: string;
@@ -44,18 +45,20 @@ export class UserSession {
   }
 
   signUpData() {
-    return { name: this.name, email: this.email, password: this.password, passwordCheck: this.password };
+    return { id: this.id, name: this.name, email: this.email, password: this.password, passwordCheck: this.password };
   }
 
   async registerUser() {
-    await this.post('users', this.signUpData());
+    const resp = await this.post('users/sign-up', this.signUpData());
     if (!this.hasCookie('jwt-token')) {
       throw new Error('Failed to extract jwt-token');
     }
+    const json = await resp.json();
+    this.id = json.id;
   }
 
   async deleteUser() {
-    await this.delete('users');
+    await this.delete('users/sign-out');
     this.clearCookies();
   }
 
