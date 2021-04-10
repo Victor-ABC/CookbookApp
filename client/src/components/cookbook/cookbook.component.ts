@@ -83,7 +83,10 @@ class CookbookComponent extends PageMixin(LitElement) {
       <input type="checkbox" id="toggle-edit" />
       ${this.ownCookbooks ? html`<label class="btn btn-success" for="toggle-edit">Bearbeiten</label>` : nothing}
       <h1>${this.title}</h1>
-      <p>${this.description} <span class="author" @click="${this.openCookbook}">von ${this.author.name}<span></p>
+      <p>
+        <span class="description">${this.description}</span>
+        <span class="author" @click="${this.openCookbook}">von ${this.author.name}<span>
+      </p>
       
       <form novalidate>
         <div class="form-group">

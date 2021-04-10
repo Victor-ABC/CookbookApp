@@ -153,8 +153,8 @@ describe('app-cookbook', () => {
     const titleElem = element.shadowRoot!.querySelector('.header > h1') as HTMLElement;
     expect(titleElem.innerText).toBe('Neuer Kochbuchtitel');
 
-    const descriptionElem = element.shadowRoot!.querySelector('.header > p') as HTMLElement;
-    expect(descriptionElem.innerText.substr(0, 'Neue Beschreibung'.length)).toBe('Neue Beschreibung');
+    const descriptionElem = element.shadowRoot!.querySelector('span.description') as HTMLElement;
+    expect(descriptionElem.innerText).toBe('Neue Beschreibung');
 
     expect(httpClient.patch).toHaveBeenCalledTimes(1);
   });
