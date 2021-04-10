@@ -2,13 +2,14 @@
 
 import { nothing } from 'lit-html';
 import { css, customElement, html, LitElement, property, unsafeCSS } from 'lit-element';
+import { WidgetMixin } from '../../widget.mixin';
 
 const sharedCSS = require('../../shared.scss');
 const componentCSS = require('./cookbook-preview.component.scss');
 
 @customElement('app-cookbook-preview')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-class CookbookPreviewComponent extends LitElement {
+class CookbookPreviewComponent extends WidgetMixin(LitElement) {
   static styles = [
     css`
       ${unsafeCSS(sharedCSS)}
@@ -28,14 +29,5 @@ class CookbookPreviewComponent extends LitElement {
         ? html`<span class="remove-cookbook" @click="${() => this.emit('appcookbookdeleteclick')}"></span>`
         : nothing}
     `;
-  }
-
-  emit(eventType: string, eventData = {}) {
-    const event = new CustomEvent(eventType, {
-      detail: eventData,
-      bubbles: true,
-      composed: true
-    });
-    this.dispatchEvent(event);
   }
 }
