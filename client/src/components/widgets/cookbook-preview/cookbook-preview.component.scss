@@ -31,16 +31,14 @@
   content: '\f2ed';
 }
 
-.show-details::before {
-  color: #5cb85c;
-  font: normal normal normal 1.25rem/1 'Font Awesome 5 Free';
-  content: '\f05a';
-}
-
 .book-id {
   flex-grow: 1;
 }
 
 :host(:hover) {
-  background-color: rgba(0, 0, 0, 0.125);
+  background-color: #5cb85c;
+
+  span {
+    color: white;
+  }
 }

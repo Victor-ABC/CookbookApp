@@ -20,7 +20,11 @@ img {
 
 .item:hover {
   img {
-    opacity: 0.35;
+    opacity: 0.15;
+  }
+
+  .remove-recipe ~ .description {
+    height: 170px;
   }
 
   .description {
@@ -29,6 +33,11 @@ img {
   
   .remove-recipe {
     visibility: visible;
+  }
+
+  .recipe-id {
+    color: white;
+    opacity: 1;
   }
 }
 
@@ -46,20 +55,20 @@ img {
 }
 
 .description {
-  height: 170px;
+  height: 200px;
   width: 100%;
   position: relative;
   display: inline-block;
   padding: 5px;
-  top: -230px;
-  opacity: 0.85;
+  top: -260px;
   visibility: hidden;
+  color: white;
 }
 
 .remove-recipe {
   position: relative;
-  top: -430px;
-  left: 8px;
+  top: -260px;
+  left: 5px;
   visibility: hidden;
 }
 

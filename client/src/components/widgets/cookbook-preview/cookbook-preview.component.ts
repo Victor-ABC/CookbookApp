@@ -23,8 +23,7 @@ class CookbookPreviewComponent extends LitElement {
 
   render() {
     return html`
-      <span class="book-id"><slot name="title"></slot></span>
-      <span class="show-details" @click="${() => this.emit('appcookbookdetailsclick')}"></span>
+      <span class="book-id" @click="${() => this.emit('appcookbookdetailsclick')}"><slot name="title"></slot></span>
       ${this.ownCookbooks === 'true'
         ? html`<span class="remove-cookbook" @click="${() => this.emit('appcookbookdeleteclick')}"></span>`
         : nothing}
