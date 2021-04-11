@@ -3,7 +3,7 @@
 :host {
   min-width: 300px;
   flex-basis: 33.33%;
-  padding: 0.20rem;
+  padding: 0.2rem;
 }
 
 .item {
@@ -35,13 +35,13 @@ img {
     visibility: visible;
   }
 
-  .recipe-id {
+  .title {
     color: white;
     opacity: 1;
   }
 }
 
-.recipe-id {
+.title {
   background-color: #5cb85c;
   height: 30px;
   width: 100%;

@@ -8,6 +8,7 @@ import { httpClient } from '../../http-client';
 interface Cookbook {
   id: string;
   title: string;
+  description: string;
 }
 
 const sharedCSS = require('../shared.scss');
@@ -55,11 +56,17 @@ class CookbooksComponent extends PageMixin(LitElement) {
       <h1>${this.headline}</h1>
       <div class="cookbooks">
         ${this.cookbooks.map(
-          book => html`<app-cookbook-preview
+          book => html`<app-cookbook-list-item
             data-own-cookbooks="false"
             @appcookbookdetailsclick=${() => this.showDetails(book)}
-            ><span slot="title">${book.title}</span></app-cookbook-preview
-          >`
+          >
+            <span slot="title">${book.title}</span>
+            <span slot="description"
+              >${book.description
+                ? book.description
+                : 'Diesem Kochbuch wurde noch keine Beschreibung hinzugefügt.'}</span
+            >
+          </app-cookbook-list-item>`
         )}
       </div>
     `;

@@ -11,11 +11,13 @@ describe('app-cookbooks', () => {
   const cookbooks = [
     {
       id: 'book-id1',
-      title: 'Buch 1'
+      title: 'Buch 1',
+      description: 'Beschreibung 1'
     },
     {
       id: 'book-id2',
-      title: 'Buch 2'
+      title: 'Buch 2',
+      description: 'Beschreibung 2'
     }
   ];
 
@@ -51,14 +53,19 @@ describe('app-cookbooks', () => {
     const titleElem = element.shadowRoot!.querySelector('h1') as HTMLElement;
     expect(titleElem.innerText).toBe('Alle Kochbücher');
 
-    // check app-cookbook-preview
-    const cookbookPreviewElems = element.shadowRoot!.querySelectorAll('app-cookbook-preview');
+    // check app-cookbook-list-item
+    const cookbookPreviewElems = element.shadowRoot!.querySelectorAll('app-cookbook-list-item');
     expect(cookbookPreviewElems.length).toBe(2);
 
     // check slot title
     const titleSlotElems = element.shadowRoot!.querySelectorAll('span[slot="title"]');
     expect((titleSlotElems[0] as HTMLElement).innerText).toBe(cookbooks[0].title);
     expect((titleSlotElems[1] as HTMLElement).innerText).toBe(cookbooks[1].title);
+
+    // check slot description
+    const descriptionSlotElems = element.shadowRoot!.querySelectorAll('span[slot="description"]');
+    expect((descriptionSlotElems[0] as HTMLElement).innerText).toBe(cookbooks[0].description);
+    expect((descriptionSlotElems[1] as HTMLElement).innerText).toBe(cookbooks[1].description);
   });
 
   it('should display user specific headline', async () => {
@@ -96,7 +103,7 @@ describe('app-cookbooks', () => {
 
     spyOn(router, 'navigate');
 
-    const cookbookPreviewElem = element.shadowRoot!.querySelector('app-cookbook-preview') as HTMLElement;
+    const cookbookPreviewElem = element.shadowRoot!.querySelector('app-cookbook-list-item') as HTMLElement;
     cookbookPreviewElem.dispatchEvent(new Event('appcookbookdetailsclick'));
 
     expect(router.navigate).toHaveBeenCalledTimes(1);

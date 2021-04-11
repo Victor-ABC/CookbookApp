@@ -291,7 +291,7 @@ async function getCookbooks(dao: GenericDAO<Cookbook>, filter?: Partial<Cookbook
   const cookbooks = await dao.findAll(filter);
 
   return cookbooks.map(book => {
-    return { id: book.id, title: book.title };
+    return { id: book.id, title: book.title, description: book.description };
   });
 }
 

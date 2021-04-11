@@ -117,7 +117,7 @@ class CookbookComponent extends PageMixin(LitElement) {
         <button class="btn btn-secondary" type="button" @click="${this.cancel}">Abbrechen</button>
       </form>
     </div>
-    <div class="cookbooks-container">
+    <div class="cookbooks">
       ${this.recipes.map(
         recipe =>
           html`<app-cookbook-details

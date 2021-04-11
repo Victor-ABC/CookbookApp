@@ -3,8 +3,10 @@
 :host {
   padding: 0.75rem;
   border: solid rgba(0, 0, 0, 0.125) 1px;
+}
+
+.header {
   display: flex;
-  align-items: center;
 }
 
 :host(:not(:first-of-type)) {
@@ -31,7 +33,17 @@
   content: '\f2ed';
 }
 
-.book-id {
+label[for="toggle-body"] {
+  margin-left: 0.75rem;
+}
+
+label[for="toggle-body"]::before {
+  color: #5cb85c;
+  font: normal normal normal 1.25rem/1 'Font Awesome 5 Free';
+  content: '\f05a';
+}
+
+.title {
   flex-grow: 1;
 }
 
@@ -41,4 +53,29 @@
   span {
     color: white;
   }
+
+  label[for="toggle-body"]::before {
+    color: white;
+  }
+}
+
+.body {
+  display: none;
+  margin: 0.5rem;
+  padding: 0.75rem;
+  border: solid rgba(0, 0, 0, 0.125) 1px;
+  border-radius: 0.25rem;
+  background-color: white;
+}
+
+label[for="toggle-body"] {
+  margin: 0;
+}
+
+#toggle-body {
+  display: none;
+}
+
+#toggle-body:checked ~ .body {
+  display: block;
 }

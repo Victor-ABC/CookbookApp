@@ -2,7 +2,6 @@
 
 import { LitElement } from 'lit-element';
 import { httpClient } from '../../http-client';
-import { router } from '../../router';
 import './my-cookbooks.component';
 
 describe('app-my-cookbooks', () => {
@@ -11,11 +10,13 @@ describe('app-my-cookbooks', () => {
   const cookbooks = [
     {
       id: 'book-id1',
-      title: 'Buch 1'
+      title: 'Buch 1',
+      description: 'Beschreibung 1'
     },
     {
       id: 'book-id2',
-      title: 'Buch 2'
+      title: 'Buch 2',
+      description: 'Beschreibung 2'
     }
   ];
 
@@ -45,7 +46,8 @@ describe('app-my-cookbooks', () => {
 
     const newCookbook = {
       id: 'book-id3',
-      title: 'Neues Kochbuch'
+      title: 'Neues Kochbuch',
+      description: 'Beschreibung 3'
     };
 
     spyOn(httpClient, 'post').and.returnValue(
@@ -69,13 +71,16 @@ describe('app-my-cookbooks', () => {
     element.requestUpdate();
     await element.updateComplete;
 
-    const cookbookPreviewElems = element.shadowRoot!.querySelectorAll('app-cookbook-preview');
-    expect(cookbookPreviewElems.length).toBe(3);
+    const cookbookListItemElems = element.shadowRoot!.querySelectorAll('app-cookbook-list-item');
+    expect(cookbookListItemElems.length).toBe(3);
 
     expect(httpClient.post).toHaveBeenCalledTimes(1);
 
     const titleSlotElems = element.shadowRoot!.querySelectorAll('span[slot="title"]');
     expect((titleSlotElems[2] as HTMLElement).innerText).toBe(newCookbook.title);
+
+    const descriptionSlotElems = element.shadowRoot!.querySelectorAll('span[slot="description"]');
+    expect((descriptionSlotElems[2] as HTMLElement).innerText).toBe(newCookbook.description);
 
     expect(titleElem.value).toBeFalsy();
   });
@@ -103,8 +108,8 @@ describe('app-my-cookbooks', () => {
     element.requestUpdate();
     await element.updateComplete;
 
-    const cookbookPreviewElems = element.shadowRoot!.querySelectorAll('app-cookbook-preview');
-    expect(cookbookPreviewElems.length).toBe(2);
+    const cookbookListItemElems = element.shadowRoot!.querySelectorAll('app-cookbook-list-item');
+    expect(cookbookListItemElems.length).toBe(2);
 
     expect(httpClient.post).toHaveBeenCalledTimes(0);
   });
@@ -133,8 +138,8 @@ describe('app-my-cookbooks', () => {
     element.requestUpdate();
     await element.updateComplete;
 
-    const cookbookPreviewElems = element.shadowRoot!.querySelectorAll('app-cookbook-preview');
-    expect(cookbookPreviewElems.length).toBe(2);
+    const cookbookListItemElems = element.shadowRoot!.querySelectorAll('app-cookbook-list-item');
+    expect(cookbookListItemElems.length).toBe(2);
 
     expect(httpClient.post).toHaveBeenCalledTimes(1);
   });
@@ -154,15 +159,15 @@ describe('app-my-cookbooks', () => {
 
     spyOn(httpClient, 'delete');
 
-    const cookbookPreviewElem = element.shadowRoot!.querySelector('app-cookbook-preview') as HTMLElement;
-    cookbookPreviewElem.dispatchEvent(new Event('appcookbookdeleteclick'));
+    const cookbookListItemElem = element.shadowRoot!.querySelector('app-cookbook-list-item') as HTMLElement;
+    cookbookListItemElem.dispatchEvent(new Event('appcookbookdeleteclick'));
 
     await element.updateComplete;
     element.requestUpdate();
     await element.updateComplete;
 
-    const cookbookPreviewElems = element.shadowRoot!.querySelectorAll('app-cookbook-preview');
-    expect(cookbookPreviewElems.length).toBe(1);
+    const cookbookListItemElems = element.shadowRoot!.querySelectorAll('app-cookbook-list-item');
+    expect(cookbookListItemElems.length).toBe(1);
 
     expect(httpClient.delete).toHaveBeenCalledTimes(1);
   });

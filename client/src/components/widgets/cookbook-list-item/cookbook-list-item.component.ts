@@ -5,11 +5,11 @@ import { css, customElement, html, LitElement, property, unsafeCSS } from 'lit-e
 import { WidgetMixin } from '../../widget.mixin';
 
 const sharedCSS = require('../../shared.scss');
-const componentCSS = require('./cookbook-details.component.scss');
+const componentCSS = require('./cookbook-list-item.component.scss');
 
-@customElement('app-cookbook-details')
+@customElement('app-cookbook-list-item')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-class CookbookDetailsComponent extends WidgetMixin(LitElement) {
+class CookbookListItemComponent extends WidgetMixin(LitElement) {
   static styles = [
     css`
       ${unsafeCSS(sharedCSS)}
@@ -24,17 +24,18 @@ class CookbookDetailsComponent extends WidgetMixin(LitElement) {
 
   render() {
     return html`
-      <div class="item">
-        <img src="https://picsum.photos/400/300" />
-        <span class="title" @click="${() => this.emit('appcookbookopenclick')}">
+      <input type="checkbox" id="toggle-body" />
+      <div class="header">
+        <span class="title" @click="${() => this.emit('appcookbookdetailsclick')}">
           <slot name="title"></slot>
         </span>
+        <label for="toggle-body"></label>
         ${this.ownCookbooks === 'true'
-          ? html`<span class="remove-recipe" @click="${() => this.emit('appcookbookdeleteclick')}"></span>`
+          ? html`<span class="remove-cookbook" @click="${() => this.emit('appcookbookdeleteclick')}"></span>`
           : nothing}
-        <span class="description" @click="${() => this.emit('appcookbookopenclick')}">
-          <slot name="description"></slot>
-        </span>
+      </div>
+      <div class="body">
+        <slot name="description"></slot>
       </div>
     `;
   }
