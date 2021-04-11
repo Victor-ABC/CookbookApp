@@ -51,7 +51,7 @@ router.post('/', authService.expressMiddleware, async (req, res) => {
   // create and store new cookbook in database
   const createdCookbook = await cookbookDAO.create({
     title: req.body.title,
-    description: '',
+    description: req.body.description || '',
     userId: res.locals.user.id,
     recipeIds: []
   });

@@ -52,15 +52,24 @@ describe('/cookbooks', () => {
         title: 'Mein Kochbuch 2'
       });
 
-      const json = await resp.json();
-      const cookbookId = json.id;
+      let json = await resp.json();
+      const updatedCookbook = {
+        id: json.id,
+        title: 'Mein Kochbuch 3',
+        description: 'Meine Beschriebung 3'
+      };
 
       // update cookbook
-      resp = await userSession.patch('/cookbooks', {
-        id: cookbookId,
-        title: 'Mein Kochbuch 3'
-      });
+      resp = await userSession.patch('/cookbooks', updatedCookbook);
       expect(resp.status).toBe(200);
+
+      // validate changes
+      resp = await userSession.get(`/cookbooks/details/${updatedCookbook.id}`);
+      expect(resp.status).toBe(200);
+      json = await resp.json();
+      expect(json.results.id).toBe(updatedCookbook.id);
+      expect(json.results.title).toBe(updatedCookbook.title);
+      expect(json.results.description).toBe(updatedCookbook.description);
     });
 
     it('should fail to update an existing cookbook', async () => {
@@ -103,7 +112,7 @@ describe('/cookbooks/:userId', () => {
   });
 
   describe('#GET', () => {
-    it('should return one cookbook', async () => {
+    it('should return at least one cookbook', async () => {
       // create cookbook
       await userSession.post('/cookbooks', {
         title: 'Mein Kochbuch'
@@ -209,7 +218,8 @@ describe('/cookbooks/details/:cookbookId', () => {
     it('should return cookbook details', async () => {
       // create a new cookbook
       let resp = await userSession.post('/cookbooks', {
-        title: 'Mein Kochbuch'
+        title: 'Mein Kochbuch',
+        description: 'Meine Beschreibung'
       });
       let json = await resp.json();
       const cookbookId = json.id;
@@ -219,7 +229,7 @@ describe('/cookbooks/details/:cookbookId', () => {
       json = await resp.json();
       expect(json.results.id).toBeDefined();
       expect(json.results.title).toBe('Mein Kochbuch');
-      expect(json.results.description).toBe('');
+      expect(json.results.description).toBe('Meine Beschreibung');
       expect(json.results.author.id).toBe(userSession.signUpData().id);
       expect(json.results.author.name).toBe(userSession.signUpData().name);
       expect(json.results.recipes.length).toBe(0);
