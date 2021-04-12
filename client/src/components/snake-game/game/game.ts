@@ -91,7 +91,7 @@ export class Game {
   public getCanvas() {
     return this.canvas;
   }
-  private play(speed : number) {
+  private play(speed: number) {
     if (!this.isCurrentlyRunning) {
       this.isCurrentlyRunning = true;
       this.fruit.setRandomColor();

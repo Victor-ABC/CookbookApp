@@ -7,7 +7,7 @@
   "scripts": {
     "start": "webpack serve --config webpack.dev.js --open",
     "build": "webpack --config webpack.prod.js --progress",
-    "lint": "eslint . --ext .ts",
+    "lint": "eslint . --ext .ts --fix",
     "test": "karma start",
     "e2e": "npm run build && tsc -p e2e && node e2e/jasmine"
   },

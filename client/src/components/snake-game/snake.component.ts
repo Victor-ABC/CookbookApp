@@ -8,8 +8,7 @@ import { internalProperty } from 'lit-element';
 const sharedCSS = require('../shared.scss');
 const snakeCSS = require('./snake.component.scss');
 @customElement('app-snake-game')
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-class SignInComponent extends PageMixin(LitElement) {
+export class SnakeGameComponent extends PageMixin(LitElement) {
   static styles = [
     css`
       ${unsafeCSS(sharedCSS)}
@@ -90,7 +89,11 @@ class SignInComponent extends PageMixin(LitElement) {
     `;
   }
   async onClick() {
-    Game.startTheGame(Number(this.scaleElement.value), this.renderRoot.querySelector('#gameField')! , Number(this.speedElement.value));
+    Game.startTheGame(
+      Number(this.scaleElement.value),
+      this.renderRoot.querySelector('#gameField')!,
+      Number(this.speedElement.value)
+    );
     this.shadowRoot?.querySelector('#game-header-container')!.classList.add('hidden');
   }
   async toggleVisibility() {
@@ -101,15 +104,15 @@ class SignInComponent extends PageMixin(LitElement) {
     }
   }
   throwKeyEventUp() {
-    window.dispatchEvent(new KeyboardEvent("keydown" , { "key" : "ArrowUp" } ))
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
   }
   throwKeyEventDown() {
-    window.dispatchEvent(new KeyboardEvent("keydown" , { "key" : "ArrowDown" } ))
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
   }
   throwKeyEventLeft() {
-    window.dispatchEvent(new KeyboardEvent("keydown" , { "key" : "ArrowLeft" } ))
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' }));
   }
   throwKeyEventRight() {
-    window.dispatchEvent(new KeyboardEvent("keydown" , { "key" : "ArrowRight" } ))
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
   }
 }

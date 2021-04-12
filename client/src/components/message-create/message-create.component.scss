@@ -1,11 +1,11 @@
 #name-check {
     visibility: hidden;
   }
-  #name-check[class="success"] {
+  #name-check[value="success"] {
     visibility: visible;
     color: green;
   }
-  #name-check[class="error"] {
+  #name-check[value="error"] {
     visibility: visible;
     color: red;
   }

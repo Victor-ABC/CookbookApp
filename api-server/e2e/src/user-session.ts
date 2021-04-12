@@ -41,7 +41,7 @@ export class UserSession {
   }
 
   signInData() {
-    return { email: this.email, password: this.password };
+    return { name: this.name, password: this.password };
   }
 
   signUpData() {

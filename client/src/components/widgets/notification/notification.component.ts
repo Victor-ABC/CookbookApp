@@ -17,10 +17,14 @@ class NotificationComponent extends LitElement {
   @property()
   info = '';
 
+  @property()
+  success = '';
+
   render() {
     return html`
       ${this.error ? html`<div class="alert alert-danger">${this.error}</div>` : ''}
       ${this.info ? html`<div class="alert alert-info">${this.info}</div>` : ''}
+      ${this.success ? html`<div class="alert alert-success">${this.success}</div>` : ''}
     `;
   }
 }

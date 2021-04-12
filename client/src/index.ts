@@ -15,3 +15,4 @@ import './components/widgets/cookbook-details/cookbook-details.component.ts';
 import './components/widgets/cookbook-list-item/cookbook-list-item.component.ts';
 import './components/widgets/header/header.component.ts';
 import './components/widgets/notification/notification.component.ts';
+import './components/message-create/message-create.component.ts';

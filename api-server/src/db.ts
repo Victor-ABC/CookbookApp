@@ -36,7 +36,7 @@ async function startMongoDB(app: Express) {
   app.locals.cookbookDAO = new MongoGenericDAO<Cookbook>(db, 'cookbooks');
   app.locals.recipeDAO = new MongoGenericDAO<Recipe>(db, 'recipes');
   app.locals.userDAO = new MongoGenericDAO<User>(db, 'users');
-  app.locals.messageDAO = new MongoGenericDAO<User>(db, 'message');
+  app.locals.messageDAO = new MongoGenericDAO<Message>(db, 'message');
 }
 
 async function connectToMongoDB() {

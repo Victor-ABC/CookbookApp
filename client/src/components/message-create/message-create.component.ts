@@ -4,13 +4,11 @@ import { PageMixin } from '../page.mixin';
 import { css, customElement, html, LitElement, query, unsafeCSS } from 'lit-element';
 import { httpClient } from '../../http-client';
 
-
 const sharedCSS = require('../shared.scss');
-const componentCSS = require('./sent.component.scss');
+const componentCSS = require('./message-create.component.scss');
 
 @customElement('app-message-create')
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-class CreateMessageComponent extends PageMixin(LitElement) {
+export class CreateMessageComponent extends PageMixin(LitElement) {
   static styles = [
     css`
       ${unsafeCSS(sharedCSS)}
@@ -30,7 +28,7 @@ class CreateMessageComponent extends PageMixin(LitElement) {
   contentElement!: HTMLInputElement;
 
   @query('form')
-  form!: HTMLFormElement;
+  formElement!: HTMLFormElement;
 
   @query('#name-check')
   messageDiv!: HTMLDivElement;
@@ -46,22 +44,30 @@ class CreateMessageComponent extends PageMixin(LitElement) {
           <input class="form-control" type="" autofocus required id="name" name="name" />
           <div class="invalid-feedback">Addresat ist zwingend einzutragen</div>
           <button
-              @click="${this.checkIfNameExists}"
-              id="name__button"
-              type="button"
-              class="name-fley-item btn btn-success"
-            >
-              Name existiert?
-            </button>
+            @click="${this.checkIfNameExists}"
+            id="name__button"
+            type="button"
+            class="name-fley-item btn btn-success"
+          >
+            Name existiert?
+          </button>
         </div>
         <div class="form-group">
           <label class="control-label" for="title">Titel</label>
           <input class="form-control" type="" required id="title" name="title" />
           <div class="invalid-feedback">Titel ist erforderlich</div>
         </div>
+        <button
+          @click="${this.textTemplate}"
+          id="textvorlage__button"
+          type="button"
+          class="name-fley-item btn btn-success"
+        >
+          Textvorlage
+        </button>
         <div class="form-group">
           <label class="control-label" for="content">Inhalt</label>
-          <textarea class="form-control" type="text" required id="content" name="content"></textarea>
+          <textarea rows="8" class="form-control" type="text" required id="content" name="content"></textarea>
           <div class="invalid-feedback">Das Textfeld sollte nicht leer sein</div>
         </div>
         <button class="btn btn-success" type="button" @click="${this.submit}">Senden</button>
@@ -69,6 +75,20 @@ class CreateMessageComponent extends PageMixin(LitElement) {
     `;
   }
 
+  textTemplate() {
+    if (this.contentElement.value === '' || this.contentElement.value === null) {
+      this.contentElement.value = `Sehr geehrter Herr Müller
+
+
+Ihr Rezept für Erdbeerkuchen hat mir sehr gut gefallen.
+Ich hab beim zweiten mal Bananen genommen. Auch eine leckere kombination.
+
+Liebe Grüße,
+Vorname Nachname`;
+    } else {
+      this.setNotification({ infoMessage: 'Der Inhaltbereich muss leer sein' });
+    }
+  }
 
   async checkIfNameExists() {
     if (this.nameElement.value) {
@@ -77,16 +97,18 @@ class CreateMessageComponent extends PageMixin(LitElement) {
           .post('/users/exists', { name: this.nameElement.value })
           .then(() => {
             this.messageDiv.textContent = 'Benutzer existiert nicht';
-            this.messageDiv.setAttribute('class', 'error');
+            this.messageDiv.setAttribute('value', 'error');
+            // this.setNotification({ errorMessage: "Benutzer existiert nicht" })
           })
           .catch(() => {
             this.messageDiv.textContent = 'Benutzer existiert';
-            this.messageDiv.setAttribute('class', 'success');
+            this.messageDiv.setAttribute('value', 'success');
+            // this.setNotification({ infoMessage: "Benutzer existiert" })
           })
           .finally(() => {
             setTimeout(() => {
               this.messageDiv.textContent = 'placeHolder';
-              this.messageDiv.setAttribute('class', '');
+              this.messageDiv.setAttribute('value', '');
             }, 1500);
           });
       } catch ({ message }) {
@@ -97,8 +119,8 @@ class CreateMessageComponent extends PageMixin(LitElement) {
 
   async submit() {
     if (this.isFormValid()) {
-      let date = new Date;
-      let dateString = `am ${date.getDate()}.${date.getMonth()}.${date.getFullYear()} um ${date.getHours()}:${date.getMinutes()} Uhr`
+      const date = new Date();
+      const dateString = `am ${date.getDate()}.${date.getMonth()}.${date.getFullYear()} um ${date.getHours()}:${date.getMinutes()} Uhr`;
       const message = {
         to: this.nameElement.value,
         title: this.titleElement.value,
@@ -107,17 +129,21 @@ class CreateMessageComponent extends PageMixin(LitElement) {
       };
       try {
         await httpClient.post('/message/', message);
+        this.setNotification({ successMessage: `Nachricht erfolgreich an ${message.to} versandt` });
+        this.formElement.reset();
       } catch ({ message }) {
-        this.setNotification({ errorMessage: message });
+        if (message.errorMessage) {
+          this.setNotification({ errorMessage: message.errorMessage });
+        } else {
+          this.setNotification({ infoMessage: message.infoMessage });
+        }
       }
     } else {
-      this.form.classList.add('was-validated');
+      this.formElement.classList.add('was-validated');
     }
   }
 
   isFormValid() {
-    return this.form.checkValidity();
+    return this.formElement.checkValidity();
   }
-
-
 }

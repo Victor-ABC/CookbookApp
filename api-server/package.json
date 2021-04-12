@@ -6,13 +6,18 @@
   "main": "index.js",
   "scripts": {
     "start": "tsc && node src/app",
-    "lint": "eslint . --ext .ts",
+    "lint": "eslint . --ext .ts --fix",
     "test": "tsc && nyc jasmine JASMINE_CONFIG_PATH=jasmine.json",
     "e2e": "tsc && node e2e/jasmine"
   },
   "nyc": {
-    "exclude": ["src/**/*.spec.js"],
-    "reporter": ["text", "html"]
+    "exclude": [
+      "src/**/*.spec.js"
+    ],
+    "reporter": [
+      "text",
+      "html"
+    ]
   },
   "keywords": [],
   "author": "",
@@ -37,6 +42,7 @@
     "jasmine": "^3.6.4",
     "node-fetch": "^2.6.1",
     "nyc": "^15.1.0",
+    "playwright": "^1.10.0",
     "prettier": "^2.2.1",
     "typescript": "^4.2.2"
   },

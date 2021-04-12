@@ -4,6 +4,7 @@ import { css, customElement, html, LitElement, query, unsafeCSS } from 'lit-elem
 import { httpClient } from '../../http-client';
 import { router } from '../../router';
 import { PageMixin } from '../page.mixin';
+import { headerEmitter } from '../widgets/header/header.component';
 
 const sharedCSS = require('../shared.scss');
 const componentCSS = require('./sign-up.component.scss');
@@ -37,7 +38,7 @@ class SignUpComponent extends PageMixin(LitElement) {
 
   @query('#name-check')
   messageDiv!: HTMLDivElement;
-  
+
   render() {
     return html`
       ${this.renderNotification()}
@@ -121,7 +122,9 @@ class SignUpComponent extends PageMixin(LitElement) {
         passwordCheck: this.passwordCheckElement.value
       };
       try {
-        await httpClient.post('/users/sign-up', accountData);
+        const response = await httpClient.post('/users/sign-up', accountData);
+        const json = await response.json();
+        headerEmitter.emit('setId', json.id);
         router.navigate('/cookbooks');
       } catch ({ message }) {
         this.setNotification({ errorMessage: message });

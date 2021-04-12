@@ -4,14 +4,13 @@ import { router } from '../../router';
 import { PageMixin } from '../page.mixin';
 import { css, customElement, html, LitElement, query, unsafeCSS } from 'lit-element';
 import { httpClient } from '../../http-client';
-
+import { headerEmitter } from '../widgets/header/header.component';
 
 const sharedCSS = require('../shared.scss');
 const componentCSS = require('./sign-in.component.scss');
 
 @customElement('app-sign-in')
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-class SignInComponent extends PageMixin(LitElement) {
+export class SignInComponent extends PageMixin(LitElement) {
   static styles = [
     css`
       ${unsafeCSS(sharedCSS)}
@@ -57,8 +56,10 @@ class SignInComponent extends PageMixin(LitElement) {
         password: this.passwordElement.value
       };
       try {
-        await httpClient.post('/users/sign-in', authData);
-        router.navigate('/my-cookbooks');
+        const response = await httpClient.post('/users/sign-in', authData);
+        const json = await response.json();
+        headerEmitter.emit('setId', json.id);
+        router.navigate('/rezepte');
       } catch ({ message }) {
         this.setNotification({ errorMessage: message });
       }

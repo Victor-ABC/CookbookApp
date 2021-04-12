@@ -3,13 +3,15 @@
 import { css, customElement, html, LitElement, property, internalProperty, unsafeCSS } from 'lit-element';
 import { classMap } from 'lit-html/directives/class-map';
 import { PageMixin } from '../../page.mixin';
+import { EventEmitter } from 'events';
+class HeaderEmitter extends EventEmitter {}
+export const headerEmitter = new HeaderEmitter();
 
 const sharedCSS = require('../../shared.scss');
 const headerCSs = require('./header.component.scss');
 
 @customElement('app-header')
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-class SignInComponent extends PageMixin(LitElement) {
+export class HeaderComponent extends PageMixin(LitElement) {
   static styles = [
     css`
       ${unsafeCSS(sharedCSS)}
@@ -18,15 +20,32 @@ class SignInComponent extends PageMixin(LitElement) {
       ${unsafeCSS(headerCSs)}
     `
   ];
-
   @property()
   title = '';
+
+  @property()
+  userId = '';
 
   @property()
   linkItems: Array<{ title: string; routePath: string }> = [];
 
   @internalProperty()
   private navbarOpen = false;
+
+  private headerEmitter;
+  private exclude : string[]; 
+
+  constructor() {
+    super();
+    this.exclude = ["Konto erstellen" , "Anmelden"];
+    this.headerEmitter = headerEmitter;
+    this.headerEmitter.on('setId', (id: string) => {
+      this.userId = id;
+    });
+    this.headerEmitter.on('deleteId', () => {
+      this.userId = '';
+    });
+  }
 
   render() {
     return html`
@@ -69,13 +88,25 @@ class SignInComponent extends PageMixin(LitElement) {
           id="navbarNav"
         >
           <ul class="flex-item navbar-nav">
-            ${this.linkItems.map(
-              linkItem => html`
-                <li class="nav-item">
-                  <a class="nav-link" href="${linkItem.routePath}" @click=${this.close}>${linkItem.title}</a>
-                </li>
-              `
-            )}
+            ${this.linkItems.map(linkItem => {
+              if (this.userId) {
+                if (!this.exclude.includes(linkItem.title)) {
+                    return html`
+                      <li class="nav-item">
+                        <a class="nav-link" href="${linkItem.routePath}" @click=${this.close}>${linkItem.title}</a>
+                      </li>
+                    `;
+              }
+              } else {
+                if (this.exclude.includes(linkItem.title)) {
+                  return html`
+                    <li class="nav-item">
+                      <a class="nav-link" href="${linkItem.routePath}" @click=${this.close}>${linkItem.title}</a>
+                    </li>
+                  `;
+                }
+              }
+            })}
           </ul>
         </div>
       </nav>
