@@ -4,7 +4,6 @@ import './index.scss';
 import './components/app/app.component.ts';
 import './components/cookbook/cookbook.component.ts';
 import './components/cookbooks/cookbooks.component.ts';
-import './components/messages/sent.component.ts';
 import './components/my-cookbooks/my-cookbooks.component.ts';
 import './components/profile/profile.component.ts';
 import './components/sign-in/sign-in.component.ts';
