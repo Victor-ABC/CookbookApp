@@ -44,6 +44,9 @@ class CookbookComponent extends PageMixin(LitElement) {
   @query('form')
   form!: HTMLFormElement;
 
+  @query('.no-recipes')
+  noRecipesElement!: HTMLElement;
+
   @internalProperty()
   recipes: Recipe[] = [];
 
@@ -61,17 +64,15 @@ class CookbookComponent extends PageMixin(LitElement) {
 
   ownCookbooks = location.search === '?own';
 
-  empty!: boolean;
-
   async firstUpdated() {
     try {
       const resp = await httpClient.get(`/cookbooks/details/${this.cookbookId}`);
       const json = (await resp.json()).results;
       this.recipes = json.recipes;
-      this.empty = this.recipes.length === 0;
       this.title = json.title;
       this.author = json.author;
       this.description = json.description;
+      this.triggerNoRecipesNotification();
     } catch ({ message }) {
       this.setNotification({ errorMessage: message });
     }
@@ -121,7 +122,8 @@ class CookbookComponent extends PageMixin(LitElement) {
       ${this.recipes.map(
         recipe =>
           html`<app-cookbook-details
-            data-own-cookbooks=${this.ownCookbooks}
+            data-image-src=https://picsum.photos/400/300
+            ?data-own-cookbooks=${this.ownCookbooks}
             @appcookbookopenclick=${() => this.openRecipe(recipe)}
             @appcookbookdeleteclick=${() => this.deleteRecipe(recipe)}
           >
@@ -130,7 +132,7 @@ class CookbookComponent extends PageMixin(LitElement) {
           </app-cookbook-details>`
       )}
     </div>
-    ${this.empty ? html`<div class="alert alert-info">Das Kochbuch ist noch leer.</div>` : nothing}
+    <div class="no-recipes alert alert-success">Das Kochbuch ist noch leer.</div>
     `;
   }
 
@@ -171,13 +173,17 @@ class CookbookComponent extends PageMixin(LitElement) {
     try {
       await httpClient.delete(`/cookbooks/${this.cookbookId}/${recipeToRemove.id}`);
       this.recipes = this.recipes.filter(recipe => recipe.id !== recipeToRemove.id);
-      this.empty = this.recipes.length === 0;
     } catch ({ message }) {
       this.setNotification({ errorMessage: message });
     }
+    this.triggerNoRecipesNotification();
   }
 
   openCookbook() {
     router.navigate(`/cookbooks/${this.author.id}`);
+  }
+
+  triggerNoRecipesNotification() {
+    this.noRecipesElement.style.display = this.recipes.length === 0 ? 'block' : 'none';
   }
 }

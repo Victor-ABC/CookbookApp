@@ -30,7 +30,10 @@ class CookbooksComponent extends PageMixin(LitElement) {
   titleElement!: HTMLInputElement;
 
   @query('form')
-  form!: HTMLFormElement;
+  formElement!: HTMLFormElement;
+
+  @query('.no-cookbooks')
+  noCookbooksElement!: HTMLElement;
 
   @internalProperty()
   cookbooks: Cookbook[] = [];
@@ -40,6 +43,7 @@ class CookbooksComponent extends PageMixin(LitElement) {
       const resp = await httpClient.get('/cookbooks/own');
       const json = (await resp.json()).results;
       this.cookbooks = json.cookbooks;
+      this.triggerNoCookbooksNotification();
     } catch ({ message }) {
       router.navigate('/users/sign-in');
     }
@@ -64,26 +68,27 @@ class CookbooksComponent extends PageMixin(LitElement) {
       <div class="cookbooks">
         ${this.cookbooks.map(
           book => html`<app-cookbook-list-item
-            data-own-cookbooks="true"
+            .data-own-cookbooks="true"
             @appcookbookdetailsclick=${() => this.showDetails(book)}
             @appcookbookdeleteclick=${() => this.deleteCookbook(book)}
           >
             <span slot="title">${book.title}</span>
-            <span slot="description"
-              >${book.description
+            <span slot="description">
+              ${book.description
                 ? book.description
                 : 'Diesem Kochbuch wurde noch keine Beschreibung hinzugefügt.'}</span
             >
           </app-cookbook-list-item>`
         )}
       </div>
+      <div class="no-cookbooks alert alert-success">Du hast noch kein Kochbuch erstellt.</div>
     `;
   }
 
   async addCookbook(event: Event) {
     event.preventDefault();
 
-    if (this.form.checkValidity()) {
+    if (this.formElement.checkValidity()) {
       const partialCookbook: Cookbook = { title: this.titleElement.value } as Cookbook;
 
       try {
@@ -97,6 +102,7 @@ class CookbooksComponent extends PageMixin(LitElement) {
     } else {
       this.setNotification({ errorMessage: 'Titel des Kochbuchs darf nicht leer sein.' });
     }
+    this.triggerNoCookbooksNotification();
   }
 
   async deleteCookbook(bookToRemove: Cookbook) {
@@ -106,9 +112,14 @@ class CookbooksComponent extends PageMixin(LitElement) {
     } catch ({ message }) {
       this.setNotification({ errorMessage: message });
     }
+    this.triggerNoCookbooksNotification();
   }
 
   async showDetails(cookbook: Cookbook) {
     router.navigate(`/cookbooks/details/${cookbook.id}?own`);
+  }
+
+  triggerNoCookbooksNotification() {
+    this.noCookbooksElement.style.display = this.cookbooks.length === 0 ? 'block' : 'none';
   }
 }

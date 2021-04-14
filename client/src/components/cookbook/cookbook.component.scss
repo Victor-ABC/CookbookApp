@@ -45,3 +45,13 @@
   color: #5cb85c;
   font-variant: small-caps;
 }
+
+.no-recipes {
+  display: none;
+}
+
+.no-recipes::before {
+  font: normal normal normal 1rem/30px 'Font Awesome 5 Free';
+  content: '\f119';
+  margin-right: 0.5rem;
+}
