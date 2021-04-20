@@ -43,7 +43,7 @@ describe('User-Interface: Testing sing-up', () => {
 
   it('should render a green text saying that this name is available', async () => {
     page = await browserContext.newPage();
-    await page.goto('http://localhost:8080/');
+    await page.goto('http://localhost:8080/app');
     await page.click('text=Konto erstellen');
     await page.click('input[name="name"]');
     await page.fill('input[name="name"]', 'Maximilian');

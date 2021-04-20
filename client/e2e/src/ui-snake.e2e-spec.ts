@@ -12,7 +12,7 @@ const password = 'h4llo?flo+M';
 
 export async function singUpUserAndGoToProfile(name: string, password: string, browserContext: ChromiumBrowserContext) {
   page = await browserContext.newPage();
-  await page.goto('http://localhost:8080/');
+  await page.goto('http://localhost:8080/app');
   await page.click('text=Konto erstellen');
   await page.fill('input[name="name"]', name);
   await page.fill('input[name="email"]', `${name}@${name}.de`);

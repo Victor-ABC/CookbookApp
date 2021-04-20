@@ -33,6 +33,7 @@ export class HeaderComponent extends PageMixin(LitElement) {
   private navbarOpen = false;
 
   private headerEmitter;
+  @property()
   private exclude : string[]; 
 
   constructor() {
