@@ -33,17 +33,17 @@
   content: '\f2ed';
 }
 
-label[for="toggle-body"] {
+label[for='toggle-body'] {
   margin-left: 0.75rem;
 }
 
-label[for="toggle-body"]::before {
+label[for='toggle-body']::before {
   color: #5cb85c;
   font: normal normal normal 1.25rem/1 'Font Awesome 5 Free';
   content: '\f05a';
 }
 
-.title {
+slot[name='title']::slotted(*) {
   flex-grow: 1;
 }
 
@@ -54,7 +54,7 @@ label[for="toggle-body"]::before {
     color: white;
   }
 
-  label[for="toggle-body"]::before {
+  label[for='toggle-body']::before {
     color: white;
   }
 }
@@ -68,7 +68,7 @@ label[for="toggle-body"]::before {
   background-color: white;
 }
 
-label[for="toggle-body"] {
+label[for='toggle-body'] {
   margin: 0;
 }
 

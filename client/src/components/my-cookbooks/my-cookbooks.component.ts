@@ -68,16 +68,14 @@ class CookbooksComponent extends PageMixin(LitElement) {
       <div class="cookbooks">
         ${this.cookbooks.map(
           book => html`<app-cookbook-list-item
-            .data-own-cookbooks="true"
+            ?data-own-cookbooks=${true}
             @appcookbookdetailsclick=${() => this.showDetails(book)}
             @appcookbookdeleteclick=${() => this.deleteCookbook(book)}
           >
             <span slot="title">${book.title}</span>
             <span slot="description">
-              ${book.description
-                ? book.description
-                : 'Diesem Kochbuch wurde noch keine Beschreibung hinzugefügt.'}</span
-            >
+              ${book.description || 'Diesem Kochbuch wurde noch keine Beschreibung hinzugefügt.'}
+            </span>
           </app-cookbook-list-item>`
         )}
       </div>

@@ -12,22 +12,22 @@
   border-radius: 0.25rem;
 }
 
-img {
+slot[name='image']::slotted(*)  {
   height: 230px;
   width: 100%;
   border-radius: 0.25rem;
 }
 
 .item:hover {
-  img {
+  slot[name='image']::slotted(*)  {
     opacity: 0.15;
   }
 
-  .remove-recipe ~ .description {
+  .remove-recipe ~ slot[name='description']::slotted(*) {
     height: 170px;
   }
 
-  .description {
+  slot[name='description']::slotted(*) {
     visibility: visible;
   }
   
@@ -54,7 +54,7 @@ img {
   border-bottom-right-radius: 0.25rem;
 }
 
-.description {
+slot[name='description']::slotted(*) {
   height: 200px;
   width: 100%;
   position: relative;

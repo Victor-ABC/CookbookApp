@@ -19,18 +19,16 @@ class CookbookListItemComponent extends WidgetMixin(LitElement) {
     `
   ];
 
-  @property({ attribute: 'data-own-cookbooks', type: String })
-  ownCookbooks!: string;
+  @property({ attribute: 'data-own-cookbooks', type: Boolean })
+  ownCookbooks!: boolean;
 
   render() {
     return html`
       <input type="checkbox" id="toggle-body" />
       <div class="header">
-        <span class="title" @click="${() => this.emit('appcookbookdetailsclick')}">
-          <slot name="title"></slot>
-        </span>
+        <slot name="title" @click="${() => this.emit('appcookbookdetailsclick')}"></slot>
         <label for="toggle-body"></label>
-        ${this.ownCookbooks === 'true'
+        ${this.ownCookbooks
           ? html`<span class="remove-cookbook" @click="${() => this.emit('appcookbookdeleteclick')}"></span>`
           : nothing}
       </div>

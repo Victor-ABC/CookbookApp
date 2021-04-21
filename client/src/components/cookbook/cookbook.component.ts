@@ -122,11 +122,12 @@ class CookbookComponent extends PageMixin(LitElement) {
       ${this.recipes.map(
         recipe =>
           html`<app-cookbook-details
-            data-image-src=https://picsum.photos/400/300
+
             ?data-own-cookbooks=${this.ownCookbooks}
             @appcookbookopenclick=${() => this.openRecipe(recipe)}
             @appcookbookdeleteclick=${() => this.deleteRecipe(recipe)}
           >
+            <img slot="image" src="https://picsum.photos/400/300" />
             <span slot="title">${recipe.title}</span>
             <span slot="description">${recipe.description}</span>
           </app-cookbook-details>`

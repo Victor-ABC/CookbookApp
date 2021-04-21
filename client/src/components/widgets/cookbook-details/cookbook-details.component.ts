@@ -22,22 +22,17 @@ class CookbookDetailsComponent extends WidgetMixin(LitElement) {
   @property({ attribute: 'data-own-cookbooks', type: Boolean })
   ownCookbooks!: string;
 
-  @property({ attribute: 'data-image-src', type: String })
-  imageSource!: string;
-
   render() {
     return html`
       <div class="item">
-        <img name="image" src=${this.imageSource} />
+        <slot name="image"></slot>
         <span class="title" @click="${() => this.emit('appcookbookopenclick')}">
           <slot name="title"></slot>
         </span>
         ${this.ownCookbooks
           ? html`<span class="remove-recipe" @click="${() => this.emit('appcookbookdeleteclick')}"></span>`
           : nothing}
-        <span class="description" @click="${() => this.emit('appcookbookopenclick')}">
-          <slot name="description"></slot>
-        </span>
+        <slot name="description" @click="${() => this.emit('appcookbookopenclick')}"></slot>
       </div>
     `;
   }
