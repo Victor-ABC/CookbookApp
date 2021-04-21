@@ -61,9 +61,9 @@ class CookbooksComponent extends PageMixin(LitElement) {
             @appcookbookdetailsclick=${() => this.showDetails(book)}
           >
             <span slot="title">${book.title}</span>
-            <span slot="description">
-              ${book.description || 'Diesem Kochbuch wurde noch keine Beschreibung hinzugefügt.'}
-            </span>
+            <span slot="description"
+              >${book.description || 'Diesem Kochbuch wurde noch keine Beschreibung hinzugefügt.'}</span
+            >
           </app-cookbook-list-item>`
         )}
       </div>
