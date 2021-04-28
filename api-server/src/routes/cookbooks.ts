@@ -6,6 +6,7 @@ import { GenericDAO } from '../models/generic.dao';
 import { Recipe } from '../models/recipe';
 import { User } from '../models/user';
 import { authService } from '../services/auth.service';
+import { cryptoService } from '../services/crypto.service';
 
 const router = express.Router();
 
@@ -35,7 +36,12 @@ router.get('/:userId', async (req, res) => {
     return;
   }
 
-  res.status(200).json({ results: { author: user.name, cookbooks } });
+  res.status(200).json({
+    results: {
+      author: user.name,
+      cookbooks
+    }
+  });
 });
 
 // create a new empty cookbook
@@ -50,8 +56,8 @@ router.post('/', authService.expressMiddleware, async (req, res) => {
 
   // create and store new cookbook in database
   const createdCookbook = await cookbookDAO.create({
-    title: req.body.title,
-    description: req.body.description || '',
+    title: cryptoService.encrypt(req.body.title),
+    description: req.body.description ? cryptoService.encrypt(req.body.description) : '',
     userId: res.locals.user.id,
     recipeIds: []
   });
@@ -59,7 +65,7 @@ router.post('/', authService.expressMiddleware, async (req, res) => {
   // prepare json response
   res.status(201).json({
     id: createdCookbook.id,
-    title: createdCookbook.title
+    title: cryptoService.decrypt(createdCookbook.title)
   });
 });
 
@@ -86,8 +92,8 @@ router.patch('/', authService.expressMiddleware, async (req, res) => {
   }
 
   // update cookbook
-  cookbook.title = req.body.title;
-  cookbook.description = req.body.description;
+  cookbook.title = cryptoService.encrypt(req.body.title);
+  cookbook.description = req.body.description ? cryptoService.encrypt(req.body.description) : '';
 
   await cookbookDAO.update(cookbook);
 
@@ -265,8 +271,8 @@ router.get('/details/:cookbookId', async (req, res) => {
   res.status(200).json({
     results: {
       id: cookbook.id,
-      title: cookbook.title,
-      description: cookbook.description,
+      title: cryptoService.decrypt(cookbook.title),
+      description: cookbook.description ? cryptoService.decrypt(cookbook.description) : '',
       author: {
         id: user.id,
         name: user.name
@@ -291,7 +297,11 @@ async function getCookbooks(dao: GenericDAO<Cookbook>, filter?: Partial<Cookbook
   const cookbooks = await dao.findAll(filter);
 
   return cookbooks.map(book => {
-    return { id: book.id, title: book.title, description: book.description };
+    return {
+      id: book.id,
+      title: cryptoService.decrypt(book.title),
+      description: cryptoService.decrypt(book.description)
+    };
   });
 }
 
