@@ -15,6 +15,7 @@ interface Recipe {
   id: string;
   title: string;
   description: string;
+  image: string;
 }
 
 const sharedCSS = require('../shared.scss');
@@ -127,7 +128,7 @@ class CookbookComponent extends PageMixin(LitElement) {
             @appcookbookopenclick=${() => this.openRecipe(recipe)}
             @appcookbookdeleteclick=${() => this.deleteRecipe(recipe)}
           >
-            <img slot="image" src="https://picsum.photos/400/300" />
+            <img slot="image" src=${recipe.image} />
             <span slot="title">${recipe.title}</span>
             <span slot="description">${recipe.description}</span>
           </app-cookbook-details>`

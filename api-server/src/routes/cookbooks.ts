@@ -264,7 +264,8 @@ router.get('/details/:cookbookId', async (req, res) => {
     return {
       id: recipe.id,
       title: recipe.title,
-      description: recipe.description
+      description: recipe.description,
+      image: recipe.image
     };
   });
 
