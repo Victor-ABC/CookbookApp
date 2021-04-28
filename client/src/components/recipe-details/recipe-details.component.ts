@@ -203,13 +203,13 @@ class RecipeDetailsComponent extends PageMixin(LitElement) {
   }
 
   async delete() {
-    // if (this.recipeId) {
-    //   try {
-    //     await httpClient.delete(`/recipes/${this.recipeId}`);
-    //   } catch ({ message }) {
-    //     this.setNotification({ errorMessage: message });
-    //   }
-    // }
+    if (this.recipeId) {
+      try {
+        await httpClient.delete(`/recipes/${this.recipeId}`);
+      } catch ({ message }) {
+        this.setNotification({ errorMessage: message });
+      }
+    }
   }
 
   ingredientsToArray() {
