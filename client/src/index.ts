@@ -15,3 +15,6 @@ import './components/widgets/cookbook-list-item/cookbook-list-item.component.ts'
 import './components/widgets/header/header.component.ts';
 import './components/widgets/notification/notification.component.ts';
 import './components/message-create/message-create.component.ts';
+import './components/recipes/recipes.component.ts';
+import './components/recipe-details/recipe-details.component.ts';
+import './components/ingredient/ingredient.component.ts';
