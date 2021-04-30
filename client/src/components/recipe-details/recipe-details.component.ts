@@ -11,6 +11,12 @@ interface Ingredient {
   quantity: number;
 }
 
+interface Cookbook {
+  id: string;
+  title: string;
+  description: string;
+}
+
 const sharedCSS = require('../shared.scss');
 const recipeCSS = require('./recipe-details.component.scss');
 
@@ -43,6 +49,9 @@ class RecipeDetailsComponent extends PageMixin(LitElement) {
   @query('#description')
   descriptionElement!: HTMLInputElement;
 
+  @query('#cookbook')
+  cookbookElement!: HTMLSelectElement;
+
   @query('#selectImage')
   imageSelectorElement!: HTMLInputElement;
 
@@ -64,7 +73,20 @@ class RecipeDetailsComponent extends PageMixin(LitElement) {
   @property()
   ingredients: Ingredient[] = [];
 
+  @property()
+  cookbooks: Cookbook[] = [];
+
+  @property()
+  cookbookId!: string;
+
   async firstUpdated() {
+    {  
+      const resp = await httpClient.get(`/cookbooks/own`);
+      const json = (await resp.json()).results;
+
+      this.cookbooks = json.cookbooks;
+    }
+
     if (this.recipeId !== "new") {
       try {
         const resp = await httpClient.get(`/recipes/details/${this.recipeId}`);
@@ -74,6 +96,7 @@ class RecipeDetailsComponent extends PageMixin(LitElement) {
         this.description = json.description;
         this.image = json.image;
         this.ingredients = json.ingredients;
+
       }
       catch ({ message }) {
         this.setNotification({ errorMessage: message });
@@ -97,6 +120,17 @@ class RecipeDetailsComponent extends PageMixin(LitElement) {
           <textarea class="form-control form-control-lg" id="description" name="description"
             placeholder="Beschreiben Sie hier Ihr neues Rezept" spellcheck="true" rows="5" required
             .value=${this.description}></textarea>
+        </div>
+
+        <div class="row">
+          <select class="form-control form-control-lg" id="cookbook" name="cookbook" .value="${this.cookbookId}">
+            <option value=""></option>
+            ${this.cookbooks.map(
+              cookbook => html`
+                <option value="${cookbook.id}">${cookbook.title}</option>
+              `
+            )}
+          </select>
         </div>
       
         <div class="row">
@@ -182,20 +216,35 @@ class RecipeDetailsComponent extends PageMixin(LitElement) {
         , ingredients: this.ingredientsToArray()
       };
       try {
+        alert(this.recipeId)
         if (this.recipeId === "new") {
           const response = await httpClient.post('/recipes', recipe);
           const json = await response.json();
-          router.navigate(`/recipe/${json.id}`);
+          this.recipeId = json.id;
+          alert(this.recipeId)
         }
         else {
           recipe.id = this.recipeId;
           const response = await httpClient.patch(`/recipes/${this.recipeId}`, recipe);
-          router.navigate(`/recipe/${this.recipeId}`);
         }
 
       } catch ({ message }) {
         this.setNotification({ errorMessage: message });
       }
+      
+      alert(this.cookbookElement.value)
+
+        if(this.cookbookElement.value) {
+
+      try {
+        await httpClient.patch(`/cookbooks/${this.cookbookElement.value}/${this.recipeId}`, {});
+      } catch ({ message }) {
+        this.setNotification({ errorMessage: message });
+      }
+  
+    }
+      
+      router.navigate(`/recipe/${this.recipeId}`);
     }
     else {
       this.form.classList.add('was-validated');
