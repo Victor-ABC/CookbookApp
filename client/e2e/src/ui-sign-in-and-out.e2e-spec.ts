@@ -14,7 +14,8 @@ let name: string;
 describe('User-Interface: Testing sing-in / sign-out: ', () => {
   beforeAll(async () => {
     browser = await chromium.launch({
-      headless: configFile.headless
+      headless: configFile.headless,
+      slowMo : configFile.slowMo
     });
   });
   beforeEach(async () => {
@@ -38,6 +39,7 @@ describe('User-Interface: Testing sing-in / sign-out: ', () => {
 
   it('should not be possible to sign-out, if you are not signed in', async () => {
     await page.click('text=Abmelden');
+    await page.waitForTimeout(100);
     const element = await page.$('text=Abmelden');
     expect(element).toBeNull();
   });

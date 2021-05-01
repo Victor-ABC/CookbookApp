@@ -1,4 +1,4 @@
-/* Autor: Felix Schaphaus */
+/* Autor: Victor Corbet */
 
 import { Entity } from './entity';
 

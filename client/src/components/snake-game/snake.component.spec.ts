@@ -1,4 +1,4 @@
-/* Autor: Victor */
+/* Autor: Victor Corbet */
 
 import { LitElement } from 'lit-element';
 import './snake.component';

@@ -1,4 +1,4 @@
-/* Autor: Prof. Dr. Norman Lahme-Hütig (FH Münster) */
+/* Autor: Victor Corbet */
 
 import { PageMixin } from '../page.mixin';
 import { css, customElement, html, LitElement, query, unsafeCSS } from 'lit-element';

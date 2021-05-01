@@ -1,5 +1,4 @@
 /* Autor: Victor Corbet */
-// npx playwright codegen http://localhost:8080 -o codemessage.js
 
 import { chromium, ChromiumBrowser, Page, ChromiumBrowserContext } from 'playwright';
 import { singUpUserAndGoToProfile } from './ui-snake.e2e-spec';
@@ -7,17 +6,20 @@ const configFile = require('./config.json');
 
 let browser: ChromiumBrowser;
 let browserContext: ChromiumBrowserContext;
+let browserContext2: ChromiumBrowserContext;
 let page: Page;
 const password = 'h4llo?flo+M'; //alle user use the same password in the texts
 
 describe('User-Interface: Message-Service: ', () => {
   beforeAll(async () => {
     browser = await chromium.launch({
-      headless: configFile.headless
+      headless: configFile.headless,
+      slowMo : configFile.slowMo
     });
   });
-  beforeEach(async () => {
+  beforeEach(async () => { // simulate 2 User Szenario
     browserContext = await browser.newContext();
+    browserContext2 = await browser.newContext();
   });
   afterEach(async () => {
     await page.close();
@@ -30,7 +32,7 @@ describe('User-Interface: Message-Service: ', () => {
   it('should check (user A), if user B exists -> success <- ', async () => {
     const userB = 'Frank';
     const userA = 'Tobias';
-    page = await singUpUserAndGoToProfile(userB, password, browserContext);
+    page = await singUpUserAndGoToProfile(userB, password, browserContext2);
     await page.click('text=Abmelden');
     page.close();
     page = await singUpUserAndGoToProfile(userA, password, browserContext);
@@ -44,7 +46,7 @@ describe('User-Interface: Message-Service: ', () => {
   it('should check (user A), if user B exists -> error <- ', async () => {
     const userB = 'Frank2';
     const userA = 'Tobias2';
-    page = await singUpUserAndGoToProfile(userB, password, browserContext);
+    page = await singUpUserAndGoToProfile(userB, password, browserContext2);
     await page.click('text=Abmelden');
     page.close();
     page = await singUpUserAndGoToProfile(userA, password, browserContext);
@@ -64,7 +66,7 @@ describe('User-Interface: Message-Service: ', () => {
       title: 'Apfelkuchen',
       content: 'das Apfelkuchenrezept ist super'
     };
-    page = await singUpUserAndGoToProfile(message.to, password, browserContext);
+    page = await singUpUserAndGoToProfile(message.to, password, browserContext2);
     await page.click('text=Abmelden');
     page.close();
     page = await singUpUserAndGoToProfile(userA, password, browserContext);
@@ -108,7 +110,7 @@ describe('User-Interface: Message-Service: ', () => {
       title: 'Apfelkuchen',
       content: 'das Apfelkuchenrezept ist super'
     };
-    page = await singUpUserAndGoToProfile(message.to, password, browserContext);
+    page = await singUpUserAndGoToProfile(message.to, password, browserContext2);
     await page.click('text=Abmelden');
     page.close();
     page = await singUpUserAndGoToProfile(userA, password, browserContext);
@@ -179,7 +181,7 @@ describe('User-Interface: Message-Service: ', () => {
       title: 'Apfelkuchen',
       content: 'das Apfelkuchenrezept ist super'
     };
-    const page2 = await singUpUserAndGoToProfile(message.to, password, browserContext);
+    const page2 = await singUpUserAndGoToProfile(message.to, password, browserContext2);
 
     page = await singUpUserAndGoToProfile(userA, password, browserContext);
 

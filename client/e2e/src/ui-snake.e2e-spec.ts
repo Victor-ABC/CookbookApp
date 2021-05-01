@@ -1,5 +1,4 @@
 /* Autor: Victor Corbet */
-// npx playwright codegen http://localhost:8080 -o code.js
 
 import { chromium, ChromiumBrowser, Page, ChromiumBrowserContext } from 'playwright';
 import { v4 as uuidv4 } from 'uuid';
@@ -32,7 +31,8 @@ export async function singUpUserAndGoToProfile(name: string, password: string, b
 describe('User-Interface: Snake-Game: ', () => {
   beforeAll(async () => {
     browser = await chromium.launch({
-      headless: configFile.headless
+      headless: configFile.headless,
+      slowMo : configFile.slowMo
     });
   });
   beforeEach(async () => {

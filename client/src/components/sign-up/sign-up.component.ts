@@ -1,4 +1,4 @@
-/* Autor: Victor */
+/* Autor: Victor Corbet */
 
 import { css, customElement, html, LitElement, query, unsafeCSS } from 'lit-element';
 import { httpClient } from '../../http-client';
@@ -125,8 +125,8 @@ class SignUpComponent extends PageMixin(LitElement) {
         const response = await httpClient.post('/users/sign-up', accountData);
         const json = await response.json();
         localStorage.setItem('user-id', json.id);
-        headerEmitter.emit('setId', json.id);
         router.navigate('api');
+        headerEmitter.emit('setId', json.id);
       } catch ({ message }) {
         this.setNotification({ errorMessage: message });
       }

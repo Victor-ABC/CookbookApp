@@ -1,4 +1,4 @@
-/* Autor: Victor */
+/* Autor: Victor Corbet */
 
 import { Entity } from './entity';
 
