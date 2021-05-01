@@ -33,10 +33,13 @@ export class HeaderComponent extends PageMixin(LitElement) {
   private navbarOpen = false;
 
   private headerEmitter;
+
+  @property()
   private exclude : string[]; 
 
   constructor() {
     super();
+    this.userId = window.localStorage.getItem("user-id") || '';
     this.exclude = ["Konto erstellen" , "Anmelden"];
     this.headerEmitter = headerEmitter;
     this.headerEmitter.on('setId', (id: string) => {
@@ -89,7 +92,7 @@ export class HeaderComponent extends PageMixin(LitElement) {
         >
           <ul class="flex-item navbar-nav">
             ${this.linkItems.map(linkItem => {
-              if (this.userId) {
+              if (window.localStorage.getItem("user-id")) {
                 if (!this.exclude.includes(linkItem.title)) {
                     return html`
                       <li class="nav-item">
