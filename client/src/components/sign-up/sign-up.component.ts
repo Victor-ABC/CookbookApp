@@ -124,8 +124,9 @@ class SignUpComponent extends PageMixin(LitElement) {
       try {
         const response = await httpClient.post('/users/sign-up', accountData);
         const json = await response.json();
+        localStorage.setItem('user-id', json.id);
         headerEmitter.emit('setId', json.id);
-        router.navigate('/cookbooks');
+        router.navigate('api');
       } catch ({ message }) {
         this.setNotification({ errorMessage: message });
       }

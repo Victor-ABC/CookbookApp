@@ -40,7 +40,7 @@ export class HeaderComponent extends PageMixin(LitElement) {
   constructor() {
     super();
     this.userId = window.localStorage.getItem("user-id") || '';
-    this.exclude = ["Konto erstellen" , "Anmelden"];
+    this.exclude = ["Konto erstellen", "Anmelden"];
     this.headerEmitter = headerEmitter;
     this.headerEmitter.on('setId', (id: string) => {
       this.userId = id;

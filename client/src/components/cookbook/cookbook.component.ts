@@ -168,7 +168,7 @@ class CookbookComponent extends PageMixin(LitElement) {
   }
 
   openRecipe(recipe: Recipe) {
-    router.navigate(`/recipes/${recipe.id}`);
+    router.navigate(`/recipes/details/${recipe.id}`);
   }
 
   async deleteRecipe(recipeToRemove: Recipe) {

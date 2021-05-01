@@ -58,6 +58,7 @@ export class SignInComponent extends PageMixin(LitElement) {
       try {
         const response = await httpClient.post('/users/sign-in', authData);
         const json = await response.json();
+        localStorage.setItem('user-id', json.id);
         headerEmitter.emit('setId', json.id);
         router.navigate('/rezepte');
       } catch ({ message }) {

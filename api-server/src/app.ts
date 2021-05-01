@@ -9,7 +9,7 @@ import https from 'https';
 import fs from 'fs';
 import path from 'path';
 import cookbooks from './routes/cookbooks';
-import recipes from './routes/recipe';
+import recipes from './routes/recipes';
 import users from './routes/users';
 import message from './routes/messages';
 
@@ -17,12 +17,12 @@ import startDB from './db';
 import { corsService } from './services/cors.service';
 
 function configureApp(app: Express) {
-  app.use(bodyParser.json({limit: '10mb'})); //AH: Added limit
-  app.use(bodyParser.urlencoded({limit: '10mb', extended: true })); //AH: Added limit
-  app.use(bodyParser.urlencoded({limit: '10mb',  extended: true })); //AH: Added limit
+  app.use(bodyParser.json({ limit: '10mb' })); //AH: Added limit
+  app.use(bodyParser.urlencoded({ limit: '10mb', extended: true })); //AH: Added limit
+  app.use(bodyParser.urlencoded({ limit: '10mb', extended: true })); //AH: Added limit
   app.use(cookieParser());
   app.use(corsService.expressMiddleware);
-  
+
   app.use('/api/cookbooks', cookbooks);
   app.use('/api/recipes', recipes);
   app.use('/api/users', users);

@@ -244,7 +244,7 @@ class RecipeDetailsComponent extends PageMixin(LitElement) {
   
     }
       
-      router.navigate(`/recipe/${this.recipeId}`);
+      router.navigate(`/recipes/details/${this.recipeId}`);
     }
     else {
       this.form.classList.add('was-validated');
