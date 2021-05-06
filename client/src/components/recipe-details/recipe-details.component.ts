@@ -216,12 +216,10 @@ class RecipeDetailsComponent extends PageMixin(LitElement) {
         , ingredients: this.ingredientsToArray()
       };
       try {
-        alert(this.recipeId)
         if (this.recipeId === "new") {
           const response = await httpClient.post('/recipes', recipe);
           const json = await response.json();
           this.recipeId = json.id;
-          alert(this.recipeId)
         }
         else {
           recipe.id = this.recipeId;
@@ -231,9 +229,6 @@ class RecipeDetailsComponent extends PageMixin(LitElement) {
       } catch ({ message }) {
         this.setNotification({ errorMessage: message });
       }
-      
-      alert(this.cookbookElement.value)
-
         if(this.cookbookElement.value) {
 
       try {

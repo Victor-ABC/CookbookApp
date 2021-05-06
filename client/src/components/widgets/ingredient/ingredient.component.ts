@@ -1,9 +1,9 @@
 /* Autor: Arne Hegemann */
 
 import { css, customElement, html, LitElement, property, unsafeCSS } from "lit-element";
-import { PageMixin } from "../page.mixin";
+import { PageMixin } from "../../page.mixin";
 
-const sharedCSS = require('../shared.scss');
+const sharedCSS = require('../../shared.scss');
 const recipeCSS = require('./ingredient.component.scss');
 
 @customElement('app-ingredient')
