@@ -23,7 +23,7 @@ class CookbookListItemComponent extends WidgetMixin(LitElement) {
 
     render() {
         return html`
-    <div class="row">
+    <div class="row" @click="${() => this.emit('apprecipedetailsclick')}">
         <div class="col-lg-2">
             <div class="image">
                 <slot name=image></slot>
@@ -31,7 +31,7 @@ class CookbookListItemComponent extends WidgetMixin(LitElement) {
         </div>
         <div class="col-lg-10">
             <div class="header">
-                <slot name="title" @click="${() => this.emit('apprecipedetailsclick')}"></slot>
+                <slot name="title"></slot>
                 <label for="toggle-body"></label>
             </div>
             <div class="body">

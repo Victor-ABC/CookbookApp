@@ -1,1 +1,44 @@
 /* Autor: Arne Hegemann */
+.row{
+    margin: 0.25rem;
+}
+
+.imgZoomCheck{
+    display: none;
+}
+
+img[src=""] {
+    display: none;
+ }
+
+ img{    
+    border-radius: 0.25rem;
+    width: 300px;
+    height: 200px;
+    object-fit: contain;
+    position: relative;
+    cursor: zoom-in;
+    border: solid lightgray 1px;
+ }
+
+ .imgZoomCheck:checked~.imgCopy  {
+    display: block; 
+    position: fixed;
+    z-index: 99;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(2);
+ }
+
+ .imgZoomCheck:checked~img  {
+    cursor: zoom-out;
+ }
+
+ .imgCopy{
+    display: none;
+    border: 0px
+ }
+
+button{
+    margin-right: 0.25rem;
+}

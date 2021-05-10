@@ -29,13 +29,16 @@ class RecipesComponent extends PageMixin(LitElement) {
 
   @property()
   userId!: string;
+
+  @property()
+  own!: boolean
   
   @internalProperty()
   recipes: Recipe[] = [];
 
   async firstUpdated() {
     try {
-      const url = this.userId ? `/recipes/${this.userId}` : '/recipes';
+      const url = this.own? `/recipes/own` : this.userId ? `/recipes/${this.userId}` : '/recipes';
       const resp = await httpClient.get(url);
       const json = (await resp.json()).results;
       this.recipes = json.recipes;
@@ -47,22 +50,27 @@ class RecipesComponent extends PageMixin(LitElement) {
   render() {
     return html`
       ${this.renderNotification()}
-      <h1>Your Recipes</h1>
-      <div class="recipes">
+      <h1>${this.own? "Deine " : ""}Rezepte</h1>
+      <div>
         ${this.recipes.map(
           recipe => html`
-            <app-recipe-list-item @apprecipedetailsclick=${() => this.showRecipe(recipe)}>
+            <app-recipe-list-item class="recipe" @apprecipedetailsclick=${() => this.showRecipe(recipe)}>
               <span slot="title">${recipe.title}</span>
-              <span slot="description">${recipe.description.substring(0, 150)}</span>
+              <span slot="description">${recipe.description.length>=250 ? recipe.description.substring(0, 250) + "..." : recipe.description}</span>
               <img class="img-fluid" slot="image" src="${recipe.image}"/>
             </app-recipe-list-item>
           `)}
       </div>
+
+      ${this.own? html`     
+        <div>
+          <button class="btn btn-success" type="button" id="newRecipe" name="newRecipe" @click="${() => {router.navigate('/recipes/details/new');}}">Neues Rezept</button>
+        </div>
+      ` : html``}
 `;
   }
 
   showRecipe(recipe: Recipe){
-    alert("test");
     router.navigate(`/recipes/details/${recipe.id}`);
   }
 }

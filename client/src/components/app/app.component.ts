@@ -29,7 +29,10 @@ class AppComponent extends LitElement {
     { title: 'Abmelden', routePath: '/users/sign-out' },
     { title: 'Mein Profil', routePath: '/users/profile' },
     { title: 'Meine Kochbücher', routePath: '/my-cookbooks' },
-    { title: 'Kochbücher', routePath: '/cookbooks' }
+    { title: 'Kochbücher', routePath: '/cookbooks' },
+    { title: 'Meine Rezepte', routePath: '/my-recipes' },
+    { title: 'Rezepte', routePath: '/recipes' },
+    { title: 'Neues Rezept', routePath: '/recipes/details/new' }
   ];
 
   constructor() {
@@ -58,7 +61,7 @@ class AppComponent extends LitElement {
         '/recipes/details/:id': params => html`<app-recipe-details .recipeId=${params.id}></app-recipe-details>`,
         '/recipes': () => html`<app-recipes></app-recipes>`,
         '/recipes/:id': params => html`<app-recipes .userId=${params.id}></app-recipes>`,
-        '/my-recipes': () => html`<app-my-recipes ></app-my-recipes>`
+        '/my-recipes': () => html`<app-recipes .own=${true}></app-my-recipes>`
       },
       () => html`<app-tasks></app-tasks>`
     );

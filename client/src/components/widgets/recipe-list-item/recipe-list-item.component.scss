@@ -11,7 +11,7 @@
   }
 
   :host(:hover) {
-    background-color: #5cb85c;
+    background-color: gainsboro;
   
     span {
       color: white;
@@ -21,7 +21,7 @@
   .body {
     margin-top: 0.75rem;  
     padding: 0.5rem;
-    background-color: white;
+    // background-color: white;
     border-radius: 0.25rem;
   }
 
@@ -34,7 +34,8 @@
   }
 
   slot[name='title']::slotted(*) {
-    flex-grow: 1;    
-    font-size: 1.5rem;
+    color: #5cb85c;;    
+    font-size: 2rem;
     font-weight: bold;
+    // text-decoration: underline;
   }

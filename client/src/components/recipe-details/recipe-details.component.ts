@@ -57,6 +57,9 @@ class RecipeDetailsComponent extends PageMixin(LitElement) {
 
   @query('#selectedImage')
   imageElement!: HTMLImageElement;
+
+  @query('#selectedImageCopy')
+  imageCopyElement!: HTMLImageElement;
   
   @query('#addLine')
   addLineElement!: HTMLElement;
@@ -105,25 +108,46 @@ class RecipeDetailsComponent extends PageMixin(LitElement) {
   }
 
   render() {
-    //TODO Not-Owner UI
-    let page = html`
+    return html`
       ${this.renderNotification()}
       <h1 id="recipeName">Ihr Rezept${this.title!=="" ? " \"" + this.title + "\"" : ""}</h1>
       <form id="form" @submit="${this.submit}">
       
         <div class="row">
-          <input class="form-control form-control-lg" type="text" id="title" name="title" placeholder="Ihr neues Rezept"
-            spellcheck="true" autofocus required @change="${this.title_change}" .value=${this.title} />
+          <input 
+            class="form-control form-control-lg" 
+            type="text" 
+            id="title" 
+            name="title" 
+            placeholder="Ihr neues Rezept"
+            spellcheck="true" 
+            autofocus 
+            required 
+            @change="${this.title_change}" 
+            .value=${this.title} 
+          />
         </div>
       
         <div class="row">
-          <textarea class="form-control form-control-lg" id="description" name="description"
-            placeholder="Beschreiben Sie hier Ihr neues Rezept" spellcheck="true" rows="5" required
-            .value=${this.description}></textarea>
+          <textarea 
+            class="form-control form-control-lg" 
+            id="description" 
+            name="description"
+            placeholder="Beschreiben Sie hier Ihr neues Rezept" 
+            spellcheck="true" 
+            rows="5" 
+            required
+            .value=${this.description}>
+          </textarea>
         </div>
 
         <div class="row">
-          <select class="form-control form-control-lg" id="cookbook" name="cookbook" .value="${this.cookbookId}">
+          <select 
+            class="form-control form-control-lg" 
+            id="cookbook" 
+            name="cookbook" 
+            .value="${this.cookbookId}"
+          >
             <option value=""></option>
             ${this.cookbooks.map(
               cookbook => html`
@@ -134,35 +158,85 @@ class RecipeDetailsComponent extends PageMixin(LitElement) {
         </div>
       
         <div class="row">
-          <input class="form-control-file" type="file" id="selectImage" name="selectImage" accept=".jpg,.png"
-            style="display: none;" @change="${this.selectImage_change}">
+          <input 
+            class="form-control-file" 
+            type="file" 
+            id="selectImage" 
+            name="selectImage" 
+            accept=".jpg,.png"
+            style="display: none;" 
+            @change="${this.selectImage_change}"
+          >
       
-          <button class="btn btn-success" type="button" id="selectImageMock" name="selectImageMock"
-            @click="${this.selectImageMock_Click}">Durchsuchen...</button>
+          <button 
+            class="btn btn-success" 
+            type="button" 
+            id="selectImageMock" 
+            name="selectImageMock"
+            @click="${this.selectImageMock_Click}"
+          >Durchsuchen...</button>
         </div>
       
         <div class="row">
-          <img id="selectedImage" src="" height="200" src=${this.image}>
+          <label>
+            <input 
+              class="imgZoomCheck" 
+              type="checkbox" 
+              id="imgZoomed" 
+              .value="false"
+            >
+
+            <img 
+              class="imgOriginal" 
+              id="selectedImage" 
+              src="" src=${this.image}
+            >
+
+            <img 
+              class="imgCopy" 
+              id="selectedImageCopy" 
+              src=${this.image}
+            >
+          </label>
         </div>
       
           ${this.ingredients.map(
               ingredient => html`
-                <app-ingredient id="ingredient${ingredientCount++}" .name="${ingredient.name}" .quantity="${ingredient.quantity}" .unit="${ingredient.unit}"/>
+                <app-ingredient 
+                  id="ingredient${ingredientCount++}" 
+                  .name="${ingredient.name}" 
+                  .quantity="${ingredient.quantity}" 
+                  .unit="${ingredient.unit}"
+                />
               `
           )}
       
         <div class="row">
-          <button class="btn btn-success" type="button" id="addLine" name="addLine" @click="${this.addLine_Click}">Zutat
-            hinzufügen</button>
+          <button 
+            class="btn btn-success" 
+            type="button" 
+            id="addLine" 
+            name="addLine" 
+            @click="${this.addLine_Click}"
+          >Zutat hinzufügen</button>
         </div>
       
         <div class="row">
-          <button class="btn btn-success" id="save" name="save">Speichern</button>
+          <button 
+            class="btn btn-success" 
+            id="save" 
+            name="save"
+          >Speichern</button>
       
-          <button class="btn btn-success" type="button" id="delete" name="delete" @click="${this.delete}">Löschen</button>
+          <button 
+            class="btn btn-success" 
+            type="button" 
+            id="delete" 
+            name="delete" 
+            @click="${this.delete}"
+          >Löschen</button>
         </div>
 `;
-    return page;
   }
 
   title_change() {
@@ -179,6 +253,7 @@ class RecipeDetailsComponent extends PageMixin(LitElement) {
 
     if (file) {
       var img = this.imageElement;
+      var imgCopy = this.imageCopyElement;
       var reader = new FileReader();
 
       reader.onloadend = function (e) {
@@ -186,7 +261,7 @@ class RecipeDetailsComponent extends PageMixin(LitElement) {
 
         if (binary) {
           img.src = binary;
-          img.height = 200;
+          imgCopy.src = binary;
         }
 
       }
@@ -250,6 +325,7 @@ class RecipeDetailsComponent extends PageMixin(LitElement) {
     if (this.recipeId) {
       try {
         await httpClient.delete(`/recipes/${this.recipeId}`);
+        router.navigate(`/my-recipes`);
       } catch ({ message }) {
         this.setNotification({ errorMessage: message });
       }
