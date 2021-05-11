@@ -1,0 +1,41 @@
+/* Autor: Arne Hegemann */
+
+:host {
+    padding: 0.75rem;
+    border: solid rgba(0, 0, 0, 0.125) 1px;
+    border-radius: 0.25rem;
+  }
+
+  .header {
+    display: flex;
+  }
+
+  :host(:hover) {
+    background-color: gainsboro;
+  
+    span {
+      color: white;
+    }
+  }
+
+  .body {
+    margin-top: 0.75rem;  
+    padding: 0.5rem;
+    // background-color: white;
+    border-radius: 0.25rem;
+  }
+
+  slot[name='image']::slotted(*) {
+    border-radius: 0.25rem;
+    max-height: 10rem;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  slot[name='title']::slotted(*) {
+    color: #5cb85c;;    
+    font-size: 2rem;
+    font-weight: bold;
+    // text-decoration: underline;
+  }

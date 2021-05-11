@@ -191,6 +191,7 @@ async function getRecipes(dao: GenericDAO<Recipe>, filter?: Partial<Recipe>) {
             id: recipe.id
             , title: recipe.title
             , description: recipe.description
+            , image: recipe.image
         };
     });
 }
