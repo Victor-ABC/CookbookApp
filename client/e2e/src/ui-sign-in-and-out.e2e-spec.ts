@@ -13,12 +13,13 @@ let name: string;
 
 describe('User-Interface: Testing sing-in / sign-out: ', () => {
   beforeAll(async () => {
+
+  });
+  beforeEach(async () => {
     browser = await chromium.launch({
       headless: configFile.headless,
       slowMo : configFile.slowMo
     });
-  });
-  beforeEach(async () => {
     name = uuidv4();
     browserContext = await browser.newContext();
     page = await singUpUserAndGoToProfile(name, password, browserContext);
@@ -26,9 +27,10 @@ describe('User-Interface: Testing sing-in / sign-out: ', () => {
   afterEach(async () => {
     await page.close();
     await browserContext.close();
+    await browser.close();
   });
   afterAll(async () => {
-    await browser.close();
+  
   });
 
   it('(the user Profile) should only be accessable for signed-in Users', async () => {
@@ -40,6 +42,8 @@ describe('User-Interface: Testing sing-in / sign-out: ', () => {
   it('should not be possible to sign-out, if you are not signed in', async () => {
     await page.click('text=Abmelden');
     await page.waitForTimeout(100);
+    // waiting for event to trigger render on component by
+    // chanching property.
     const element = await page.$('text=Abmelden');
     expect(element).toBeNull();
   });

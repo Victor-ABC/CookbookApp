@@ -1,4 +1,4 @@
-/* Autor: Victor */
+/* Autor: Victor Corbet */
 
 import express from 'express';
 import { Message } from '../models/message';
