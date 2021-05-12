@@ -15,7 +15,6 @@ class SignOutComponent extends PageMixin(LitElement) {
   async firstUpdated() {
     try {
       await httpClient.delete('/users/sign-out');
-      localStorage.removeItem('user-id');
       headerEmitter.emit('deleteId');
       this.setNotification({ infoMessage: 'Sie wurden erfolgreich abgemeldet!' });
     } catch ({ message }) {

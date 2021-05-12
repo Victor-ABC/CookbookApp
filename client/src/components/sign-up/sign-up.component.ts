@@ -124,7 +124,6 @@ class SignUpComponent extends PageMixin(LitElement) {
       try {
         const response = await httpClient.post('/users/sign-up', accountData);
         const json = await response.json();
-        localStorage.setItem('user-id', json.id);
         router.navigate('api');
         headerEmitter.emit('setId', json.id);
       } catch ({ message }) {
