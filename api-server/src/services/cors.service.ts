@@ -1,7 +1,7 @@
 /* Autor: Prof. Dr. Norman Lahme-Hütig (FH Münster) */
 
 import { Request, Response, NextFunction } from 'express';
-
+const security_configuration = require("./security_config.json");
 class CorsService {
   expressMiddleware = (req: Request, res: Response, next: NextFunction) => {
     if (this.isOriginAllowed(req.get('Origin'))) {
@@ -21,8 +21,11 @@ class CorsService {
     return req.method === 'OPTIONS' && req.get('Origin') && req.get('Access-Control-Request-Method');
   }
 
-  isOriginAllowed(origin?: string) {
-    return !!origin;
+  isOriginAllowed(origin?: string) { 
+    if(origin == security_configuration.allowedPage){ // only http://localhost:8080 
+      return true;
+    }
+    return false
   }
 }
 
