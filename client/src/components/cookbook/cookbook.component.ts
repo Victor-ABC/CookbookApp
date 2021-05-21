@@ -75,7 +75,8 @@ class CookbookComponent extends PageMixin(LitElement) {
       this.description = json.description;
       this.triggerNoRecipesNotification();
     } catch ({ message }) {
-      this.setNotification({ errorMessage: message });
+      this.setNotification({ errorMessage: 'Das Kochbuch existiert nicht.' });
+      setTimeout(() => router.navigate('/cookbooks'), 3000);
     }
   }
 
@@ -153,7 +154,7 @@ class CookbookComponent extends PageMixin(LitElement) {
         this.description = updatedCookbook.description;
         this.toggleEditElement.checked = false;
       } catch ({ message }) {
-        this.setNotification({ errorMessage: message });
+        this.setNotification({ errorMessage: 'Das Kochbuch konnte nicht aktualisiert werden.' });
       }
     } else {
       this.setNotification({ errorMessage: 'Das Kochbuch benötigt einen Titel.' });
@@ -175,7 +176,7 @@ class CookbookComponent extends PageMixin(LitElement) {
       await httpClient.delete(`/cookbooks/${this.cookbookId}/${recipeToRemove.id}`);
       this.recipes = this.recipes.filter(recipe => recipe.id !== recipeToRemove.id);
     } catch ({ message }) {
-      this.setNotification({ errorMessage: message });
+      this.setNotification({ errorMessage: 'Das Rezept konnte aus dem Kochbuch nicht entfernt werden.' });
     }
     this.triggerNoRecipesNotification();
   }

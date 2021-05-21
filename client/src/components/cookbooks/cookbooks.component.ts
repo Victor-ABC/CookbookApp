@@ -53,11 +53,11 @@ class CookbooksComponent extends PageMixin(LitElement) {
       const resp = await httpClient.get(this.getUrl());
       const json = (await resp.json()).results;
       this.cookbooks = json.cookbooks;
-      console.log(json.author);
       this.headline = json.author ? `${json.author}'s Kochbücher` : 'Alle Kochbücher';
       this.triggerNoCookbooksNotification();
     } catch ({ message }) {
-      router.navigate('/cookbooks');
+      this.setNotification({ errorMessage: 'Wir konnten die Kochbücher nicht finden.' });
+      setTimeout(() => router.navigate('/cookbooks'), 3000);
     }
   }
 
@@ -96,10 +96,10 @@ class CookbooksComponent extends PageMixin(LitElement) {
         this.cookbooks = [...this.cookbooks, cookbook];
         this.titleElement.value = '';
       } catch ({ message }) {
-        this.setNotification({ errorMessage: message });
+        this.setNotification({ errorMessage: 'Das Kochbuch konnte nicht gespeichert werden.' });
       }
     } else {
-      this.setNotification({ errorMessage: 'Titel des Kochbuchs darf nicht leer sein.' });
+      this.setNotification({ errorMessage: 'Der Titel des Kochbuchs darf nicht leer sein.' });
     }
     this.triggerNoCookbooksNotification();
   }
@@ -109,7 +109,7 @@ class CookbooksComponent extends PageMixin(LitElement) {
       await httpClient.delete(`/cookbooks/${bookToRemove.id}`);
       this.cookbooks = this.cookbooks.filter(book => book.id !== bookToRemove.id);
     } catch ({ message }) {
-      this.setNotification({ errorMessage: message });
+      this.setNotification({ errorMessage: 'Das Kochbuch konnte nicht gelöscht werden.' });
     }
     this.triggerNoCookbooksNotification();
   }
