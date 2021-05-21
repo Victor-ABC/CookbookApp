@@ -8,3 +8,13 @@ form {
   display: flex;
   flex-direction: column;
 }
+
+.no-cookbooks {
+  display: none;
+}
+
+.no-cookbooks::before {
+  font: normal normal normal 1rem/30px 'Font Awesome 5 Free';
+  content: '\f119';
+  margin-right: 0.5rem;
+}

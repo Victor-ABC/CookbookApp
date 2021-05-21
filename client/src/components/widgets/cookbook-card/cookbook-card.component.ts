@@ -5,9 +5,9 @@ import { css, customElement, html, LitElement, property, unsafeCSS } from 'lit-e
 import { WidgetMixin } from '../../widget.mixin';
 
 const sharedCSS = require('../../shared.scss');
-const componentCSS = require('./cookbook-details.component.scss');
+const componentCSS = require('./cookbook-card.component.scss');
 
-@customElement('app-cookbook-details')
+@customElement('app-cookbook-card')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class CookbookDetailsComponent extends WidgetMixin(LitElement) {
   static styles = [

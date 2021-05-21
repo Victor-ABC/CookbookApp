@@ -56,7 +56,7 @@ class AppComponent extends LitElement {
         '/cookbooks/details/:id': params => html`<app-cookbook .cookbookId=${params.id}></app-cookbook>`,
         '/cookbooks': () => html`<app-cookbooks></app-cookbooks>`,
         '/cookbooks/:id': params => html`<app-cookbooks .userId=${params.id}></app-cookbooks>`,
-        '/my-cookbooks': () => html`<app-my-cookbooks></app-my-cookbooks>`,
+        '/my-cookbooks': () => html`<app-cookbooks .own=${true}></app-cookbooks>`,
 
         '/recipes/details/:id': params => html`<app-recipe-details .recipeId=${params.id}></app-recipe-details>`,
         '/recipes': () => html`<app-recipes></app-recipes>`,

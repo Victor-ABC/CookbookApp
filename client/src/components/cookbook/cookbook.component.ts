@@ -87,7 +87,7 @@ class CookbookComponent extends PageMixin(LitElement) {
       <h1>${this.title}</h1>
       <p>
         <span class="description">${this.description}</span>
-        <span class="author" @click="${this.openCookbook}">von ${this.author.name}<span>
+        <span class="author" @click="${this.openCookbook}">${this.author.name}<span>
       </p>
       
       <form novalidate>
@@ -122,8 +122,7 @@ class CookbookComponent extends PageMixin(LitElement) {
     <div class="cookbooks">
       ${this.recipes.map(
         recipe =>
-          html`<app-cookbook-details
-
+          html`<app-cookbook-card
             ?data-own-cookbooks=${this.ownCookbooks}
             @appcookbookopenclick=${() => this.openRecipe(recipe)}
             @appcookbookdeleteclick=${() => this.deleteRecipe(recipe)}
@@ -131,7 +130,7 @@ class CookbookComponent extends PageMixin(LitElement) {
             <img slot="image" src=${recipe.image} />
             <span slot="title">${recipe.title}</span>
             <span slot="description">${recipe.description}</span>
-          </app-cookbook-details>`
+          </app-cookbook-card>`
       )}
     </div>
     <div class="no-recipes alert alert-success">Das Kochbuch ist noch leer.</div>

@@ -18,8 +18,24 @@ router.get('/', async (req, res) => {
 
 // get list of own cookbooks
 router.get('/own', authService.expressMiddleware, async (req, res) => {
+  const userDAO: GenericDAO<User> = req.app.locals.userDAO;
   const cookbooks = await getCookbooks(req.app.locals.cookbookDAO, { userId: res.locals.user.id });
-  res.status(200).json({ results: { cookbooks } });
+
+  // grab user form database
+  const user = await userDAO.findOne({ id: res.locals.user.id });
+
+  // validate user
+  if (!user) {
+    res.status(404).json({ message: 'Der Benutzer existiert nicht.' });
+    return;
+  }
+
+  res.status(200).json({
+    results: {
+      author: user.name,
+      cookbooks
+    }
+  });
 });
 
 // get cookbook list from a user
