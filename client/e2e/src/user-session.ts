@@ -27,7 +27,7 @@ export class UserSession {
   }
 
   async registerUser() {
-    const response = await fetch(config.serverUrl('users'), {
+    const response = await fetch(config.serverUrl('users/sign-up'), {
       method: 'POST',
       body: JSON.stringify(this.signUpData()),
       headers: { 'Content-Type': 'application/json' }
@@ -44,7 +44,7 @@ export class UserSession {
   }
 
   async deleteUser() {
-    const response = await fetch(config.serverUrl('users'), {
+    const response = await fetch(config.serverUrl('users/sign-out'), {
       method: 'DELETE',
       headers: { Cookie: `jwt-token=${this.token}` }
     });
