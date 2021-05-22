@@ -69,6 +69,7 @@ class CookbookComponent extends PageMixin(LitElement) {
     try {
       const resp = await httpClient.get(`/cookbooks/details/${this.cookbookId}`);
       const json = (await resp.json()).results;
+      console.log(JSON.stringify(json));
       this.recipes = json.recipes;
       this.title = json.title;
       this.author = json.author;

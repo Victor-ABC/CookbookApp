@@ -12,7 +12,8 @@
   }
 
   #toggle-edit {
-    display: none;
+    position: absolute;
+    left: -1000000px; // playwright doesn't work with display: none
   }
   
   #toggle-edit:checked ~ form {
