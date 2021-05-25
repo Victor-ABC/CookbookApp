@@ -66,10 +66,12 @@ class CookbookComponent extends PageMixin(LitElement) {
   ownCookbooks = location.search === '?own';
 
   async firstUpdated() {
+    // update url
+    history.replaceState(null, '', `${location.origin}${location.pathname}`);
+
     try {
       const resp = await httpClient.get(`/cookbooks/details/${this.cookbookId}`);
       const json = (await resp.json()).results;
-      console.log(JSON.stringify(json));
       this.recipes = json.recipes;
       this.title = json.title;
       this.author = json.author;
@@ -145,15 +147,20 @@ class CookbookComponent extends PageMixin(LitElement) {
     if (this.form.checkValidity()) {
       const updatedCookbook = {
         id: this.cookbookId,
-        description: this.newDescriptionElement.value,
-        title: this.newTitleElement.value
+        description: this.newDescriptionElement.value.trim(),
+        title: this.newTitleElement.value.trim()
       };
 
       try {
+        // update cookbook in database
         await httpClient.patch('/cookbooks', updatedCookbook);
         this.title = updatedCookbook.title;
         this.description = updatedCookbook.description;
         this.toggleEditElement.checked = false;
+
+        // update html
+        this.newTitleElement.value = updatedCookbook.title;
+        this.newDescriptionElement.value = updatedCookbook.description;
       } catch ({ message }) {
         this.setNotification({ errorMessage: 'Das Kochbuch konnte nicht aktualisiert werden.' });
       }

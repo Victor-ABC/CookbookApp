@@ -88,7 +88,7 @@ class CookbooksComponent extends PageMixin(LitElement) {
     event.preventDefault();
 
     if (this.formElement.checkValidity()) {
-      const partialCookbook: Cookbook = { title: this.titleElement.value } as Cookbook;
+      const partialCookbook: Cookbook = { title: this.titleElement.value.trim() } as Cookbook;
 
       try {
         const response = await httpClient.post('/cookbooks', partialCookbook);
