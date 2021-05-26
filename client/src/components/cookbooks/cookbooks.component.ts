@@ -132,6 +132,7 @@ class CookbooksComponent extends PageMixin(LitElement) {
         id="title"
         name="title"
         placeholder="Neues Kochbuch hinzufügen"
+        maxlength="32"
       />
     </form>`;
   }

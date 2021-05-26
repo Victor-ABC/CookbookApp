@@ -63,7 +63,7 @@ class AppComponent extends LitElement {
         '/recipes/:id': params => html`<app-recipes .userId=${params.id}></app-recipes>`,
         '/my-recipes': () => html`<app-recipes .own=${true}></app-my-recipes>`
       },
-      () => html`<app-tasks></app-tasks>`
+      () => html`<app-recipes></app-recipes>`
     );
   }
 

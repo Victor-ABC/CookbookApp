@@ -66,7 +66,7 @@ class CookbookComponent extends PageMixin(LitElement) {
   ownCookbooks = location.search === '?own';
 
   async firstUpdated() {
-    // update url
+    // update url to remove ?own
     history.replaceState(null, '', `${location.origin}${location.pathname}`);
 
     try {
@@ -105,6 +105,7 @@ class CookbookComponent extends PageMixin(LitElement) {
             id="new-title"
             name="new-title"
             placeholder="Wähle einen neuen Titel für dein Kochbuch."
+            maxlength="32"
             .value=${this.title}
           />
         </div>
@@ -116,6 +117,7 @@ class CookbookComponent extends PageMixin(LitElement) {
             name="new-description"
             rows="6"
             placeholder="Füge deinem Kochbuch eine kurze Beschreibung hinzu."
+            maxlength="1024"
             .value=${this.description}
           /></textarea>
         </div>
