@@ -10,7 +10,7 @@ class SecurityHeadersService {
     res.set('Referrer-Policy', 'same-origin');
     res.set('Feature-Policy', `camera 'none'; geolocation 'none'; gyroscope 'none'; microphone 'none'; midi 'none'; payment 'none'`);
     res.set('Cross-Origin-Resource-Policy', 'same-origin');
-    res.set('Content-Security-Policy', `script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; media-src 'self'; object-src 'none'; frame-ancestors 'none'`);
+    res.set('Content-Security-Policy', `script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self'; object-src 'none'; frame-ancestors 'none'`);
     next();
   };
 }
