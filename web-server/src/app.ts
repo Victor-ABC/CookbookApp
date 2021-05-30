@@ -6,11 +6,9 @@ import path from 'path';
 import http from 'http';
 import https from 'https';
 import fs from 'fs';
-import { securityHeadersService } from './services/security-headers.service';
 
 export async function start(port: number, dir: string, withHttps = false) {
   const app = express();
-  app.use(securityHeadersService.expressMiddleware);
   app.use('/app', express.static(dir));
   app.use('/app', (_, res) => {
     res.sendFile(path.join(dir, 'index.html'));
