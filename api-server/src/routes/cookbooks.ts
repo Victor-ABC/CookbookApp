@@ -47,8 +47,8 @@ router.post('/', authService.expressMiddleware, async (req, res) => {
   const cookbookDAO: GenericDAO<Cookbook> = req.app.locals.cookbookDAO;
   const errors: string[] = [];
 
-  // validate parameters
-  if (!hasRequiredFields(req.body, ['title'], errors)) {
+  // validate body
+  if (!validateBody(req.body, [{ key: 'title', type: 'string' }], errors)) {
     return res.status(400).json({ message: errors });
   }
 
@@ -71,8 +71,18 @@ router.post('/', authService.expressMiddleware, async (req, res) => {
 router.patch('/', authService.expressMiddleware, async (req, res) => {
   const errors: string[] = [];
 
-  // validate parameters
-  if (!hasRequiredFields(req.body, ['id', 'title'], errors)) {
+  // validate body
+  if (
+    !validateBody(
+      req.body,
+      [
+        { key: 'id', type: 'string' },
+        { key: 'title', type: 'string' },
+        { key: 'description', type: 'string' }
+      ],
+      errors
+    )
+  ) {
     return res.status(400).json({ message: errors });
   }
 
@@ -203,14 +213,30 @@ router.get('/details/:cookbookId', async (req, res) => {
 
 // Below are helper functions to simplify error handling
 
-function hasRequiredFields(object: { [key: string]: unknown }, requiredFields: string[], errors: string[]) {
+function validateBody(
+  object: { [key: string]: unknown },
+  requiredFields: { key: string; type: string }[],
+  errors: string[]
+) {
   let hasErrors = false;
-  requiredFields.forEach(fieldName => {
-    if (!object[fieldName]) {
-      errors.push(fieldName + ' darf nicht leer sein.');
+
+  // validate number of fields
+  if (Object.keys(object).length !== requiredFields.length) {
+    errors.push('Number of fields mismatch required number of fields.');
+    hasErrors = true;
+  }
+
+  // validate each field
+  requiredFields.forEach(field => {
+    if (object[field.key] === undefined) {
+      errors.push(`Field ${field.key} of type ${field.type} must exist.`);
+      hasErrors = true;
+    } else if (typeof object[field.key] !== field.type) {
+      errors.push(`Field ${field.key} must be of type ${field.type}`);
       hasErrors = true;
     }
   });
+
   return !hasErrors;
 }
 
