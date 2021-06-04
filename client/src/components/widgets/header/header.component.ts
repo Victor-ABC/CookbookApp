@@ -10,6 +10,7 @@ export const headerEmitter = new HeaderEmitter();
 const sharedCSS = require('../../shared.scss');
 const headerCSs = require('./header.component.scss');
 
+
 @customElement('app-header')
 export class HeaderComponent extends PageMixin(LitElement) {
   static styles = [
@@ -40,7 +41,7 @@ export class HeaderComponent extends PageMixin(LitElement) {
 
   constructor() {
     super();
-    this.userId = '';
+    this.userId = document.cookie;
     this.exclude = ["Konto erstellen", "Anmelden"];
     this.headerEmitter = headerEmitter;
     this.headerEmitter.on('setId', (id: string) => {
@@ -93,7 +94,7 @@ export class HeaderComponent extends PageMixin(LitElement) {
         >
           <ul class="flex-item navbar-nav">
             ${this.linkItems.map(linkItem => {
-              if (this.userId) {
+              if (document.cookie) {
                 if (!this.exclude.includes(linkItem.title)) {
                     return html`
                       <li class="nav-item">

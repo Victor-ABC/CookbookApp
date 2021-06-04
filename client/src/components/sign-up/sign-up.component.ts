@@ -67,7 +67,7 @@ class SignUpComponent extends PageMixin(LitElement) {
         </div>
         <div class="form-group">
           <label class="control-label" for="password">Passwort</label>
-          <input class="form-control" type="password" required minlength="10" id="password" name="password" />
+          <input class="form-control" type="password" required minlength="10" id="password" name="password" autocomplete="off"/>
           <div class="invalid-feedback">Passwort ist erforderlich und muss mind. 10 Zeichen lang sein</div>
         </div>
         <div class="form-group">
@@ -79,6 +79,7 @@ class SignUpComponent extends PageMixin(LitElement) {
             minlength="10"
             id="password-check"
             name="passwordCheck"
+            autocomplete="off"
           />
           <div class="invalid-feedback">
             Eine erneute Eingabe ist erforderlich und muss mit der ersten Passworteingabe übereinstimmen
