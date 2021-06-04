@@ -8,7 +8,7 @@ const configFile = require('./config.json');
 let browser: ChromiumBrowser;
 let browserContext: ChromiumBrowserContext;
 let page: Page;
-const password = 'h4llo?flo+M';
+const password = 'abAB12asd*!';
 let name: string;
 
 describe('User-Interface: Testing sing-in / sign-out: ', () => {

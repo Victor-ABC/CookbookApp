@@ -8,7 +8,7 @@ let browser: ChromiumBrowser;
 let browserContext: ChromiumBrowserContext;
 let browserContext2: ChromiumBrowserContext;
 let page: Page;
-const password = 'h4llo?flo+M'; //alle user use the same password in the texts
+const password = 'abAB12asd*!'; //alle user use the same password in the texts
 
 describe('User-Interface: Message-Service: ', () => {
   beforeAll(async () => {

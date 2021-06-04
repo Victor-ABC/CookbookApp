@@ -66,13 +66,14 @@ class SignUpComponent extends PageMixin(LitElement) {
           <div class="invalid-feedback">E-Mail ist erforderlich und muss gültig sein</div>
         </div>
         <div class="form-group">
-          <label class="control-label" for="password">Passwort</label>
-          <input class="form-control" type="password" required minlength="10" id="password" name="password" autocomplete="off"/>
-          <div class="invalid-feedback">Passwort ist erforderlich und muss mind. 10 Zeichen lang sein</div>
+          <label class="control-label" for="password">Passwort <small>(wird nur akzeptiert, wenn es 100% sicher ist [siehe unten])</small></label>
+          <input class="form-control" type="password" required minlength="10" id="password" title="Passwort ist obligatorisch. Muss 10 Zeichen lang sein und mind. 2 Zahlen, 2 Großbuchstaben, 2 Kleinbuchstaben und 2 Sonderzeichen((!@#$&*)) enthalten." name="password" autocomplete="off"/>
+          <div class="invalid-feedback">Passwort ist obligatorisch. Muss 10 Zeichen lang sein und mind. 2 Zahlen, 2 Großbuchstaben, 2 Kleinbuchstaben und 2 Sonderzeichen((!@#$&*)) enthalten.</div>
         </div>
         <div class="form-group">
           <label class="control-label" for="password-check">Passwort nochmals eingeben</label>
           <input
+          title="Muss mit dem Password übereinstimmen"
             class="form-control"
             type="password"
             required
@@ -82,11 +83,12 @@ class SignUpComponent extends PageMixin(LitElement) {
             autocomplete="off"
           />
           <div class="invalid-feedback">
-            Eine erneute Eingabe ist erforderlich und muss mit der ersten Passworteingabe übereinstimmen
+            Eine erneute Eingabe ist erforderlich. Sie muss mit der ersten Passworteingabe übereinstimmen.
           </div>
         </div>
         <button class="btn btn-success" type="button" @click="${this.submit}">Konto erstellen</button>
       </form>
+      <app-password></app-password>
     `;
   }
 

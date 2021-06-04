@@ -41,7 +41,7 @@ export class SignInComponent extends PageMixin(LitElement) {
         </div>
         <div class="form-group">
           <label class="control-label" for="password">Passwort</label>
-          <input class="form-control" type="password" required id="password" name="password" />
+          <input class="form-control" type="password" pattern="^(?=.*[A-Z].*[A-Z])(?=.*[!@#$&*])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8}$" required id="password" name="password" />
           <div class="invalid-feedback">Passwort ist erforderlich</div>
         </div>
         <button class="btn btn-success" type="button" @click="${this.submit}">Anmelden</button>

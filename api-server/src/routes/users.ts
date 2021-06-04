@@ -13,6 +13,7 @@ import { Message } from '../models/message';
 interface formType {
   [key: string]: string | number;
 }
+
 const router = express.Router();
 
 router.post('/sign-in', async (req, res) => {
@@ -53,6 +54,9 @@ router.post('/sign-up', (req, res) => {
   const userDAO: GenericDAO<User> = req.app.locals.userDAO;
   const errors: string[] = [];
   checkFormPromise(req.body, ['email', 'name', 'password', 'passwordCheck'], errors)
+    .then( () => { // only here is new
+      return checkIfPasswordIsSave(req.body.password , errors);
+    })
     .then(() => {
       return validatePasswords(req.body);
     })
@@ -134,6 +138,93 @@ export function checkIfUserAlreadyExistsPromise(filter: Partial<User>, userDAO: 
       resolve();
     }
   });
+}
+
+// #################
+
+function checkIfPasswordIsSave (password : string , errorMessages : string[]) {
+  return new Promise<void>(async (resolve, reject) => { //eslint-disable-line
+    const problems = calculatePasswordStrength(password);
+    let strength : number = 100;
+    let errorMessage = 'Registrierung Fehlgeschlagen, da das Password nicht sicher genug ist.';
+
+      problems.forEach( (problem : any) => {
+          if(problem == null) return
+          strength -= problem.punishment
+          errorMessage += problem.message;
+      })
+      if(strength != 100) {
+        errorMessage += `Aktueller Sicherheitsscore des Passwords: ${strength}%. Erforderlich: 100%`
+        errorMessages.push(errorMessage);
+        reject(errorMessages);
+    } else {
+      resolve();
+    }
+  });
+}
+
+function calculatePasswordStrength(password : string) {
+  const problems : any = []
+  problems.push(lenghtProblem(password))
+  problems.push(lowercaseProblem(password))
+  problems.push(uppercaseProblem(password))
+  problems.push(numberProblem(password))
+  problems.push(specialCharactersProblem(password))
+  problems.push(reapeatCharactersProblem(password))
+  return problems
+}
+
+function genericProblemFinder(password : string, regex : RegExp, type : string ) {
+  const matches = password.match(regex) || []
+  if(matches.length == 0) {
+      return {
+          message: `-> Password hat keine ${type}`,
+          punishment: 15
+      }
+  }
+  if(matches.length == 1) {
+      return {
+          message: `-> Password hat nur ein ${type}`,
+          punishment: 10
+      }
+  }
+}
+
+function lowercaseProblem(password : string) {
+  return genericProblemFinder(password, /[a-z]/g , 'Kleinbuchstaben')
+}
+function uppercaseProblem(password : string) {
+  return genericProblemFinder(password, /[A-Z]/g , 'Großbuchstaben')
+}
+function numberProblem(password : string) {
+  return genericProblemFinder(password, /[0-9]/g , 'Number character')
+}
+function specialCharactersProblem(password : string) {
+  return genericProblemFinder(password , /[^0-9a-zA-Z\s]/g , 'Sonderzeichen (!$%&*...)')
+}
+function reapeatCharactersProblem(password : string) {
+  const matches = password.match(/(.)\1/g) || []
+  if( matches.length > 0) {
+      return {
+          message: '-> Bitte keine selben Zeichen nebeneinander',
+          punishment: matches.length * 10
+      }
+  }
+}
+function lenghtProblem(password : string) {
+  const length = password.length
+  if ( length <= 5) {
+      return {
+          message: '-> Password zu kurz',
+          punishment: 40
+      }
+  }
+  if ( length <= 10) {
+      return {
+          message: '-> Password könnte länger sein',
+          punishment: 25
+      }
+  }
 }
 
 export default router;

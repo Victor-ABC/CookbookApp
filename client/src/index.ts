@@ -14,6 +14,7 @@ import './components/widgets/cookbook-list-item/cookbook-list-item.component.ts'
 import './components/widgets/header/header.component.ts';
 import './components/widgets/notification/notification.component.ts';
 import './components/message-create/message-create.component.ts';
+import './components/password/password.component.ts';
 
 //Recipes - Arne Hegemann
 import './components/recipes/recipes.component.ts';

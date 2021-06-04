@@ -7,7 +7,7 @@ const configFile = require('./config.json');
 let browser: ChromiumBrowser;
 let browserContext: ChromiumBrowserContext;
 let page: Page;
-const password = 'h4llo?flo+M';
+const password = 'abAB12asd*!';
 
 export async function singUpUserAndGoToProfile(name: string, password: string, browserContext: ChromiumBrowserContext) {
   page = await browserContext.newPage();
