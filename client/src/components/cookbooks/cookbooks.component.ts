@@ -1,5 +1,6 @@
 /* Autor: Felix Schaphaus */
 
+import { nothing } from 'lit-html';
 import { css, customElement, html, LitElement, internalProperty, query, unsafeCSS, property } from 'lit-element';
 import { PageMixin } from '../page.mixin';
 import { router } from '../../router';
@@ -29,6 +30,15 @@ class CookbooksComponent extends PageMixin(LitElement) {
   @query('#title')
   titleElement!: HTMLInputElement;
 
+  @query('form')
+  formElement!: HTMLFormElement;
+
+  @query('.no-cookbooks')
+  noCookbooksElement!: HTMLElement;
+
+  @property()
+  own!: boolean;
+
   @property()
   userId!: string;
 
@@ -40,13 +50,14 @@ class CookbooksComponent extends PageMixin(LitElement) {
 
   async firstUpdated() {
     try {
-      const url = this.userId ? `/cookbooks/${this.userId}` : '/cookbooks';
-      const resp = await httpClient.get(url);
+      const resp = await httpClient.get(this.getUrl());
       const json = (await resp.json()).results;
       this.cookbooks = json.cookbooks;
       this.headline = json.author ? `${json.author}'s Kochbücher` : 'Alle Kochbücher';
+      this.triggerNoCookbooksNotification();
     } catch ({ message }) {
-      router.navigate('/cookbooks');
+      this.setNotification({ errorMessage: 'Wir konnten die Kochbücher nicht finden.' });
+      setTimeout(() => router.navigate('/cookbooks'), 3000);
     }
   }
 
@@ -54,11 +65,13 @@ class CookbooksComponent extends PageMixin(LitElement) {
     return html`
       ${this.renderNotification()}
       <h1>${this.headline}</h1>
+      ${this.own ? this.displayAddNewCookbook() : nothing}
       <div class="cookbooks">
         ${this.cookbooks.map(
           book => html`<app-cookbook-list-item
-            ?data-own-cookbooks=${false}
+            ?data-own-cookbooks=${this.own}
             @appcookbookdetailsclick=${() => this.showDetails(book)}
+            @appcookbookdeleteclick=${() => this.deleteCookbook(book)}
           >
             <span slot="title">${book.title}</span>
             <span slot="description"
@@ -67,10 +80,73 @@ class CookbooksComponent extends PageMixin(LitElement) {
           </app-cookbook-list-item>`
         )}
       </div>
+      <div class="no-cookbooks alert alert-success">Es wurde noch kein Kochbuch erstellt.</div>
     `;
   }
 
+  async addCookbook(event: Event) {
+    event.preventDefault();
+
+    if (this.formElement.checkValidity()) {
+      const partialCookbook: Cookbook = { title: this.titleElement.value.trim() } as Cookbook;
+
+      try {
+        const response = await httpClient.post('/cookbooks', partialCookbook);
+        const cookbook: Cookbook = await response.json();
+        this.cookbooks = [...this.cookbooks, cookbook];
+        this.titleElement.value = '';
+      } catch ({ message }) {
+        this.setNotification({ errorMessage: 'Das Kochbuch konnte nicht gespeichert werden.' });
+      }
+    } else {
+      this.setNotification({ errorMessage: 'Der Titel des Kochbuchs darf nicht leer sein.' });
+    }
+    this.triggerNoCookbooksNotification();
+  }
+
+  async deleteCookbook(bookToRemove: Cookbook) {
+    try {
+      await httpClient.delete(`/cookbooks/${bookToRemove.id}`);
+      this.cookbooks = this.cookbooks.filter(book => book.id !== bookToRemove.id);
+    } catch ({ message }) {
+      this.setNotification({ errorMessage: 'Das Kochbuch konnte nicht gelöscht werden.' });
+    }
+    this.triggerNoCookbooksNotification();
+  }
+
   async showDetails(cookbook: Cookbook) {
-    router.navigate(`/cookbooks/details/${cookbook.id}`);
+    if (this.own) {
+      router.navigate(`/cookbooks/details/${cookbook.id}?own`);
+    } else {
+      router.navigate(`/cookbooks/details/${cookbook.id}`);
+    }
+  }
+
+  displayAddNewCookbook() {
+    return html`<form novalidate @submit="${this.addCookbook}">
+      <input
+        class="form-control form-control-lg"
+        type="text"
+        autofocus
+        required
+        id="title"
+        name="title"
+        placeholder="Neues Kochbuch hinzufügen"
+        maxlength="32"
+      />
+    </form>`;
+  }
+
+  triggerNoCookbooksNotification() {
+    this.noCookbooksElement.style.display = this.cookbooks.length === 0 ? 'block' : 'none';
+  }
+
+  getUrl() {
+    if (this.own) {
+      return '/cookbooks/own';
+    } else if (this.userId) {
+      return `/cookbooks/${this.userId}`;
+    }
+    return '/cookbooks';
   }
 }

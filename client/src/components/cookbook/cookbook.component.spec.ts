@@ -71,8 +71,8 @@ describe('app-cookbook', () => {
     const authorElem = element.shadowRoot!.querySelector('.author') as HTMLElement;
     expect(authorElem.innerText).toBe(`von ${details.author.name}`);
 
-    // check app-cookbook-details
-    const detailsElems = element.shadowRoot!.querySelectorAll('app-cookbook-details');
+    // check app-cookbook-card
+    const detailsElems = element.shadowRoot!.querySelectorAll('app-cookbook-card');
     expect(detailsElems.length).toBe(2);
 
     // check slot title
@@ -105,14 +105,14 @@ describe('app-cookbook', () => {
     // delete one cookbook details element
     spyOn(httpClient, 'delete');
 
-    let detailsElems = element.shadowRoot!.querySelectorAll('app-cookbook-details');
+    let detailsElems = element.shadowRoot!.querySelectorAll('app-cookbook-card');
     detailsElems[0].dispatchEvent(new Event('appcookbookdeleteclick'));
 
     await element.updateComplete;
     element.requestUpdate();
     await element.updateComplete;
 
-    detailsElems = element.shadowRoot!.querySelectorAll('app-cookbook-details');
+    detailsElems = element.shadowRoot!.querySelectorAll('app-cookbook-card');
     expect(detailsElems.length).toBe(1);
 
     expect(httpClient.delete).toHaveBeenCalledTimes(1);

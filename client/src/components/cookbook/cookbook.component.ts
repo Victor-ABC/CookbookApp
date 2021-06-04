@@ -66,6 +66,9 @@ class CookbookComponent extends PageMixin(LitElement) {
   ownCookbooks = location.search === '?own';
 
   async firstUpdated() {
+    // update url to remove ?own
+    history.replaceState(null, '', `${location.origin}${location.pathname}`);
+
     try {
       const resp = await httpClient.get(`/cookbooks/details/${this.cookbookId}`);
       const json = (await resp.json()).results;
@@ -75,7 +78,8 @@ class CookbookComponent extends PageMixin(LitElement) {
       this.description = json.description;
       this.triggerNoRecipesNotification();
     } catch ({ message }) {
-      this.setNotification({ errorMessage: message });
+      this.setNotification({ errorMessage: 'Das Kochbuch existiert nicht.' });
+      setTimeout(() => router.navigate('/cookbooks'), 3000);
     }
   }
 
@@ -87,7 +91,7 @@ class CookbookComponent extends PageMixin(LitElement) {
       <h1>${this.title}</h1>
       <p>
         <span class="description">${this.description}</span>
-        <span class="author" @click="${this.openCookbook}">von ${this.author.name}<span>
+        <span class="author" @click="${this.openCookbook}">${this.author.name}<span>
       </p>
       
       <form novalidate>
@@ -101,6 +105,7 @@ class CookbookComponent extends PageMixin(LitElement) {
             id="new-title"
             name="new-title"
             placeholder="Wähle einen neuen Titel für dein Kochbuch."
+            maxlength="32"
             .value=${this.title}
           />
         </div>
@@ -112,6 +117,7 @@ class CookbookComponent extends PageMixin(LitElement) {
             name="new-description"
             rows="6"
             placeholder="Füge deinem Kochbuch eine kurze Beschreibung hinzu."
+            maxlength="1024"
             .value=${this.description}
           /></textarea>
         </div>
@@ -122,8 +128,7 @@ class CookbookComponent extends PageMixin(LitElement) {
     <div class="cookbooks">
       ${this.recipes.map(
         recipe =>
-          html`<app-cookbook-details
-
+          html`<app-cookbook-card
             ?data-own-cookbooks=${this.ownCookbooks}
             @appcookbookopenclick=${() => this.openRecipe(recipe)}
             @appcookbookdeleteclick=${() => this.deleteRecipe(recipe)}
@@ -131,7 +136,7 @@ class CookbookComponent extends PageMixin(LitElement) {
             <img slot="image" src=${recipe.image} />
             <span slot="title">${recipe.title}</span>
             <span slot="description">${recipe.description}</span>
-          </app-cookbook-details>`
+          </app-cookbook-card>`
       )}
     </div>
     <div class="no-recipes alert alert-success">Das Kochbuch ist noch leer.</div>
@@ -144,17 +149,22 @@ class CookbookComponent extends PageMixin(LitElement) {
     if (this.form.checkValidity()) {
       const updatedCookbook = {
         id: this.cookbookId,
-        description: this.newDescriptionElement.value,
-        title: this.newTitleElement.value
+        description: this.newDescriptionElement.value.trim(),
+        title: this.newTitleElement.value.trim()
       };
 
       try {
+        // update cookbook in database
         await httpClient.patch('/cookbooks', updatedCookbook);
         this.title = updatedCookbook.title;
         this.description = updatedCookbook.description;
         this.toggleEditElement.checked = false;
+
+        // update html
+        this.newTitleElement.value = updatedCookbook.title;
+        this.newDescriptionElement.value = updatedCookbook.description;
       } catch ({ message }) {
-        this.setNotification({ errorMessage: message });
+        this.setNotification({ errorMessage: 'Das Kochbuch konnte nicht aktualisiert werden.' });
       }
     } else {
       this.setNotification({ errorMessage: 'Das Kochbuch benötigt einen Titel.' });
@@ -176,7 +186,7 @@ class CookbookComponent extends PageMixin(LitElement) {
       await httpClient.delete(`/cookbooks/${this.cookbookId}/${recipeToRemove.id}`);
       this.recipes = this.recipes.filter(recipe => recipe.id !== recipeToRemove.id);
     } catch ({ message }) {
-      this.setNotification({ errorMessage: message });
+      this.setNotification({ errorMessage: 'Das Rezept konnte aus dem Kochbuch nicht entfernt werden.' });
     }
     this.triggerNoRecipesNotification();
   }
