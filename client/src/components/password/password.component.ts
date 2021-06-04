@@ -102,7 +102,7 @@ class PasswordComponent extends PageMixin(LitElement) {
         return this.genericProblemFinder(password, /[A-Z]/g , 'Großbuchstaben')
       }
       numberProblem(password : string) {
-        return this.genericProblemFinder(password, /[0-9]/g , 'Number character')
+        return this.genericProblemFinder(password, /[0-9]/g , 'Zahlen')
       }
       specialCharactersProblem(password : string) {
         return this.genericProblemFinder(password , /[^0-9a-zA-Z\s]/g , 'Sonderzeichen (!$%&*...)')
@@ -124,7 +124,7 @@ class PasswordComponent extends PageMixin(LitElement) {
                 punishment: 40
             }
         }
-        if ( length <= 10) {
+        if ( length < 10) {
             return {
                 message: '-> Password könnte länger sein',
                 punishment: 25

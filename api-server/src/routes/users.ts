@@ -140,8 +140,6 @@ export function checkIfUserAlreadyExistsPromise(filter: Partial<User>, userDAO: 
   });
 }
 
-// #################
-
 function checkIfPasswordIsSave (password : string , errorMessages : string[]) {
   return new Promise<void>(async (resolve, reject) => { //eslint-disable-line
     const problems = calculatePasswordStrength(password);
@@ -197,7 +195,7 @@ function uppercaseProblem(password : string) {
   return genericProblemFinder(password, /[A-Z]/g , 'Großbuchstaben')
 }
 function numberProblem(password : string) {
-  return genericProblemFinder(password, /[0-9]/g , 'Number character')
+  return genericProblemFinder(password, /[0-9]/g , 'Zahlen')
 }
 function specialCharactersProblem(password : string) {
   return genericProblemFinder(password , /[^0-9a-zA-Z\s]/g , 'Sonderzeichen (!$%&*...)')
@@ -219,7 +217,7 @@ function lenghtProblem(password : string) {
           punishment: 40
       }
   }
-  if ( length <= 10) {
+  if ( length < 10) {
       return {
           message: '-> Password könnte länger sein',
           punishment: 25
