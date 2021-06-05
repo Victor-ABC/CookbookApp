@@ -2,7 +2,7 @@
 
 import { router } from '../../router';
 import { PageMixin } from '../page.mixin';
-import { css, customElement, html, LitElement, query, unsafeCSS } from 'lit-element';
+import { css, customElement, html, internalProperty, LitElement, query, unsafeCSS } from 'lit-element';
 import { httpClient } from '../../http-client';
 import { headerEmitter } from '../widgets/header/header.component';
 
@@ -29,6 +29,15 @@ export class SignInComponent extends PageMixin(LitElement) {
   @query('form')
   form!: HTMLFormElement;
 
+  @internalProperty()
+  versuche : number = 5;
+
+  @internalProperty()
+  waitTime : number = 30;
+
+  @internalProperty()
+  isCountdownRunning : boolean = false;
+
   render() {
     return html`
       ${this.renderNotification()}
@@ -49,19 +58,39 @@ export class SignInComponent extends PageMixin(LitElement) {
     `;
   }
 
+
   async submit() {
     if (this.isFormValid()) {
-      const authData = {
-        name: this.nameElement.value,
-        password: this.passwordElement.value
-      };
-      try {
-        const response = await httpClient.post('/users/sign-in', authData);
-        const json = await response.json();
-        headerEmitter.emit('setId', json.id);
-        router.navigate('/my-recipes');
-      } catch ({ message }) {
-        this.setNotification({ errorMessage: message });
+      if(this.versuche > 0) {
+        this.versuche--;
+        const authData = {
+          name: this.nameElement.value,
+          password: this.passwordElement.value
+        };
+        try {
+          const response = await httpClient.post('/users/sign-in', authData);
+          const json = await response.json();
+          headerEmitter.emit('setId', json.id);
+          router.navigate('/my-recipes');
+        } catch ({ message }) {
+          this.setNotification({ errorMessage: message });
+        }
+      }
+      else {
+        if(!this.isCountdownRunning) {
+          this.isCountdownRunning = !this.isCountdownRunning;
+          const interval = setInterval( () => {
+              if(this.waitTime <= 0) {
+                this.waitTime = 30;
+                this.versuche = 5;
+                this.isCountdownRunning = !this.isCountdownRunning;
+                clearInterval(interval);
+              } else {
+                this.waitTime--;
+              }
+            }, 1000)
+          }
+        this.setNotification({ errorMessage: `Maximale Anzahl Versuche Erreicht. Versuchen sie es in ${this.waitTime} Sekunden erneut.` });
       }
     } else {
       this.form.classList.add('was-validated');
