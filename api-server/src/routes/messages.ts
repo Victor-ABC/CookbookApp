@@ -29,7 +29,7 @@ router.post('', authService.expressMiddleware, async (req, res) => {
     })
     .then(() => {
       const message = {
-        to: cryptoService.encrypt(req.body.to),//hier crypto encode
+        to: req.body.to,
         title: cryptoService.encrypt(req.body.title),
         content: cryptoService.encrypt(req.body.content),
         date: req.body.date
@@ -37,11 +37,10 @@ router.post('', authService.expressMiddleware, async (req, res) => {
       return messageDAO.create(message);
     })
     .then(message => {
-      // res.status(200).json({ results: message });
-      res.status(200);
+      res.status(200).json({ results: message });
     })
-    .catch((errorMessage: string[]) => {
-      res.status(401).json({ errorMessage });
+    .catch((message: string[]) => {
+      res.status(401).json({ message });
     });
 });
 
@@ -51,11 +50,13 @@ router.get('', authService.expressMiddleware, async (req, res) => {
   const user = await userDAO.findOne({ id: res.locals.user.id });
   if (user) {
     const messages = await messageDAO.findAll({ to: user.name });
-    let decodedMessages;
+    let decodedMessages : Message[] = [];
     if (messages) {
       messages.forEach( ( message : Message ) => {
-        const decodedMessage = {
-          to: cryptoService.decrypt(message.to),
+        const decodedMessage : Message = {
+          id: message.id,
+          createdAt : message.createdAt,
+          to: message.to,
           title: cryptoService.decrypt(message.title),
           content: cryptoService.decrypt(message.content),
           date: req.body.date

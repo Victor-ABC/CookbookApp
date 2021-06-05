@@ -135,6 +135,7 @@ Vorname Nachname`;
         if (message.errorMessage) {
           this.setNotification({ errorMessage: message.errorMessage });
         } else {
+          console.log(message.infoMessage);
           this.setNotification({ infoMessage: message.infoMessage });
         }
       }

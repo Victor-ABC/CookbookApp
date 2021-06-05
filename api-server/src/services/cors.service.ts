@@ -22,10 +22,11 @@ class CorsService {
   }
 
   isOriginAllowed(origin?: string) { 
-    if(origin == security_configuration.allowedPage){ // only http://localhost:8080 
-      return true;
-    }
-    return false
+    // if(origin == security_configuration.allowedPage){ // only http://localhost:8080 
+    //   return true;
+    // }
+    // return false
+    return !!origin;
   }
 }
 
