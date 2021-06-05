@@ -1,7 +1,7 @@
 /* Autor: Victor Corbet */
 
 import { PageMixin } from '../page.mixin';
-import { css, customElement, html, LitElement, query, unsafeCSS } from 'lit-element';
+import { css, customElement, html, internalProperty, LitElement, query, unsafeCSS } from 'lit-element';
 import { httpClient } from '../../http-client';
 
 const sharedCSS = require('../shared.scss');
@@ -32,6 +32,9 @@ export class CreateMessageComponent extends PageMixin(LitElement) {
 
   @query('#name-check')
   messageDiv!: HTMLDivElement;
+
+  @internalProperty()
+  ready : boolean = true;
 
   render() {
     return html`
@@ -119,25 +122,32 @@ Vorname Nachname`;
 
   async submit() {
     if (this.isFormValid()) {
-      const date = new Date();
-      const dateString = `am ${date.getDate()}.${date.getMonth()}.${date.getFullYear()} um ${date.getHours()}:${date.getMinutes()} Uhr`;
-      const message = {
-        to: this.nameElement.value,
-        title: this.titleElement.value,
-        content: this.contentElement.value,
-        date: dateString
-      };
-      try {
-        await httpClient.post('/message/', message);
-        this.setNotification({ successMessage: `Nachricht erfolgreich an ${message.to} versandt` });
-        this.formElement.reset();
-      } catch ({ message }) {
-        if (message.errorMessage) {
-          this.setNotification({ errorMessage: message.errorMessage });
-        } else {
-          console.log(message.infoMessage);
-          this.setNotification({ infoMessage: message.infoMessage });
+      if(this.ready) {
+        this.ready = !this.ready;
+        setTimeout( () => {
+          this.ready = true;
+        }, 10000)
+        const date = new Date();
+        const dateString = `am ${date.getDate()}.${date.getMonth()}.${date.getFullYear()} um ${date.getHours()}:${date.getMinutes()} Uhr`;
+        const message = {
+          to: this.nameElement.value,
+          title: this.titleElement.value,
+          content: this.contentElement.value,
+          date: dateString
+        };
+        try {
+          await httpClient.post('/message/', message);
+          this.setNotification({ successMessage: `Nachricht erfolgreich an ${message.to} versandt` });
+          this.formElement.reset();
+        } catch ({ message }) {
+          if (message.errorMessage) {
+            this.setNotification({ errorMessage: message.errorMessage });
+          } else {
+            this.setNotification({ infoMessage: message.infoMessage });
+          }
         }
+      } else {
+        this.setNotification({ infoMessage: "Sie können nur alle 10 Sekunden eine Nachricht schicken." });
       }
     } else {
       this.formElement.classList.add('was-validated');
