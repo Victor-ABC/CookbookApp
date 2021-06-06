@@ -4,6 +4,7 @@ import { css, customElement, html, LitElement, property, internalProperty, unsaf
 import { classMap } from 'lit-html/directives/class-map';
 import { PageMixin } from '../../page.mixin';
 import { EventEmitter } from 'events';
+
 class HeaderEmitter extends EventEmitter {}
 export const headerEmitter = new HeaderEmitter();
 

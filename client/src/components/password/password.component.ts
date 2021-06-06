@@ -1,7 +1,7 @@
 /* Autor: Victor Corbet */
 
 import { PageMixin } from '../page.mixin';
-import { css, customElement, html, LitElement, property, query, queryAsync, unsafeCSS} from 'lit-element';
+import { css, customElement, html, internalProperty, LitElement, property, query, queryAsync, unsafeCSS} from 'lit-element';
 
 const sharedCSS = require('../shared.scss');
 const componentCSS = require('./password.component.scss');
@@ -18,24 +18,34 @@ class PasswordComponent extends PageMixin(LitElement) {
         `
       ];
 
-      @query('#password-strength')
+      @query('#pwt-strength')
       strengMeter!: HTMLDivElement;
 
-      @query('#reasons')
+      @query('#problems')
       reasonsContainer!: HTMLDivElement;
       
-      @query('#password-input')
+      @query('#pwt-input')
       passwordInput!: HTMLInputElement;
+
+      @internalProperty()
+      isFirstPasswordInput : boolean = true
 
       render() {
         return html`
         <div id="pwt-container">
           <h3>Sicheres Password</h3>
-          <div id="password-strength" class="password-strength"></div>
-          <input type="text" id="password-input" class="password-input" aria-labelledby="password" value=">> Hier Passwort eingeben <<"> 
-          <div id="reasons" class="reasons"></div>
+          <div id="pwt-strength" class="pwt-strength"></div>
+          <input type="text" id="pwt-input" class="pwt-input" aria-labelledby="password" @focus="${this.removeContentFromPasswordInput}" value=">> hier Password eingeben <<"> 
+          <div id="problems" class="problems"></div>
         </div>
           `;
+      }
+
+      removeContentFromPasswordInput () {
+        if(this.isFirstPasswordInput) {
+          this.isFirstPasswordInput = false;
+          this.passwordInput.value = ""
+        };
       }
 
       async firstUpdated() {

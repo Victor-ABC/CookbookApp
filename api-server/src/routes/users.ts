@@ -210,7 +210,7 @@ function specialCharactersProblem(password : string) {
   return genericProblemFinder(password , /[^0-9a-zA-Z\s]/g , 'Sonderzeichen (!$%&*...)')
 }
 function reapeatCharactersProblem(password : string) {
-  const matches = password.match(/(.)\1/g) || []
+  const matches = password.match(/(.)\1/g) || []   // abab wird nicht erkannt. sondern nur aabb 
   if( matches.length > 0) {
       return {
           message: '-> Bitte keine selben Zeichen nebeneinander',
