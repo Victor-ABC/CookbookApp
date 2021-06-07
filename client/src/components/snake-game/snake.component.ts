@@ -79,9 +79,6 @@ export class SnakeGameComponent extends PageMixin(LitElement) {
             <summary>Info</summary>
             <p id="info">
               In diesem Spiel geht es darum, so viel wie möglich zu essen. Du steuerst die Schlange mit den Pfeiltasten
-              <img
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Arrow_keys.jpg/150px-Arrow_keys.jpg"
-              />
             </p>
           </details>
         </div>
