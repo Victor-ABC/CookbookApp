@@ -9,7 +9,6 @@ import { Cookbook } from '../models/cookbook';
 import { Recipe } from '../models/recipe';
 import { authService } from '../services/auth.service';
 import { Message } from '../models/message';
-import fetch from 'node-fetch';
 
 interface formType {
   [key: string]: string | number;
@@ -51,14 +50,9 @@ router.post('/exists', (req, res) => {
     });
 });
 
-router.post('/sign-up/:captcha', async (req, res) => {
+router.post('/sign-up', async (req, res) => {
   const userDAO: GenericDAO<User> = req.app.locals.userDAO;
   const errors: string[] = [];
-  // const checkedCaptchaObject = await fetch(`https://www.google.com/recaptcha/api/siteverify?        wird im Browser nicht angezeigt.
-  // 6LfbcRMbAAAAAHxvpu2DIIWTnf6S7gSzqmFTD0xy&response=${req.params.captcha}` , {
-  //   method : "POST",
-  // }).then(res => res.json())
-  // if(checkedCaptchaObject.success === true) {
   checkFormPromise(req.body, ['email', 'name', 'password', 'passwordCheck'], errors)
     .then( () => { // only here is new
       return checkIfPasswordIsSave(req.body.password , errors);
@@ -82,9 +76,6 @@ router.post('/sign-up/:captcha', async (req, res) => {
       authService.removeToken(res);
       res.status(400).json({ message });
     });
-  // } else {
-  //   console.log("Google-Captcha-error");
-  // }
 });
 
 router.delete('/', authService.expressMiddleware, async (req, res) => {
