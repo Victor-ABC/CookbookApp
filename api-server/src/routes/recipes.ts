@@ -1,8 +1,6 @@
 /* Autor: Arne Hegemann */
 
 import express from 'express';
-import { debug } from 'node:console';
-import { SSL_OP_NETSCAPE_REUSE_CIPHER_CHANGE_BUG } from 'node:constants';
 import { GenericDAO } from '../models/generic.dao';
 import { Recipe } from '../models/recipe';
 import { User } from '../models/user';

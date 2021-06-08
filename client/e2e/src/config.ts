@@ -3,7 +3,7 @@
 const configFile = require('./config.json');
 
 class Config {
-  launchOptions = { headless: configFile.headless, slowMo: configFile.slowMo };
+  launchOptions = { headless: configFile.headless, slowMo: configFile.slowMo};
 
   clientPort = Number(new URL(configFile.client).port);
 

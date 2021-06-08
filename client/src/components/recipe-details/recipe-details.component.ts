@@ -82,32 +82,37 @@ class RecipeDetailsComponent extends PageMixin(LitElement) {
   @property()
   cookbookId!: string;
 
-  async firstUpdated() {
-    {  
-      const resp = await httpClient.get(`/cookbooks/own`);
-      const json = (await resp.json()).results;
+  async firstUpdated() {  
 
-      this.cookbooks = json.cookbooks;
-    }
+    await this.test();
+    await this.test();
+
+    const respC = await httpClient.get(`/cookbooks/own`);
+
+    // const jsonC = (await respC.json()).results;
+    // this.cookbooks = jsonC.cookbooks;
 
     if (this.recipeId !== "new") {
       try {
-        const resp = await httpClient.get(`/recipes/details/${this.recipeId}`);
-        const json = (await resp.json()).results;
-
-        this.title = json.title;
-        this.description = json.description;
-        this.image = json.image;
-        this.ingredients = json.ingredients;
-
+        const respR = await httpClient.get(`/recipes/details/${this.recipeId}`);
+        const jsonR = (await respR.json()).results;
+        
+        this.recipeId = jsonR.id;
+        this.title = jsonR.title;
+        this.description = jsonR.description;
+        this.image = jsonR.image;
+        this.ingredients = jsonR.ingredients;
       }
       catch ({ message }) {
         this.setNotification({ errorMessage: message });
       }
-    }
+    }    
   }
 
+  async test() {}
+
   render() {
+    ingredientCount = 0;
     return html`
       ${this.renderNotification()}
       <h1 id="recipeName">Ihr Rezept${this.title!=="" ? " \"" + this.title + "\"" : ""}</h1>
@@ -189,13 +194,13 @@ class RecipeDetailsComponent extends PageMixin(LitElement) {
             <img 
               class="imgOriginal" 
               id="selectedImage" 
-              src="" src=${this.image}
+              src=${this.image}
             >
 
             <img 
               class="imgCopy" 
-              id="selectedImageCopy" 
-              src=${this.image}
+              id="selectedImageCopy"              
+              src=${this.image}              
             >
           </label>
         </div>
@@ -241,23 +246,23 @@ class RecipeDetailsComponent extends PageMixin(LitElement) {
 
   title_change() {
     if (this.titleElement.value) {
-      this.recipeNameElement.innerText = `Your Recipe "${this.titleElement.value}"`;
+      this.recipeNameElement.innerText = `Ihr Rezept "${this.titleElement.value}"`;
     }
     else {
-      this.recipeNameElement.innerText = `Your Recipe`;
+      this.recipeNameElement.innerText = `Ihr Rezept`;
     }
   }
 
   selectImage_change() {
-    var file = this.imageSelectorElement.files?.item(0);
+    let file = this.imageSelectorElement.files?.item(0);
 
     if (file) {
-      var img = this.imageElement;
-      var imgCopy = this.imageCopyElement;
-      var reader = new FileReader();
+      let img = this.imageElement;
+      let imgCopy = this.imageCopyElement;
+      let reader = new FileReader();
 
       reader.onloadend = function (e) {
-        var binary = <string>e.target?.result
+        let binary = <string>e.target?.result
 
         if (binary) {
           img.src = binary;
@@ -282,7 +287,8 @@ class RecipeDetailsComponent extends PageMixin(LitElement) {
 
   async submit(event: Event) {
     event.preventDefault();
-    if (this.form.checkValidity()) {
+    if (this.form.checkValidity()) 
+    {
       const recipe = {
         id: ''
         , title: this.titleElement.value
@@ -290,6 +296,7 @@ class RecipeDetailsComponent extends PageMixin(LitElement) {
         , image: this.imageElement.src
         , ingredients: this.ingredientsToArray()
       };
+
       try {
         if (this.recipeId === "new") {
           const response = await httpClient.post('/recipes', recipe);
@@ -301,18 +308,19 @@ class RecipeDetailsComponent extends PageMixin(LitElement) {
           const response = await httpClient.patch(`/recipes/${this.recipeId}`, recipe);
         }
 
-      } catch ({ message }) {
+      } 
+      catch ({ message }) {
         this.setNotification({ errorMessage: message });
       }
-        if(this.cookbookElement.value) {
 
-      try {
-        await httpClient.patch(`/cookbooks/${this.cookbookElement.value}/${this.recipeId}`, {});
-      } catch ({ message }) {
-        this.setNotification({ errorMessage: message });
+      if(this.cookbookElement.value) {
+        try {
+          await httpClient.patch(`/cookbooks/${this.cookbookElement.value}/${this.recipeId}`, {});
+        } 
+        catch ({ message }) {
+          this.setNotification({ errorMessage: message });
+        }    
       }
-  
-    }
       
       router.navigate(`/recipes/details/${this.recipeId}`);
     }
@@ -333,17 +341,16 @@ class RecipeDetailsComponent extends PageMixin(LitElement) {
   }
 
   ingredientsToArray() {
-    var ingredients = []
-    for (let index = 0; index <= ingredientCount; index++) {
-      var ingredientNode = this.shadowRoot?.getElementById(`ingredient${index}`);
-      if (ingredientNode) {
-        var name = (<HTMLInputElement>ingredientNode.shadowRoot?.getElementById('ingredient')).value;
-        var quantity = (<HTMLInputElement>ingredientNode.shadowRoot?.getElementById('quantity')).valueAsNumber;
-        var unit = (<HTMLInputElement>ingredientNode.shadowRoot?.getElementById('unit')).value;
+    let ingredients = []
+    let ingredientElements = this.shadowRoot!.querySelectorAll("app-ingredient");    
 
-        var ingredient = { name: name, quantity: quantity, unit: unit };
-        ingredients.push(ingredient);
-      }
+    for(let i = 0; i < ingredientElements.length; ++i){
+      let name = (<HTMLInputElement>ingredientElements[i].shadowRoot!.getElementById('ingredient')).value
+      let quantity = (<HTMLInputElement>ingredientElements[i].shadowRoot!.getElementById('quantity')).valueAsNumber;
+      let unit = (<HTMLInputElement>ingredientElements[i].shadowRoot!.getElementById('unit')).value;
+
+      let ingredient = { name: name, quantity: quantity, unit: unit };
+      ingredients.push(ingredient);
     }
 
     return ingredients;

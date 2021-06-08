@@ -15,7 +15,7 @@ export class UserSession {
     const uuid = uuidv4();
     this.name = `name_${uuid}`;
     this.email = `email_${uuid}@example.org`;
-    this.password = `pw_${uuid}`;
+    this.password = `abAB12asd*!`;
   }
 
   signInData() {
