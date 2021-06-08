@@ -24,7 +24,7 @@ var ingredientCount = 0;
 
 @customElement('app-recipe-details')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-class RecipeDetailsComponent extends PageMixin(LitElement) {
+export class RecipeDetailsComponent extends PageMixin(LitElement) {
   static styles = [
     css`
       ${unsafeCSS(sharedCSS)}
@@ -33,6 +33,14 @@ class RecipeDetailsComponent extends PageMixin(LitElement) {
       ${unsafeCSS(recipeCSS)}
     `
   ];
+
+  //Workaround for "updateComplete" (Autor: Prof. Dr. Norman Lahme-Hütig (FH Münster))
+  public initializeComplete = new Promise<boolean>(resolve => {
+    this.resolveInitialized = resolve;
+  });
+
+  private resolveInitialized!: (value: boolean) => void;
+  //Workaround for "updateComplete" - End
 
   @property()
   recipeId!: string;
@@ -82,15 +90,17 @@ class RecipeDetailsComponent extends PageMixin(LitElement) {
   @property()
   cookbookId!: string;
 
-  async firstUpdated() {  
+  async firstUpdated() {
 
-    await this.test();
-    await this.test();
+    try {
+      const respC = await httpClient.get(`/cookbooks/own`);
+      const jsonC = (await respC.json()).results;
 
-    const respC = await httpClient.get(`/cookbooks/own`);
-
-    // const jsonC = (await respC.json()).results;
-    // this.cookbooks = jsonC.cookbooks;
+      this.cookbooks = jsonC.cookbooks;
+    }
+    catch ({ message }) {
+      this.setNotification({ errorMessage: message });
+    }
 
     if (this.recipeId !== "new") {
       try {
@@ -107,13 +117,13 @@ class RecipeDetailsComponent extends PageMixin(LitElement) {
         this.setNotification({ errorMessage: message });
       }
     }    
-  }
 
-  async test() {}
+    this.resolveInitialized(true);  
+  }
 
   render() {
     ingredientCount = 0;
-    return html`
+    const rVal = html`
       ${this.renderNotification()}
       <h1 id="recipeName">Ihr Rezept${this.title!=="" ? " \"" + this.title + "\"" : ""}</h1>
       <form id="form" @submit="${this.submit}">
@@ -241,7 +251,10 @@ class RecipeDetailsComponent extends PageMixin(LitElement) {
             @click="${this.delete}"
           >Löschen</button>
         </div>
-`;
+      </form>
+    `;
+
+    return rVal;
   }
 
   title_change() {
@@ -296,7 +309,7 @@ class RecipeDetailsComponent extends PageMixin(LitElement) {
         , image: this.imageElement.src
         , ingredients: this.ingredientsToArray()
       };
-
+      
       try {
         if (this.recipeId === "new") {
           const response = await httpClient.post('/recipes', recipe);
@@ -342,7 +355,7 @@ class RecipeDetailsComponent extends PageMixin(LitElement) {
 
   ingredientsToArray() {
     let ingredients = []
-    let ingredientElements = this.shadowRoot!.querySelectorAll("app-ingredient");    
+    let ingredientElements = this.shadowRoot!.querySelectorAll('app-ingredient');
 
     for(let i = 0; i < ingredientElements.length; ++i){
       let name = (<HTMLInputElement>ingredientElements[i].shadowRoot!.getElementById('ingredient')).value
