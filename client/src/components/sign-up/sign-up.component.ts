@@ -87,7 +87,6 @@ class SignUpComponent extends PageMixin(LitElement) {
             Eine erneute Eingabe ist erforderlich. Sie muss mit der ersten Passworteingabe übereinstimmen.
           </div>
         </div>
-        <div class="g-recaptcha" data-sitekey="6LfbcRMbAAAAAHJM7oPZe7F0JBoM5wkV8YMWLhK_"></div> <!--wird nicht angezeigt-->
         <button class="btn btn-success" type="button" @click="${this.submit}">Konto erstellen</button>
       </form>
       <app-password></app-password>
@@ -120,8 +119,6 @@ class SignUpComponent extends PageMixin(LitElement) {
   }
   async submit() {
     if (this.isFormValid()) {
-      const formData = new FormData(<HTMLFormElement>this.shadowRoot?.getElementById("sign_up_form"));
-      const captcha = formData.get("g-recaptcha-response");
       const accountData = {
         name: this.nameElement.value,
         email: this.emailElement.value,
@@ -129,7 +126,7 @@ class SignUpComponent extends PageMixin(LitElement) {
         passwordCheck: this.passwordCheckElement.value
       };
       try {
-        const response = await httpClient.post(`/users/sign-up/${encodeURI(<string>captcha)}`, accountData);
+        const response = await httpClient.post('/users/sign-up', accountData);
         const json = await response.json();
         router.navigate('/my-recipes');
         headerEmitter.emit('setId', json.id);
