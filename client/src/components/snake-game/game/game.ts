@@ -1,6 +1,6 @@
 /* Autor: Victor Corbet */
 
-import { Canvas } from './canvas';
+import { CanvasDAO } from './canvas';
 import { Fruit } from './fruit';
 import { Snake } from './snake';
 
@@ -11,7 +11,7 @@ export class Game {
   private snakeColor: string;
   private snake: Snake;
   private fruit: Fruit;
-  private canvas: Canvas;
+  private canvas: CanvasDAO;
   private gameInterval: NodeJS.Timeout | null = null;
   private gameField: HTMLElement;
   private scale: number;
@@ -23,7 +23,7 @@ export class Game {
     this.snakeColor = color.value;
     this.snake = Snake.getInstance(this.snakeColor);
     this.fruit = Fruit.getInstance();
-    this.canvas = Canvas.getInstance(scale, gameField);
+    this.canvas = CanvasDAO.getInstance(scale, gameField);
     this.isCurrentlyRunning = false;
     this.rgbVerlaufIndex = 1;
     this.rgbVerlauf = [

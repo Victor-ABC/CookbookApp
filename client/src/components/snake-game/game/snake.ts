@@ -1,6 +1,6 @@
 /* Autor: Victor Corbet */
 
-import { Canvas } from './canvas.js';
+import { CanvasDAO } from './canvas.js';
 import { TailElement } from './TailElement';
 
 export class Snake {
@@ -62,7 +62,7 @@ export class Snake {
     }
     return false;
   }
-  public draw(canvas: Canvas) {
+  public draw(canvas: CanvasDAO) {
     if (this.color === 'rainbow') {
       canvas.draw(this.x, this.y, 'rgb(0, 204, 0)'); //Kopf
     } else {
@@ -83,7 +83,7 @@ export class Snake {
     this.tailIndex++;
     this.tailElems[this.tailIndex - 1] = new TailElement(x, y, color);
   }
-  public outOfMap(canvas: Canvas) {
+  public outOfMap(canvas: CanvasDAO) {
     if (this.x > canvas.getWidth()) {
       return true;
     }

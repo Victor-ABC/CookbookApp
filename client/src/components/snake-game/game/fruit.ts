@@ -1,7 +1,7 @@
 /* Autor: Victor Corbet */
 
 import { Snake } from './snake';
-import { Canvas } from './canvas';
+import { CanvasDAO } from './canvas';
 
 export class Fruit {
   private static instance: Fruit | null = null;
@@ -26,7 +26,7 @@ export class Fruit {
   public setRandomColor() {
     this.color = this.colorArray[Math.floor(Math.random() * this.colorArray.length)];
   }
-  public setRandomLocation(canvas: Canvas, snake: Snake, scale: number) {
+  public setRandomLocation(canvas: CanvasDAO, snake: Snake, scale: number) {
     this.x = Math.floor((Math.random() * canvas.getWidth()) / scale) * scale;
     this.y = Math.floor((Math.random() * canvas.getHeight()) / scale) * scale;
     // Check if it spawned in snake
@@ -34,7 +34,7 @@ export class Fruit {
       this.setRandomLocation(canvas, snake, scale);
     }
   }
-  public draw(canvas: Canvas) {
+  public draw(canvas: CanvasDAO) {
     canvas.draw(this.x, this.y, this.color);
   }
   public getX() {

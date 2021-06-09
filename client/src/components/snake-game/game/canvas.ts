@@ -1,7 +1,7 @@
 /* Autor: Victor Corbet */
 
-export class Canvas {
-  private static instance: Canvas | null = null;
+export class CanvasDAO {
+  private static instance: CanvasDAO | null = null;
   private canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
   private scale: number;
@@ -13,7 +13,7 @@ export class Canvas {
   }
   public static getInstance(scale: number, gameField: HTMLElement) {
     if (!this.instance) {
-      this.instance = new Canvas(scale, gameField);
+      this.instance = new CanvasDAO(scale, gameField);
       return this.instance;
     } else {
       return this.instance;

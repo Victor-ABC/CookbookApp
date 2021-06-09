@@ -4,7 +4,7 @@ import { LitElement } from 'lit-element';
 import './snake.component';
 import { SnakeGameComponent } from './snake.component';
 import { Game } from './game/game';
-import { Canvas } from './game/canvas';
+import { CanvasDAO } from './game/canvas';
 import { Fruit } from './game/fruit';
 import { Snake } from './game/snake';
 
@@ -37,12 +37,12 @@ describe('app-snake-game', () => {
   });
   it('should create only one object in RAM because "Canvas" ("Canvas" = Class Canvas = its only job is to interact with the real HTMLCanvasElement [Seperation of Concerns]) should be a singleton', async () => {
     const gameField = <HTMLElement>await element.renderRoot.querySelector('#gameField');
-    spyOn(Canvas, 'getInstance');
-    const instanceA = Canvas.getInstance(1, gameField);
-    const instanceB = Canvas.getInstance(6, gameField);
+    spyOn(CanvasDAO, 'getInstance');
+    const instanceA = CanvasDAO.getInstance(1, gameField);
+    const instanceB = CanvasDAO.getInstance(6, gameField);
     expect(instanceA).not.toBeNull();
     expect(instanceA).toBe(instanceB); // Test auf Identität
-    expect(Canvas.getInstance).toHaveBeenCalledTimes(2);
+    expect(CanvasDAO.getInstance).toHaveBeenCalledTimes(2);
   });
   it('should create only one object in RAM because "Fruit" should be a singleton', async () => {
     spyOn(Fruit, 'getInstance');

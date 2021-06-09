@@ -1,6 +1,6 @@
 /* Autor: Victor Corbet */
 
-import { Canvas } from './canvas.js';
+import { CanvasDAO } from './canvas.js';
 
 export class TailElement {
   private x: number;
@@ -11,7 +11,7 @@ export class TailElement {
     this.y = y;
     this.color = color;
   }
-  public drawTailElement(canvas: Canvas) {
+  public drawTailElement(canvas: CanvasDAO) {
     canvas.draw(this.x, this.y, this.color);
   }
   public getX() {
