@@ -139,6 +139,10 @@ function userAuthenticate(form: formType, userDAO: GenericDAO<User>, filter: Par
     reject('Die zwei eingegebenen Passwörter stimmen nicht überein!!!');
   });
 }
+
+// Quelle:
+// Bei der Umsetzung habe ich mich am YouTube Tutorial: https://www.youtube.com/watch?v=7-1VZ2wF8pw orientiert.
+
 // compares password with passwordCheck
 function validatePasswords(form: formType): Promise<void> {
   return new Promise<void>((resolve, reject) => {

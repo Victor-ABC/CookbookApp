@@ -6,6 +6,9 @@ import { css, customElement, html, internalProperty, LitElement, property, query
 const sharedCSS = require('../shared.scss');
 const componentCSS = require('./password.component.scss');
 
+// Quelle:
+// Bei der Umsetzung habe ich mich am YouTube Tutorial: https://www.youtube.com/watch?v=7-1VZ2wF8pw orientiert.
+
 @customElement('app-password')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class PasswordComponent extends PageMixin(LitElement) { 
