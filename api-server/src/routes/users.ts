@@ -140,8 +140,7 @@ function userAuthenticate(form: formType, userDAO: GenericDAO<User>, filter: Par
   });
 }
 
-// Quelle:
-// Bei der Umsetzung habe ich mich am YouTube Tutorial: https://www.youtube.com/watch?v=7-1VZ2wF8pw orientiert.
+// Von hier ...
 
 // compares password with passwordCheck
 function validatePasswords(form: formType): Promise<void> {
@@ -257,5 +256,8 @@ function lenghtProblem(password : string) {
   }
   // should have 10 or more characters
 }
+
+// Bis hier.
+// Bei der Umsetzung habe ich mich am YouTube Tutorial Quelle: https://www.youtube.com/watch?v=7-1VZ2wF8pw (stand:10.6.21) orientiert.
 
 export default router;
