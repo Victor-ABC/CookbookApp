@@ -213,25 +213,32 @@ router.get('/details/:cookbookId', async (req, res) => {
 
 // Below are helper functions to simplify error handling
 
+/**
+ * Validate the body of an HTTP request
+ * @param body the request body
+ * @param requiredFields the fields, that must be part of the body
+ * @param errors reference to an array that stores error messages
+ * @returns whether validation was a success or not
+ */
 function validateBody(
-  object: { [key: string]: unknown },
+  body: { [key: string]: unknown },
   requiredFields: { key: string; type: string }[],
   errors: string[]
 ) {
   let hasErrors = false;
 
   // validate number of fields
-  if (Object.keys(object).length !== requiredFields.length) {
+  if (Object.keys(body).length !== requiredFields.length) {
     errors.push('Number of fields mismatch required number of fields.');
     hasErrors = true;
   }
 
   // validate each field
   requiredFields.forEach(field => {
-    if (object[field.key] === undefined) {
+    if (body[field.key] === undefined) {
       errors.push(`Field ${field.key} of type ${field.type} must exist.`);
       hasErrors = true;
-    } else if (typeof object[field.key] !== field.type) {
+    } else if (typeof body[field.key] !== field.type) {
       errors.push(`Field ${field.key} must be of type ${field.type}`);
       hasErrors = true;
     }
@@ -283,6 +290,12 @@ async function getCookbooksByUserId(cookbookDao: GenericDAO<Cookbook>, userDao: 
   };
 }
 
+/**
+ * Get one cookbook
+ * @param cookbookDao the cookbook dao
+ * @param filter a filter to find a specific cookbook
+ * @returns the cookbook
+ */
 async function getCookbook(cookbookDao: GenericDAO<Cookbook>, filter: Partial<Cookbook>) {
   const cookbook = await cookbookDao.findOne(filter);
 
@@ -293,6 +306,12 @@ async function getCookbook(cookbookDao: GenericDAO<Cookbook>, filter: Partial<Co
   return cookbook;
 }
 
+/**
+ * Get a recipe for the recipe ID
+ * @param recipeDao the recipe dao
+ * @param recipeId the id of the recipe
+ * @returns the recipe
+ */
 async function getRecipe(recipeDao: GenericDAO<Recipe>, recipeId: string) {
   const recipe = await recipeDao.findOne({ id: recipeId });
 
@@ -303,6 +322,12 @@ async function getRecipe(recipeDao: GenericDAO<Recipe>, recipeId: string) {
   return recipe;
 }
 
+/**
+ * Get the user for the user ID
+ * @param userDao the user dao
+ * @param userId the id of the user
+ * @returns the user
+ */
 async function getUser(userDao: GenericDAO<User>, userId: string) {
   const user = await userDao.findOne({ id: userId });
 

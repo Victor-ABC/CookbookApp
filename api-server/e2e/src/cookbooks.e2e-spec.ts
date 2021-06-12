@@ -2,9 +2,6 @@
 
 import { UserSession } from './user-session';
 
-// Specs for /cookbooks/:cookbookId/:recipeId (DELETE and PATCH) still missing,
-// as there is so far no endpoint to create recipes.
-
 describe('/cookbooks', () => {
   let userSession: UserSession;
 
@@ -89,12 +86,12 @@ describe('/cookbooks', () => {
       expect(resp.status).toBe(400);
     });
 
-    it('should fail to find a cookbook', async () => {
+    it('should fail update a non-existing cookbook', async () => {
       const resp = await userSession.patch('/cookbooks', {
         id: 'X', // invalid uuid
         title: 'Mein Kochbuch 3'
       });
-      expect(resp.status).toBe(404);
+      expect(resp.status).toBe(400);
     });
   });
 });
@@ -202,6 +199,97 @@ describe('/cookbooks/:cookbookId', () => {
   });
 });
 
+describe('/cookbooks/:cookbookId/:recipeId', () => {
+  let userSession: UserSession;
+
+  beforeEach(async () => {
+    userSession = new UserSession();
+    await userSession.registerUser();
+  });
+
+  afterEach(async () => {
+    await userSession.deleteUser();
+  });
+
+  describe('#PATCH', () => {
+    it('should add recipe to cookbook', async () => {
+      // create a new cookbook
+      let resp = await userSession.post('/cookbooks', { title: 'Mein Kochbuch' });
+      let json = await resp.json();
+      const cookbookId = json.id;
+
+      // add recipe
+      resp = await userSession.post('/recipes', {
+        title: 'Mein Rezept',
+        description: 'Meine Rezeptbeschreibung',
+        userId: userSession.id,
+        ingredients: [],
+        cookbookIds: [],
+        image:
+          'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAD0lEQVQIHQEEAPv/AP8AAAMBAQDHBpJvAAAAAElFTkSuQmCC'
+      });
+      json = await resp.json();
+      const recipeId = json.id;
+
+      // add recipe to cookbook
+      resp = await userSession.patch(`/cookbooks/${cookbookId}/${recipeId}`, {});
+      expect(resp.status).toBe(201);
+    });
+
+    it('should fail to add recipe to cookbook', async () => {
+      // create a new cookbook
+      let resp = await userSession.post('/cookbooks', { title: 'Mein Kochbuch' });
+      const json = await resp.json();
+      const cookbookId = json.id;
+
+      // no recipe will be added. we use an invalid id instead
+      const recipeId = 'X';
+
+      // add recipe to cookbook
+      resp = await userSession.patch(`/cookbooks/${cookbookId}/${recipeId}`, {});
+      expect(resp.status).toBe(404);
+    });
+  });
+
+  describe('#DELETE', () => {
+    it('should delete a recipe from the cookbook', async () => {
+      // create a new cookbook
+      let resp = await userSession.post('/cookbooks', { title: 'Mein Kochbuch' });
+      let json = await resp.json();
+      const cookbookId = json.id;
+
+      // add recipe
+      resp = await userSession.post('/recipes', {
+        title: 'Mein Rezept',
+        description: 'Meine Rezeptbeschreibung',
+        userId: userSession.id,
+        ingredients: [],
+        cookbookIds: [],
+        image:
+          'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAD0lEQVQIHQEEAPv/AP8AAAMBAQDHBpJvAAAAAElFTkSuQmCC'
+      });
+      json = await resp.json();
+      const recipeId = json.id;
+
+      resp = await userSession.delete(`/cookbooks/${cookbookId}/${recipeId}`);
+      expect(resp.status).toBe(200);
+    });
+
+    it('should fail to delete a recipe from the cookbook', async () => {
+      // create a new cookbook
+      let resp = await userSession.post('/cookbooks', { title: 'Mein Kochbuch' });
+      const json = await resp.json();
+      const cookbookId = json.id;
+
+      // no recipe will be added. we use an invalid id instead
+      const recipeId = 'X';
+
+      resp = await userSession.delete(`/cookbooks/${cookbookId}/${recipeId}`);
+      expect(resp.status).toBe(404);
+    });
+  });
+});
+
 describe('/cookbooks/details/:cookbookId', () => {
   let userSession: UserSession;
 
@@ -217,10 +305,7 @@ describe('/cookbooks/details/:cookbookId', () => {
   describe('#GET', () => {
     it('should return cookbook details', async () => {
       // create a new cookbook
-      let resp = await userSession.post('/cookbooks', {
-        title: 'Mein Kochbuch',
-        description: 'Meine Beschreibung'
-      });
+      let resp = await userSession.post('/cookbooks', { title: 'Mein Kochbuch' });
       let json = await resp.json();
       const cookbookId = json.id;
 
@@ -229,7 +314,7 @@ describe('/cookbooks/details/:cookbookId', () => {
       json = await resp.json();
       expect(json.results.id).toBeDefined();
       expect(json.results.title).toBe('Mein Kochbuch');
-      expect(json.results.description).toBe('Meine Beschreibung');
+      expect(json.results.description).toBe('');
       expect(json.results.author.id).toBe(userSession.signUpData().id);
       expect(json.results.author.name).toBe(userSession.signUpData().name);
       expect(json.results.recipes.length).toBe(0);
