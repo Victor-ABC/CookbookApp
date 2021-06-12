@@ -69,7 +69,7 @@ describe('app-cookbook', () => {
 
     // check author
     const authorElem = element.shadowRoot!.querySelector('.author') as HTMLElement;
-    expect(authorElem.innerText).toBe(`von ${details.author.name}`);
+    expect(authorElem.innerText).toBe(details.author.name);
 
     // check app-cookbook-card
     const detailsElems = element.shadowRoot!.querySelectorAll('app-cookbook-card');

@@ -110,14 +110,13 @@ describe('app-cookbooks', () => {
   });
 
   it('should fail to fetch users cookbooks', async () => {
-    spyOn(router, 'navigate');
-    spyOn(httpClient, 'get').and.throwError;
+    spyOn(httpClient, 'get').and.throwError('Error');
 
     await element.updateComplete;
     element.requestUpdate();
     await element.updateComplete;
 
-    expect(router.navigate).toHaveBeenCalledTimes(1);
+    expect(httpClient.get).toThrowError();
   });
 
   it('should add a cookbook', async () => {
