@@ -94,6 +94,5 @@ describe('/my-cookbooks', () => {
     const url = await page.url();
     await Promise.all([page.waitForNavigation(), await page.click('app-cookbook-list-item span[slot="title"]')]);
     expect(url).not.toBe(await page.url());
-    expect(await page.url().endsWith('?own')).toBeTrue();
   });
 });
