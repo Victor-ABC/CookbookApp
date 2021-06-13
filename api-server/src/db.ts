@@ -18,6 +18,8 @@ export default async function startDB(app: Express, dbms = 'in-memory-db') {
     case 'mongodb':
       startMongoDB(app);
       break;
+    default:
+      throw new Error(`unsupported dbms: ${dbms}, use in-memory-db or mongodb instead`);
   }
   return async () => Promise.resolve();
 }

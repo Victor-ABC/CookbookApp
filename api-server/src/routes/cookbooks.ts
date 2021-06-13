@@ -103,9 +103,27 @@ router.patch('/', authService.expressMiddleware, async (req, res) => {
 // delete a cookbook
 router.delete('/:cookbookId', authService.expressMiddleware, async (req, res) => {
   const cookbookDAO: GenericDAO<Cookbook> = req.app.locals.cookbookDAO;
+  const recipeDAO: GenericDAO<Recipe> = req.app.locals.recipeDAO;
 
   try {
+    // get cookbook
     const cookbook = await getCookbook(cookbookDAO, { id: req.params.cookbookId, userId: res.locals.user.id });
+
+    // remove cookbook id from each recipe
+    for (const recipeId of cookbook.recipeIds) {
+      try {
+        const recipe = await getRecipe(recipeDAO, recipeId);
+
+        if (removeItem(recipe.cookbookIds, req.params.cookbookId)) {
+          await recipeDAO.update(recipe);
+        }
+      } catch {
+        // if the recipe no longer exists, continue with the next recipe
+        continue;
+      }
+    }
+
+    // delete cookbook
     await cookbookDAO.delete(cookbook.id);
 
     res.status(200).end();
@@ -124,16 +142,12 @@ router.patch('/:cookbookId/:recipeId', authService.expressMiddleware, async (req
     const recipe = await getRecipe(recipeDAO, req.params.recipeId);
 
     // add recipeId to cookbook
-    const recipeIds = cookbook.recipeIds;
-    if (!recipeIds.includes(req.params.recipeId)) {
-      recipeIds.push(req.params.recipeId);
+    if (addItem(cookbook.recipeIds, req.params.recipeId)) {
       await cookbookDAO.update(cookbook);
     }
 
     // add cookbookId to recipe
-    const cookbookIds = recipe.cookbookIds;
-    if (!cookbookIds.includes(req.params.cookbookId)) {
-      cookbookIds.push(req.params.cookbookId);
+    if (addItem(recipe.cookbookIds, req.params.cookbookId)) {
       await recipeDAO.update(recipe);
     }
 
@@ -152,21 +166,13 @@ router.delete('/:cookbookId/:recipeId', authService.expressMiddleware, async (re
     const cookbook = await getCookbook(cookbookDAO, { id: req.params.cookbookId, userId: res.locals.user.id });
     const recipe = await getRecipe(recipeDAO, req.params.recipeId);
 
-    let index: number;
-
     // remove recipeId from cookbook
-    const recipeIds = cookbook.recipeIds;
-    index = recipeIds.indexOf(req.params.recipeId);
-    if (index != -1) {
-      recipeIds.splice(index, 1);
+    if (removeItem(cookbook.recipeIds, req.params.recipeId)) {
       await cookbookDAO.update(cookbook);
     }
 
     // remove cookbookId from recipe
-    const cookbookIds = recipe.cookbookIds;
-    index = cookbookIds.indexOf(req.params.cookbookId);
-    if (index != -1) {
-      cookbookIds.splice(index, 1);
+    if (removeItem(recipe.cookbookIds, req.params.cookbookId)) {
       await recipeDAO.update(recipe);
     }
 
@@ -336,6 +342,38 @@ async function getUser(userDao: GenericDAO<User>, userId: string) {
   }
 
   return user;
+}
+
+/**
+ * Add an item to an array. It won't be added, if it already exists.
+ * @param arr the array
+ * @param item the item to be added
+ * @returns if the item was added.
+ */
+function addItem(arr: string[], item: string) {
+  const exists = arr.includes(item);
+
+  if (!exists) {
+    arr.push(item);
+  }
+
+  return !exists;
+}
+
+/**
+ * Remove an item from an array
+ * @param arr the array
+ * @param item the item to be removed
+ * @returns if the item was found
+ */
+function removeItem(arr: string[], item: string) {
+  const index = arr.indexOf(item);
+
+  if (index != -1) {
+    arr.splice(index, 1);
+  }
+
+  return index != -1;
 }
 
 export default router;

@@ -63,7 +63,7 @@ async function startHttpServer(app: Express, port: number, withHttps: boolean) {
 
 if (require.main === module) {
   program
-    .option('-d, --dbms <mongodb|psql|in-memory-db>', 'dbms to use (default: "in-memory-db")')
+    .option('-d, --dbms <mongodb|in-memory-db>', 'dbms to use (default: "in-memory-db")')
     .option('-s, --https', 'use https (default: http')
     .description('Starts the API server')
     .action(async cmd => {
