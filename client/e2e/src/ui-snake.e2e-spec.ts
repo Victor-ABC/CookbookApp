@@ -32,7 +32,7 @@ describe('User-Interface: Snake-Game: ', () => {
   beforeAll(async () => {
     browser = await chromium.launch({
       headless: configFile.headless,
-      slowMo : configFile.slowMo
+      slowMo: configFile.slowMo
     });
   });
   beforeEach(async () => {

@@ -15,7 +15,7 @@ describe('User-Interface: Testing sing-in / sign-out: ', () => {
   beforeAll(async () => {
     browser = await chromium.launch({
       headless: configFile.headless,
-      slowMo : configFile.slowMo
+      slowMo: configFile.slowMo
     });
   });
   beforeEach(async () => {

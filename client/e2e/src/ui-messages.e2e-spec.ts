@@ -14,10 +14,11 @@ describe('User-Interface: Message-Service: ', () => {
   beforeAll(async () => {
     browser = await chromium.launch({
       headless: configFile.headless,
-      slowMo : configFile.slowMo
+      slowMo: configFile.slowMo
     });
   });
-  beforeEach(async () => { // simulate 2 User Szenario
+  beforeEach(async () => {
+    // simulate 2 User Szenario
     browserContext = await browser.newContext();
     browserContext2 = await browser.newContext();
   });

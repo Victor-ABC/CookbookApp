@@ -11,7 +11,6 @@ export const headerEmitter = new HeaderEmitter();
 const sharedCSS = require('../../shared.scss');
 const headerCSs = require('./header.component.scss');
 
-
 @customElement('app-header')
 export class HeaderComponent extends PageMixin(LitElement) {
   static styles = [
@@ -22,6 +21,13 @@ export class HeaderComponent extends PageMixin(LitElement) {
       ${unsafeCSS(headerCSs)}
     `
   ];
+
+  @query('#search-select')
+  searchSelect!: HTMLSelectElement;
+
+  @query('#search-field')
+  searchInput!: HTMLInputElement;
+
   @property()
   title = '';
 
@@ -35,22 +41,14 @@ export class HeaderComponent extends PageMixin(LitElement) {
   private navbarOpen = false;
 
   @property()
-  private exclude : string[]; 
-
-  
-  @query('#search-select')
-  searchSelect!: HTMLSelectElement;
-
-  @query('#search-field')
-  searchInput!: HTMLInputElement;
+  private exclude: string[];
 
   private headerEmitter;
-
 
   constructor() {
     super();
     this.userId = document.cookie;
-    this.exclude = ["Konto erstellen", "Anmelden"];
+    this.exclude = ['Konto erstellen', 'Anmelden'];
     this.headerEmitter = headerEmitter;
     this.headerEmitter.on('setId', (id: string) => {
       this.userId = id;
@@ -77,7 +75,12 @@ export class HeaderComponent extends PageMixin(LitElement) {
             <option selected value="recipe">in Rezepte</option>
             <option value="cookbook">in Kochbücher</option>
           </select>
-          <button id="search-button" class="form-item btn btn-light my-2 my-sm-0" type="button" @click="${this.runSearch}"></button>
+          <button
+            id="search-button"
+            class="form-item btn btn-light my-2 my-sm-0"
+            type="button"
+            @click="${this.runSearch}"
+          ></button>
         </form>
         <button
           @click="${this.toggle}"
@@ -104,12 +107,12 @@ export class HeaderComponent extends PageMixin(LitElement) {
             ${this.linkItems.map(linkItem => {
               if (document.cookie) {
                 if (!this.exclude.includes(linkItem.title)) {
-                    return html`
-                      <li class="nav-item">
-                        <a class="nav-link" href="${linkItem.routePath}" @click=${this.close}>${linkItem.title}</a>
-                      </li>
-                    `;
-              }
+                  return html`
+                    <li class="nav-item">
+                      <a class="nav-link" href="${linkItem.routePath}" @click=${this.close}>${linkItem.title}</a>
+                    </li>
+                  `;
+                }
               } else {
                 if (this.exclude.includes(linkItem.title)) {
                   return html`
@@ -130,24 +133,24 @@ export class HeaderComponent extends PageMixin(LitElement) {
     this.navbarOpen = !this.navbarOpen;
   }
 
-  runSearch () {
-    switch(this.searchSelect.value) { 
-      case "recipe": { 
-        if(this.searchInput.value) {
+  runSearch() {
+    switch (this.searchSelect.value) {
+      case 'recipe': {
+        if (this.searchInput.value) {
           location.href = `http://localhost:8080/app/`;
         }
-        break; 
-      } 
-      case "cookbook": { 
-        if(this.searchInput.value) {
-          location.href = "http://localhost:8080/app/cookbooks";
+        break;
+      }
+      case 'cookbook': {
+        if (this.searchInput.value) {
+          location.href = 'http://localhost:8080/app/cookbooks';
         }
-        break; 
-      } 
-      default: { 
-         break; 
-      } 
-   } 
+        break;
+      }
+      default: {
+        break;
+      }
+    }
   }
 
   close() {

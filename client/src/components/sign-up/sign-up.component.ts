@@ -12,7 +12,6 @@ const componentCSS = require('./sign-up.component.scss');
 @customElement('app-sign-up')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class SignUpComponent extends PageMixin(LitElement) {
-
   static styles = [
     css`
       ${unsafeCSS(sharedCSS)}
@@ -67,14 +66,28 @@ class SignUpComponent extends PageMixin(LitElement) {
           <div class="invalid-feedback">E-Mail ist erforderlich und muss gültig sein</div>
         </div>
         <div class="form-group">
-          <label class="control-label" for="password">Passwort <small>(wird nur akzeptiert, wenn es 100% sicher ist [siehe unten])</small></label>
-          <input class="form-control" type="password" required minlength="10" id="password" title="Passwort ist obligatorisch. Muss 10 Zeichen lang sein und mind. 2 Zahlen, 2 Großbuchstaben, 2 Kleinbuchstaben und 2 Sonderzeichen((!@#$&*)) enthalten." name="password" autocomplete="off"/>
-          <div class="invalid-feedback">Passwort ist obligatorisch. Muss 10 Zeichen lang sein und mind. 2 Zahlen, 2 Großbuchstaben, 2 Kleinbuchstaben und 2 Sonderzeichen((!@#$&*)) enthalten.</div>
+          <label class="control-label" for="password"
+            >Passwort <small>(wird nur akzeptiert, wenn es 100% sicher ist [siehe unten])</small></label
+          >
+          <input
+            class="form-control"
+            type="password"
+            required
+            minlength="10"
+            id="password"
+            title="Passwort ist obligatorisch. Muss 10 Zeichen lang sein und mind. 2 Zahlen, 2 Großbuchstaben, 2 Kleinbuchstaben und 2 Sonderzeichen((!@#$&*)) enthalten."
+            name="password"
+            autocomplete="off"
+          />
+          <div class="invalid-feedback">
+            Passwort ist obligatorisch. Muss 10 Zeichen lang sein und mind. 2 Zahlen, 2 Großbuchstaben, 2
+            Kleinbuchstaben und 2 Sonderzeichen((!@#$&*)) enthalten.
+          </div>
         </div>
         <div class="form-group">
           <label class="control-label" for="password-check">Passwort nochmals eingeben</label>
           <input
-          title="Muss mit dem Password übereinstimmen"
+            title="Muss mit dem Password übereinstimmen"
             class="form-control"
             type="password"
             required

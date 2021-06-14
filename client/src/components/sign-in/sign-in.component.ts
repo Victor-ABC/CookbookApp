@@ -30,13 +30,13 @@ export class SignInComponent extends PageMixin(LitElement) {
   form!: HTMLFormElement;
 
   @internalProperty()
-  versuche : number = 5;
+  versuche = 5;
 
   @internalProperty()
-  waitTime : number = 30;
+  waitTime = 30;
 
   @internalProperty()
-  isCountdownRunning : boolean = false;
+  isCountdownRunning = false;
 
   render() {
     return html`
@@ -58,10 +58,9 @@ export class SignInComponent extends PageMixin(LitElement) {
     `;
   }
 
-
   async submit() {
     if (this.isFormValid()) {
-      if(this.versuche > 0) {
+      if (this.versuche > 0) {
         this.versuche--;
         const authData = {
           name: this.nameElement.value,
@@ -75,22 +74,23 @@ export class SignInComponent extends PageMixin(LitElement) {
         } catch ({ message }) {
           this.setNotification({ errorMessage: message });
         }
-      }
-      else {
-        if(!this.isCountdownRunning) {
+      } else {
+        if (!this.isCountdownRunning) {
           this.isCountdownRunning = !this.isCountdownRunning;
-          const interval = setInterval( () => {
-              if(this.waitTime <= 0) {
-                this.waitTime = 30;
-                this.versuche = 5;
-                this.isCountdownRunning = !this.isCountdownRunning;
-                clearInterval(interval);
-              } else {
-                this.waitTime--;
-              }
-            }, 1000)
-          }
-        this.setNotification({ errorMessage: `Maximale Anzahl Versuche Erreicht. Versuchen sie es in ${this.waitTime} Sekunden erneut.` });
+          const interval = setInterval(() => {
+            if (this.waitTime <= 0) {
+              this.waitTime = 30;
+              this.versuche = 5;
+              this.isCountdownRunning = !this.isCountdownRunning;
+              clearInterval(interval);
+            } else {
+              this.waitTime--;
+            }
+          }, 1000);
+        }
+        this.setNotification({
+          errorMessage: `Maximale Anzahl Versuche Erreicht. Versuchen sie es in ${this.waitTime} Sekunden erneut.`
+        });
       }
     } else {
       this.form.classList.add('was-validated');

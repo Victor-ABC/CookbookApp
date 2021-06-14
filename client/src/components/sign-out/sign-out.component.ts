@@ -17,7 +17,7 @@ class SignOutComponent extends PageMixin(LitElement) {
       await httpClient.delete('/users/sign-out');
       headerEmitter.emit('deleteId');
       this.setNotification({ infoMessage: 'Sie wurden erfolgreich abgemeldet!' });
-      location.href = "http://localhost:8080/app/";
+      location.href = 'http://localhost:8080/app/';
     } catch ({ message }) {
       this.setNotification({ errorMessage: message });
     }
