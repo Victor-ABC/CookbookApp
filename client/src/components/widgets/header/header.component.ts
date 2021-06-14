@@ -1,6 +1,6 @@
 /* Autor: Victor Corbet */
 
-import { css, customElement, html, LitElement, property, internalProperty, unsafeCSS } from 'lit-element';
+import { css, customElement, html, LitElement, property, internalProperty, unsafeCSS, query } from 'lit-element';
 import { classMap } from 'lit-html/directives/class-map';
 import { PageMixin } from '../../page.mixin';
 import { EventEmitter } from 'events';
@@ -37,6 +37,13 @@ export class HeaderComponent extends PageMixin(LitElement) {
   @property()
   private exclude : string[]; 
 
+  
+  @query('#search-select')
+  searchSelect!: HTMLSelectElement;
+
+  @query('#search-field')
+  searchInput!: HTMLInputElement;
+
   private headerEmitter;
 
 
@@ -67,10 +74,10 @@ export class HeaderComponent extends PageMixin(LitElement) {
             aria-label="Search"
           />
           <select id="search-select" class="form-item form-select custom-select" id="inputGroupSelect01">
-            <option selected>in Rezepte</option>
-            <option value="1">in Kochbücher</option>
+            <option selected value="recipe">in Rezepte</option>
+            <option value="cookbook">in Kochbücher</option>
           </select>
-          <button id="search-button" class="form-item btn btn-light my-2 my-sm-0" type="submit"></button>
+          <button id="search-button" class="form-item btn btn-light my-2 my-sm-0" type="button" @click="${this.runSearch}"></button>
         </form>
         <button
           @click="${this.toggle}"
@@ -121,6 +128,26 @@ export class HeaderComponent extends PageMixin(LitElement) {
 
   toggle() {
     this.navbarOpen = !this.navbarOpen;
+  }
+
+  runSearch () {
+    switch(this.searchSelect.value) { 
+      case "recipe": { 
+        if(this.searchInput.value) {
+          location.href = `http://localhost:8080/app/`;
+        }
+        break; 
+      } 
+      case "cookbook": { 
+        if(this.searchInput.value) {
+          location.href = "http://localhost:8080/app/cookbooks";
+        }
+        break; 
+      } 
+      default: { 
+         break; 
+      } 
+   } 
   }
 
   close() {
