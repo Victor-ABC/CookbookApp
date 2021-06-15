@@ -63,25 +63,6 @@ export class HeaderComponent extends PageMixin(LitElement) {
       <nav class="flex-box navbar fixed-top navbar-expand-lg navbar-dark bg-success">
         <span class="flex-item main-icon"></span>
         <a class="flex-item navbar-brand" href="/"><span class="logo"></span>${this.title}</a>
-        <form class="form-flex-box">
-          <input
-            id="search-field"
-            class="form-item form-control"
-            type="search"
-            placeholder="z.B. Pizza, Pasta ..."
-            aria-label="Search"
-          />
-          <select id="search-select" class="form-item form-select custom-select" id="inputGroupSelect01">
-            <option selected value="recipe">in Rezepte</option>
-            <option value="cookbook">in Kochbücher</option>
-          </select>
-          <button
-            id="search-button"
-            class="form-item btn btn-light my-2 my-sm-0"
-            type="button"
-            @click="${this.runSearch}"
-          ></button>
-        </form>
         <button
           @click="${this.toggle}"
           class="flex-item navbar-toggler"
@@ -131,26 +112,6 @@ export class HeaderComponent extends PageMixin(LitElement) {
 
   toggle() {
     this.navbarOpen = !this.navbarOpen;
-  }
-
-  runSearch() {
-    switch (this.searchSelect.value) {
-      case 'recipe': {
-        if (this.searchInput.value) {
-          location.href = `http://localhost:8080/app/`;
-        }
-        break;
-      }
-      case 'cookbook': {
-        if (this.searchInput.value) {
-          location.href = 'http://localhost:8080/app/cookbooks';
-        }
-        break;
-      }
-      default: {
-        break;
-      }
-    }
   }
 
   close() {
