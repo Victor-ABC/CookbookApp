@@ -94,7 +94,7 @@ describe('User-Interface: Message-Service: ', () => {
     await page.press('input[name="name"]', 'Tab');
     await page.fill('input[name="password"]', password);
     await Promise.all([
-      page.waitForNavigation({ url: 'http://localhost:8080/app/rezepte' }),
+      page.waitForNavigation({ url: 'http://localhost:8080/app/my-recipes' }),
       page.click('button:has-text("Anmelden")')
     ]);
     await page.click('text=Mein Profil');
@@ -136,7 +136,7 @@ describe('User-Interface: Message-Service: ', () => {
     await page.press('input[name="name"]', 'Tab');
     await page.fill('input[name="password"]', password);
     await Promise.all([
-      page.waitForNavigation({ url: 'http://localhost:8080/app/rezepte' }),
+      page.waitForNavigation({ url: 'http://localhost:8080/app/my-recipes' }),
       page.click('button:has-text("Anmelden")')
     ]);
     await page.click('text=Mein Profil');

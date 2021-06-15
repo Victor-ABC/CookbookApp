@@ -18,7 +18,7 @@ export async function singUpUserAndGoToProfile(name: string, password: string, b
   await page.fill('input[name="password"]', password);
   await page.fill('input[name="passwordCheck"]', password);
   await Promise.all([
-    page.waitForNavigation({ url: 'http://localhost:8080/app/api' }),
+    page.waitForNavigation({ url: 'http://localhost:8080/app/my-recipes' }),
     page.click('button:has-text("Konto erstellen")')
   ]);
   await Promise.all([
