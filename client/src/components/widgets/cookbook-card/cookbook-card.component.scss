@@ -8,7 +8,7 @@
 
 .item {
   height: 230px;
-  background-color: #5cb85c;
+  background-color: var(--app-default-green);
   border-radius: 0.25rem;
 }
 
@@ -42,7 +42,7 @@ slot[name='image']::slotted(*)  {
 }
 
 .title {
-  background-color: #5cb85c;
+  background-color: var(--app-default-green);
   height: 30px;
   width: 100%;
   position: relative;
@@ -74,6 +74,6 @@ slot[name='description']::slotted(*) {
 
 .remove-recipe::before {
   font: normal normal normal 1rem/30px 'Font Awesome 5 Free';
-  color: var(--app-error-color);
+  color: var(--app-default-red);
   content: '\f2ed';
 }
