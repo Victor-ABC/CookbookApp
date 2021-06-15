@@ -5,12 +5,7 @@ import { css, customElement, html, LitElement, internalProperty, query, unsafeCS
 import { PageMixin } from '../page.mixin';
 import { router } from '../../router';
 import { httpClient } from '../../http-client';
-
-interface Cookbook {
-  id: string;
-  title: string;
-  description: string;
-}
+import { Cookbook } from '../../models/cookbook';
 
 const sharedCSS = require('../shared.scss');
 const componentCSS = require('./cookbooks.component.scss');
