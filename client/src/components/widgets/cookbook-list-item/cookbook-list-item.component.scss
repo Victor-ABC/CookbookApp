@@ -28,7 +28,7 @@
 }
 
 .remove-cookbook::before {
-  color: var(--app-error-color);
+  color: var(--app-default-red);
   font: normal normal normal 1.25rem/1 'Font Awesome 5 Free';
   content: '\f2ed';
 }
@@ -38,7 +38,7 @@ label[for='toggle-body'] {
 }
 
 label[for='toggle-body']::before {
-  color: #5cb85c;
+  color: var(--app-default-green);
   font: normal normal normal 1.25rem/1 'Font Awesome 5 Free';
   content: '\f05a';
 }
@@ -48,7 +48,7 @@ slot[name='title']::slotted(*) {
 }
 
 :host(:hover) {
-  background-color: #5cb85c;
+  background-color: var(--app-default-green);
 
   span {
     color: white;
