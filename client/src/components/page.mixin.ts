@@ -36,7 +36,6 @@ export const PageMixin = <T extends new (...args: any[]) => LitElement>(base: T)
     }
 
     protected setNotification({ errorMessage = '', infoMessage = '', successMessage = '' }) {
-      console.log("pmsn: " + errorMessage);
       this.successMessage = successMessage;
       this.errorMessage = errorMessage;
       this.infoMessage = infoMessage;

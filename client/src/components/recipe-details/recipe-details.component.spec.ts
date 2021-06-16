@@ -16,7 +16,29 @@ describe('app-recipes', () => {
       'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna. Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.',
     image:
       'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAD0lEQVQIHQEEAPv/AP8AAAMBAQDHBpJvAAAAAElFTkSuQmCC',
-    ingredients: []
+    cookbookIds: ['book1'],
+    ingredients: [
+      {
+        name: 'Kartoffel',
+        quantity: 10,
+        unit: 'gram'
+      },
+      {
+        name: 'Wasser',
+        quantity: 10,
+        unit: 'milliliter'
+      },
+      {
+        name: 'Möhre',
+        quantity: 5,
+        unit: 'piece'
+      },
+      {
+        name: 'Salz',
+        quantity: 0,
+        unit: ''
+      }
+    ]
   };
 
   const recipe = {
@@ -26,6 +48,7 @@ describe('app-recipes', () => {
       'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna. Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.',
     image:
       'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAD0lEQVQIHQEEAPv/AP8AAAMBAQDHBpJvAAAAAElFTkSuQmCC',
+    cookbookIds: ['book1'],
     ingredients: [
       {
         name: 'Kartoffel',
@@ -73,6 +96,7 @@ describe('app-recipes', () => {
 
   beforeEach(() => {
     element = document.createElement('app-recipe-details') as LitElement;
+    element.setAttribute('own', 'true');
     document.body.appendChild(element);
   });
 
@@ -173,6 +197,7 @@ describe('app-recipes', () => {
       } as Response)
     );
 
+
     await element.requestUpdate();
     await (element as RecipeDetailsComponent).initializeComplete;
     expect(httpClient.get).toHaveBeenCalledTimes(2);
@@ -181,6 +206,7 @@ describe('app-recipes', () => {
 
     // save(post) recipe
     const form = element.shadowRoot!.getElementById('form');
+
     (<HTMLElement>form).dispatchEvent(new Event('submit'));
 
     expect(httpClient.post).toHaveBeenCalledTimes(1);

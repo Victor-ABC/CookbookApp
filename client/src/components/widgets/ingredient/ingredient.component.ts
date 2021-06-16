@@ -33,58 +33,18 @@ class RecipeDetailsComponent extends WidgetMixin(LitElement) {
   render() {
     return this.own ? html`
         <div class="row">
-          <input 
-            class="form-control form-control-sm col-sm-3" 
-            type="text" 
-            id="ingredient" 
-            name="ingredient" 
-            placeholder="Zutat" 
-            required .value="${this.name}"
-          />
-          <input 
-            class="form-control form-control-sm col-sm-1" 
-            type="number" 
-            id="quantity" 
-            name="quantity" 
-            placeholder="0" 
-            required  
-            .value="${this.quantity}" 
-          />
-          <select class="form-control form-control-sm col-sm-1" id="unit" name="unit" .value="${this.unit}">
-            <option value="emtpy"></option>
-            <option value="gram">Gram</option>
-            <option value="milliliter">Milliliter</option>
-            <option value="piece">Stück</option>
-          </select>
-          <span class="col-sm-1 delete-ingredient" @click="${() => this.emit('appDeleteIngredientClick')}"></span>
-        </div>
+          <slot name="ingredient"></slot>
+          <slot name="quantity"></slot>
+          <slot name="unit"></slot>
+          <span class="delete-ingredient" @click="${() => this.emit('appDeleteIngredientClick')}"></span>
+        </div>      
         ` : html`
         <div class="row">
-          <div class="col-md-6">
-            <div class="row" >
-              <span class="col-sm-1 border border-right-0 rounded ingredient">${this.quantity}</span>
-              <span class="col-sm-2 border border-right-0 rounded ingredient">${this.getUnitText()}</span>
-              <span class="col-sm-6 border rounded ingredient">${this.name}</span>
-            </div>
-          </div>
-        </div>
+          <slot name="quantity2"></slot>
+          <slot name="unit2"></slot>
+          <slot name="ingredient2"></slot>
+        </div>  
         `;
   }
 
-  getUnitText(){
-    switch (this.unit) {
-      case "gram":{
-        return "Gram";
-      }
-      case "milliliter":{
-        return "Milliliter";
-      }
-      case "piece":{
-        return "Stück";
-      }
-      default: {
-        return "";
-      }
-    }
-  }
 }

@@ -34,13 +34,9 @@ export class RecipeDetailsComponent extends PageMixin(LitElement) {
     `
   ];
 
-  //Workaround for "updateComplete" (Autor: Prof. Dr. Norman Lahme-Hütig (FH Münster))
-  public initializeComplete = new Promise<boolean>(resolve => {
-    this.resolveInitialized = resolve;
-  });
+  public initializeComplete?: Promise<void>;
 
-  private resolveInitialized!: (value: boolean) => void;
-  //Workaround for "updateComplete" - End
+  private resolveInitialized!: () => void;
 
   @property()
   recipeId!: string;
@@ -79,7 +75,7 @@ export class RecipeDetailsComponent extends PageMixin(LitElement) {
   description = '';
 
   @property()
-  image = '';
+  image = '//:0';
 
   @property()
   ingredients: Ingredient[] = [];
@@ -91,41 +87,50 @@ export class RecipeDetailsComponent extends PageMixin(LitElement) {
   cookbookId!: string;
 
   @property()
-  own!: boolean;
+  own: boolean = false;
 
   async firstUpdated() {
-    try {
-      const respC = await httpClient.get(`/cookbooks/own`);
-      const jsonC = (await respC.json()).results;
-
-      this.cookbooks = jsonC.cookbooks;
-    } catch ({ message }) {
-      this.setNotification({ errorMessage: message });
-    }
-
-    if (this.recipeId !== 'new') {
+    
+    try{
+      this.initializeComplete = new Promise<void>(resolve => {
+        this.resolveInitialized = resolve;
+      });
       try {
-        const respR = await httpClient.get(`/recipes/details/${this.recipeId}`);
-        const jsonR = (await respR.json()).results;
+        const respC = await httpClient.get(`/cookbooks/own`);
+        const jsonC = (await respC.json()).results;
 
-        this.recipeId = jsonR.id;
-        this.title = jsonR.title;
-        this.description = jsonR.description;
-        this.cookbookId = (jsonR.cookbookIds as []).length === 0 ? "" : jsonR.cookbookIds[0];
-        this.image = jsonR.image;
-        this.ingredients = jsonR.ingredients;
-
-        this.own = location.search === '?own';
-      }
-      catch ({ message }) {
+        this.cookbooks = jsonC.cookbooks;
+      } catch ({ message }) {
         this.setNotification({ errorMessage: message });
       }
-    }
-    else {
-      this.own = true;
-    }
 
-    this.resolveInitialized(true);
+      if (this.recipeId !== 'new') {
+        try {
+          const respR = await httpClient.get(`/recipes/details/${this.recipeId}`);
+          const jsonR = (await respR.json()).results;
+
+          this.recipeId = jsonR.id;
+          this.title = jsonR.title;
+          this.description = jsonR.description;
+          this.cookbookId = (jsonR.cookbookIds as []).length === 0 ? "" : jsonR.cookbookIds[0];
+          this.image = jsonR.image;
+          this.ingredients = jsonR.ingredients;
+
+          if(!this.own) {
+            this.own = location.search === '?own';
+          }
+        }
+        catch ({ message }) {
+          this.setNotification({ errorMessage: message });
+        }
+      }
+      else {
+        this.own = true;
+      }
+    }
+    finally {
+      this.resolveInitialized!();
+    }
   }
 
   render() {
@@ -202,25 +207,51 @@ export class RecipeDetailsComponent extends PageMixin(LitElement) {
           </div>
         
           <div class="row">
-            <label>
-              <input class="imgZoomCheck" type="checkbox" id="imgZoomed" .value="false" />
-              <img class="imgOriginal" id="selectedImage" src=${this.recipeId === "new" ? "//:0" : this.image} />
-              <img class="imgCopy" id="selectedImageCopy" src=${this.image} />
-            </label>
+            <div class="col-sm-2">
+              <label>
+                <input class="imgZoomCheck" type="checkbox" id="imgZoomed" .value="false" />
+                <img class="imgOriginal img-fluid" id="selectedImage" src=${this.recipeId === "new" ? "//:0" : this.image} />
+                <img class="imgCopy img-fluid" id="selectedImageCopy" src=${this.image} />
+              </label>
+            </div>
+        
+            <div class="col-sm-5">
+              ${this.ingredients.map(
+                  ingredient => html`
+                    <app-ingredient 
+                      id="ingredient${ingredientCount++}" 
+                      .name="${ingredient.name}" 
+                      .quantity="${ingredient.quantity}" 
+                      .unit="${ingredient.unit}"
+                      @appDeleteIngredientClick="${() => this.deleteIngredient(ingredient)}"
+                    >                           
+                      <input 
+                        slot="ingredient"
+                        class="form-control form-control-sm col-sm-6 ingredient-margin" 
+                        type="text" 
+                        placeholder="Zutat" 
+                        required 
+                        .value="${ingredient.name}"
+                      />
+                      <input 
+                        slot="quantity"
+                        class="form-control form-control-sm col-sm-2 ingredient-margin" 
+                        type="number" 
+                        placeholder="0" 
+                        required  
+                        .value="${ingredient.quantity}" 
+                      />
+                      <select slot="unit" class="form-control form-control-sm col-sm-3 ingredient-margin" .value="${ingredient.unit}">
+                        <option value="emtpy"></option>
+                        <option value="gram">Gram</option>
+                        <option value="milliliter">Milliliter</option>
+                        <option value="piece">Stück</option>
+                      </select>
+                  `            
+              )}
+            </div>
           </div>
-        
-            ${this.ingredients.map(
-                ingredient => html`
-                  <app-ingredient 
-                    id="ingredient${ingredientCount++}" 
-                    .name="${ingredient.name}" 
-                    .quantity="${ingredient.quantity}" 
-                    .unit="${ingredient.unit}"
-                    @appDeleteIngredientClick="${() => this.deleteIngredient(ingredient)}"
-                  />
-                `
-            )}
-        
+          
           <div class="row">
             <button class="btn btn-success" type="button" id="addLine" name="addLine" @click="${this.addLine_Click}">
               Zutat Hinzufügen...
@@ -250,27 +281,34 @@ export class RecipeDetailsComponent extends PageMixin(LitElement) {
             .value=${this.description}
           >
           </textarea>
-        </div>          
-        
+        </div>
+
         <div class="row">
-          <label>
-            <input class="imgZoomCheck" type="checkbox" id="imgZoomed" .value="false" />
-            <img class="imgOriginal" id="selectedImage" src=${this.recipeId === "new" ? "//:0" : this.image} />
-            <img class="imgCopy" id="selectedImageCopy" src=${this.image} />
-          </label>
-        </div>        
-        
-        ${this.ingredients.map(
-          ingredient => html`
-            <app-ingredient 
-              id="ingredient${ingredientCount++}" 
-              .own="${this.own}"
-              .name="${ingredient.name}" 
-              .quantity="${ingredient.quantity}" 
-              .unit="${ingredient.unit}"}
-            />
-          `
-        )}        
+          <div class="col-sm-2">
+            <label>
+              <input class="imgZoomCheck" type="checkbox" id="imgZoomed" .value="false" />
+              <img class="imgOriginal img-fluid" id="selectedImage" src=${this.recipeId === "new" ? "//:0" : this.image} />
+              <img class="imgCopy img-fluid" id="selectedImageCopy" src=${this.image} />
+            </label>
+          </div>
+          <div class="col-sm-5">
+            ${this.ingredients.map(
+              ingredient => html`
+                <app-ingredient 
+                  id="ingredient${ingredientCount++}" 
+                  .own="${this.own}"
+                  .name="${ingredient.name}" 
+                  .quantity="${ingredient.quantity}" 
+                  .unit="${ingredient.unit}"}
+                />
+                  <span slot="unit2" class="col-sm-3 border rounded">${ingredient.quantity}</span>
+                  <span slot="quantity2" class="col-sm-2 border rounded">${this.getUnitText(ingredient.unit)}</span>
+                  <span slot="ingredient2" class="col-sm-7 border rounded">${ingredient.name}</span>
+                </app-ingredient>   
+              `
+            )}   
+          </div>
+        </div>       
         
         <div class="row">        
           <button class="btn btn-success" type="button" id="back" name="back" @click="${this.goBack}">
@@ -360,8 +398,8 @@ export class RecipeDetailsComponent extends PageMixin(LitElement) {
         }
       }
       
-      // router.navigate(`/recipes/details/${this.recipeId}`);      
-      router.navigate(`/my-recipes`);
+      router.navigate(`/recipes/details/${this.recipeId}?own`);      
+      // router.navigate(`/my-recipes`);
     }
     else {      
       this.form.classList.add('was-validated');
@@ -384,28 +422,52 @@ export class RecipeDetailsComponent extends PageMixin(LitElement) {
   }
 
   checkAdditionalValidity() {
-    //Checks if Image is set
-    if(this.imageElement.src === "//:0") {
-      this.setNotification({ errorMessage: "Es muss ein Bild hinzugefügt werden" });
-      return false;
-    }
-
-    //Checks if at least one ingredient element is present
-    let ingredientElements = this.shadowRoot!.querySelectorAll('app-ingredient');
-    if(ingredientElements.length === 0) {
-      this.setNotification({ errorMessage: "Es muss mindestens eine Zutat hinzugefügt werden" });
-      return false;      
-    }
-
-    //checks if all ingredient elements have at least the name set
-    for(let i = 0; i < ingredientElements.length; ++i){
-      let name = (<HTMLInputElement>ingredientElements[i].shadowRoot!.getElementById('ingredient')).value
-      if(name.length === 0) {
-        this.setNotification({ errorMessage: "Zutaten benötigen mindestens einen Namen" });
+    try {
+      //Checks if Image is set
+      if(this.imageElement.src === "//:0") {
+        this.setNotification({ errorMessage: "Es muss ein Bild hinzugefügt werden" });
         return false;
       }
+
+      //Checks if at least one ingredient element is present
+      let ingredientElements = this.shadowRoot!.querySelectorAll('app-ingredient');
+      if(ingredientElements.length === 0) {
+        this.setNotification({ errorMessage: "Es muss mindestens eine Zutat hinzugefügt werden" });
+        return false;      
+      }
+
+      //checks if all ingredient elements have at least the name set
+      for(let i = 0; i < ingredientElements.length; ++i){
+        let name = (<HTMLInputElement>ingredientElements[i].querySelector('input[slot="ingredient"]'))?.value;
+        if(name.length === 0) {
+          this.setNotification({ errorMessage: "Zutaten benötigen mindestens einen Namen" });
+          return false;
+        }
+      }
+    }
+    catch ({ message }){
+      console.log("error*: " + message)
+      this.setNotification({ errorMessage: message });
+      return false;
     }
     return true;
+  }
+
+  getUnitText(unit: string){
+    switch (unit) {
+      case "gram":{
+        return "Gram";
+      }
+      case "milliliter":{
+        return "Milliliter";
+      }
+      case "piece":{
+        return "Stück";
+      }
+      default: {
+        return "";
+      }
+    }
   }
 
   ingredientsToArray() {
@@ -413,9 +475,9 @@ export class RecipeDetailsComponent extends PageMixin(LitElement) {
     const ingredientElements = this.shadowRoot!.querySelectorAll('app-ingredient');
 
     for (let i = 0; i < ingredientElements.length; ++i) {
-      const name = (<HTMLInputElement>ingredientElements[i].shadowRoot!.getElementById('ingredient')).value;
-      const quantity = (<HTMLInputElement>ingredientElements[i].shadowRoot!.getElementById('quantity')).valueAsNumber;
-      const unit = (<HTMLInputElement>ingredientElements[i].shadowRoot!.getElementById('unit')).value;
+      const name = (<HTMLInputElement>ingredientElements[i].querySelector('input[slot=ingredient]')).value;
+      const quantity = (<HTMLInputElement>ingredientElements[i].querySelector('input[slot=quantity]')).valueAsNumber;
+      const unit = (<HTMLInputElement>ingredientElements[i].querySelector('select[slot=unit]')).value;
 
       const ingredient = { name: name, quantity: quantity, unit: unit };
       ingredients.push(ingredient);

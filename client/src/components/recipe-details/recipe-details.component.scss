@@ -41,6 +41,23 @@ img[src="//:0"] {
     border: 0px
  }
 
+
+ .ingredient-margin {
+   margin: 0.05rem;
+ }
+ 
+ app-ingredient:nth-child(2n){
+   border-color: #89d189;
+ } 
+
+ app-ingredient{
+   margin: 0.5rem;
+   border-width: 3px;
+   border-radius: 5px;
+   border-style: solid;
+   border-color: #5cb85c;
+ } 
+
 button{
     margin-right: 0.25rem;
 }

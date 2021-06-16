@@ -52,9 +52,9 @@ describe('/recipes', () => {
     await page.click('#selectImageMock');
 
     await page.click('#addLine');
-    await page.fill('app-ingredient input[id="ingredient"]', 'Möhre');
-    await page.fill('app-ingredient input[id="quantity"]', '1');
-    await page.selectOption('app-ingredient select[id="unit"]', 'piece');
+    await page.fill('app-ingredient input[slot="ingredient"]', 'Möhre');
+    await page.fill('app-ingredient input[slot="quantity"]', '1');
+    await page.selectOption('app-ingredient select[slot="unit"]', 'piece');
     await page.click('#save');
 
     await Promise.all([page.waitForNavigation(), await page.goto(config.clientUrl('/recipes'))]);
@@ -71,9 +71,9 @@ describe('/recipes', () => {
     await page.click('#selectImageMock');
 
     await page.click('#addLine');
-    await page.fill('app-ingredient input[id="ingredient"]', 'Möhre');
-    await page.fill('app-ingredient input[id="quantity"]', '1');
-    await page.selectOption('app-ingredient select[id="unit"]', 'piece');
+    await page.fill('app-ingredient input[slot="ingredient"]', 'Möhre');
+    await page.fill('app-ingredient input[slot="quantity"]', '1');
+    await page.selectOption('app-ingredient select[slot="unit"]', 'piece');
     await page.click('#save');
 
     await Promise.all([page.waitForNavigation(), await page.goto(config.clientUrl('/recipes'))]);

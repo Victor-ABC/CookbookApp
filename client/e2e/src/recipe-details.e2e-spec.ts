@@ -12,7 +12,6 @@ describe('/recipes/details', () => {
   let userSession: UserSession;
 
   beforeAll(async () => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
     browser = await chromium.launch(config.launchOptions);
   });
 
@@ -64,9 +63,9 @@ describe('/recipes/details', () => {
     await page.click('#selectImageMock');
 
     await page.click('#addLine');
-    await page.fill('app-ingredient input[id="ingredient"]', 'Möhre');
-    await page.fill('app-ingredient input[id="quantity"]', '1');
-    await page.selectOption('app-ingredient select[id="unit"]', 'piece');
+    await page.fill('app-ingredient input[slot="ingredient"]', 'Möhre');
+    await page.fill('app-ingredient input[slot="quantity"]', '1');
+    await page.selectOption('app-ingredient select[slot="unit"]', 'piece');
 
     await page.click('#save');
     await Promise.all([page.waitForNavigation(), await page.keyboard.press('F5')]);
@@ -81,9 +80,9 @@ describe('/recipes/details', () => {
     await page.click('#selectImageMock');
 
     await page.click('#addLine');
-    await page.fill('app-ingredient input[id="ingredient"]', 'Möhre');
-    await page.fill('app-ingredient input[id="quantity"]', '1');
-    await page.selectOption('app-ingredient select[id="unit"]', 'piece');
+    await page.fill('app-ingredient input[slot="ingredient"]', 'Möhre');
+    await page.fill('app-ingredient input[slot="quantity"]', '1');
+    await page.selectOption('app-ingredient select[slot="unit"]', 'piece');
 
     await page.click('#save');
     await Promise.all([page.waitForNavigation(), await page.keyboard.press('F5')]);
@@ -107,9 +106,9 @@ describe('/recipes/details', () => {
     await page.click('#selectImageMock');
 
     await page.click('#addLine');
-    await page.fill('app-ingredient input[id="ingredient"]', 'Möhre');
-    await page.fill('app-ingredient input[id="quantity"]', '1');
-    await page.selectOption('app-ingredient select[id="unit"]', 'piece');
+    await page.fill('app-ingredient input[slot="ingredient"]', 'Möhre');
+    await page.fill('app-ingredient input[slot="quantity"]', '1');
+    await page.selectOption('app-ingredient select[slot="unit"]', 'piece');
 
     await page.click('#save');
     await Promise.all([page.waitForNavigation(), await page.keyboard.press('F5')]);
