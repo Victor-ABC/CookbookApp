@@ -34,7 +34,7 @@ export class CreateMessageComponent extends PageMixin(LitElement) {
   messageDiv!: HTMLDivElement;
 
   @internalProperty()
-  ready : boolean = true;
+  ready = true;
 
   render() {
     return html`
@@ -122,11 +122,11 @@ Vorname Nachname`;
 
   async submit() {
     if (this.isFormValid()) {
-      if(this.ready) {
+      if (this.ready) {
         this.ready = !this.ready;
-        setTimeout( () => {
+        setTimeout(() => {
           this.ready = true;
-        }, 10000)
+        }, 10000);
         const date = new Date();
         const dateString = `am ${date.getDate()}.${date.getMonth()}.${date.getFullYear()} um ${date.getHours()}:${date.getMinutes()} Uhr`;
         const message = {
@@ -147,7 +147,7 @@ Vorname Nachname`;
           }
         }
       } else {
-        this.setNotification({ infoMessage: "Sie können nur alle 10 Sekunden eine Nachricht schicken." });
+        this.setNotification({ infoMessage: 'Sie können nur alle 10 Sekunden eine Nachricht schicken.' });
       }
     } else {
       this.formElement.classList.add('was-validated');

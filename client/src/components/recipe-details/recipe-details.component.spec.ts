@@ -1,9 +1,9 @@
 /* Autor: Arne Hegemann */
 
-import { LitElement } from "lit-element";
-import { exception } from "node:console";
-import { httpClient } from "../../http-client";
-import { RecipeDetailsComponent } from "./recipe-details.component"
+import { LitElement } from 'lit-element';
+import { exception } from 'node:console';
+import { httpClient } from '../../http-client';
+import { RecipeDetailsComponent } from './recipe-details.component';
 import './recipe-details.component';
 
 describe('app-recipes', () => {
@@ -12,42 +12,46 @@ describe('app-recipes', () => {
   const recipeNew = {
     id: 'new',
     title: 'Drölfte Rezept',
-    description: 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna. Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.',
-    image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAD0lEQVQIHQEEAPv/AP8AAAMBAQDHBpJvAAAAAElFTkSuQmCC",
-    ingredients: [ ]
+    description:
+      'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna. Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.',
+    image:
+      'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAD0lEQVQIHQEEAPv/AP8AAAMBAQDHBpJvAAAAAElFTkSuQmCC',
+    ingredients: []
   };
 
   const recipe = {
     id: 'recipe2',
     title: 'Drölfte Rezept',
-    description: 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna. Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.',
-    image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAD0lEQVQIHQEEAPv/AP8AAAMBAQDHBpJvAAAAAElFTkSuQmCC",
+    description:
+      'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna. Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.',
+    image:
+      'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAD0lEQVQIHQEEAPv/AP8AAAMBAQDHBpJvAAAAAElFTkSuQmCC',
     ingredients: [
       {
-        name: "Kartoffel",
+        name: 'Kartoffel',
         quantity: 10,
-        unit: "gram"
+        unit: 'gram'
       },
       {
-        name: "Wasser",
+        name: 'Wasser',
         quantity: 10,
-        unit: "milliliter"
+        unit: 'milliliter'
       },
       {
-        name: "Möhre",
+        name: 'Möhre',
         quantity: 5,
-        unit: "piece"
+        unit: 'piece'
       },
       {
-        name: "Salz",
+        name: 'Salz',
         quantity: 0,
-        unit: ""
+        unit: ''
       }
     ]
-  };  
-  
+  };
+
   const cookbooks = {
-    author: "Arne :)",
+    author: 'Arne :)',
     cookbooks: [
       {
         id: 'book1',
@@ -74,7 +78,7 @@ describe('app-recipes', () => {
 
   afterEach(() => {
     element.remove();
-  });    
+  });
 
   it('should get the recipe details', async () => {
     element.setAttribute('recipeId', 'recipe2');
@@ -87,8 +91,16 @@ describe('app-recipes', () => {
 
   it('should render the recipe details', async () => {
     spyOn(httpClient, 'get').and.returnValues(
-      Promise.resolve({ json() { return Promise.resolve({ results: cookbooks }); } } as Response), 
-      Promise.resolve({ json() { return Promise.resolve({ results: recipe }); } } as Response)
+      Promise.resolve({
+        json() {
+          return Promise.resolve({ results: cookbooks });
+        }
+      } as Response),
+      Promise.resolve({
+        json() {
+          return Promise.resolve({ results: recipe });
+        }
+      } as Response)
     );
 
     await element.requestUpdate();
@@ -97,10 +109,10 @@ describe('app-recipes', () => {
 
     //header
     const headerElement = element.shadowRoot!.getElementById('recipeName') as HTMLElement;
-    expect(headerElement.innerText).toBe("Ihr Rezept \"" + recipe.title + "\"");
+    expect(headerElement.innerText).toBe('Ihr Rezept "' + recipe.title + '"');
 
     //title
-    const titleElement = element.shadowRoot!.getElementById('title') as HTMLInputElement
+    const titleElement = element.shadowRoot!.getElementById('title') as HTMLInputElement;
     expect(titleElement.value).toBe(recipe.title);
 
     //description
@@ -116,14 +128,22 @@ describe('app-recipes', () => {
     expect(imageCopyElement.src).toBe(recipe.image);
 
     //ingredients count
-    let ingredientElements = element.shadowRoot!.querySelectorAll('app-ingredient');
+    const ingredientElements = element.shadowRoot!.querySelectorAll('app-ingredient');
     expect(ingredientElements.length).toBe(4);
   });
 
   it('should delete a recipe', async () => {
     spyOn(httpClient, 'get').and.returnValues(
-      Promise.resolve({ json() { return Promise.resolve({ results: cookbooks }); } } as Response), 
-      Promise.resolve({ json() { return Promise.resolve({ results: recipe }); } } as Response)
+      Promise.resolve({
+        json() {
+          return Promise.resolve({ results: cookbooks });
+        }
+      } as Response),
+      Promise.resolve({
+        json() {
+          return Promise.resolve({ results: recipe });
+        }
+      } as Response)
     );
 
     await element.requestUpdate();
@@ -133,16 +153,24 @@ describe('app-recipes', () => {
     spyOn(httpClient, 'delete');
 
     // delete recipe
-    let deleteButton = element.shadowRoot!.getElementById('delete');
-    (<HTMLElement> deleteButton).dispatchEvent(new Event('click'));
+    const deleteButton = element.shadowRoot!.getElementById('delete');
+    (<HTMLElement>deleteButton).dispatchEvent(new Event('click'));
 
     expect(httpClient.delete).toHaveBeenCalledTimes(1);
   });
 
   it('should post a recipe', async () => {
     spyOn(httpClient, 'get').and.returnValues(
-      Promise.resolve({ json() { return Promise.resolve({ results: cookbooks }); } } as Response), 
-      Promise.resolve({ json() { return Promise.resolve({ results: recipeNew }); } } as Response)
+      Promise.resolve({
+        json() {
+          return Promise.resolve({ results: cookbooks });
+        }
+      } as Response),
+      Promise.resolve({
+        json() {
+          return Promise.resolve({ results: recipeNew });
+        }
+      } as Response)
     );
 
     await element.requestUpdate();
@@ -152,16 +180,24 @@ describe('app-recipes', () => {
     spyOn(httpClient, 'post');
 
     // save(post) recipe
-    let form = element.shadowRoot!.getElementById('form');
-    (<HTMLElement> form).dispatchEvent(new Event('submit'));
+    const form = element.shadowRoot!.getElementById('form');
+    (<HTMLElement>form).dispatchEvent(new Event('submit'));
 
-    expect(httpClient.post).toHaveBeenCalledTimes(1);  
+    expect(httpClient.post).toHaveBeenCalledTimes(1);
   });
 
   it('should patch a recipe', async () => {
     spyOn(httpClient, 'get').and.returnValues(
-      Promise.resolve({ json() { return Promise.resolve({ results: cookbooks }); } } as Response), 
-      Promise.resolve({ json() { return Promise.resolve({ results: recipeNew }); } } as Response)
+      Promise.resolve({
+        json() {
+          return Promise.resolve({ results: cookbooks });
+        }
+      } as Response),
+      Promise.resolve({
+        json() {
+          return Promise.resolve({ results: recipeNew });
+        }
+      } as Response)
     );
 
     await element.requestUpdate();
@@ -172,9 +208,9 @@ describe('app-recipes', () => {
     spyOn(httpClient, 'patch');
 
     // save(patch) recipe
-    let form = element.shadowRoot!.getElementById('form');
-    (<HTMLElement> form).dispatchEvent(new Event('submit'));
+    const form = element.shadowRoot!.getElementById('form');
+    (<HTMLElement>form).dispatchEvent(new Event('submit'));
 
-    expect(httpClient.patch).toHaveBeenCalledTimes(1);      
+    expect(httpClient.patch).toHaveBeenCalledTimes(1);
   });
-})
+});

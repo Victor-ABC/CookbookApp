@@ -15,7 +15,7 @@ describe('User-Interface: Testing sing-in / sign-out: ', () => {
   beforeAll(async () => {
     browser = await chromium.launch({
       headless: configFile.headless,
-      slowMo : configFile.slowMo
+      slowMo: configFile.slowMo
     });
   });
   beforeEach(async () => {
@@ -54,7 +54,7 @@ describe('User-Interface: Testing sing-in / sign-out: ', () => {
     await page.click('input[name="password"]');
     await page.fill('input[name="password"]', password);
     await Promise.all([
-      page.waitForNavigation({ url: 'http://localhost:8080/app/rezepte' }),
+      page.waitForNavigation({ url: 'http://localhost:8080/app/my-recipes' }),
       page.click('button:has-text("Anmelden")')
     ]);
     await page.click('text=Mein Profil');

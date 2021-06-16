@@ -10,11 +10,6 @@ const componentCSS = require('./app.component.scss');
 @customElement('app-root')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class AppComponent extends LitElement {
-
-  createRenderRoot() {
-    return this;
-  }
-
   static styles = [
     css`
       ${unsafeCSS(sharedCSS)}
@@ -44,6 +39,10 @@ class AppComponent extends LitElement {
     super();
     const port = location.protocol === 'https:' ? 3443 : location.protocol === 'https:' ? 3443 : 3000;
     httpClient.init({ baseURL: `${location.protocol}//${location.hostname}:${port}/api/` });
+  }
+
+  createRenderRoot() {
+    return this;
   }
 
   firstUpdated() {

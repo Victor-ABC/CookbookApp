@@ -1,6 +1,6 @@
 /* Autor: Arne Hegemann */
 
-import { css, customElement, html, LitElement, property, unsafeCSS } from "lit-element";
+import { css, customElement, html, LitElement, property, unsafeCSS } from 'lit-element';
 import { WidgetMixin } from '../../widget.mixin';
 
 const sharedCSS = require('../../shared.scss');
@@ -11,33 +11,45 @@ const recipeCSS = require('./ingredient.component.scss');
 class RecipeDetailsComponent extends WidgetMixin(LitElement) {
   static styles = [
     css`
-          ${unsafeCSS(sharedCSS)}
-        `,
+      ${unsafeCSS(sharedCSS)}
+    `,
     css`
-          ${unsafeCSS(recipeCSS)}
-        `
+      ${unsafeCSS(recipeCSS)}
+    `
   ];
 
   @property()
   own: boolean = true;
 
   @property()
-  ingredientId: number = -1;
-
-  @property()
   name: string = "";
 
   @property()
-  quantity: number = 0;
+  quantity = 0;
 
   @property()
-  unit: string = "";
+  unit = '';
 
   render() {
     return this.own ? html`
         <div class="row">
-          <input class="form-control form-control-sm col-sm-3" type="text" id="ingredient" name="ingredient" placeholder="Zutat" required .value="${this.name}"/>
-          <input class="form-control form-control-sm col-sm-1" type="number" id="quantity" name="quantity" placeholder="0" required  .value="${this.quantity}" />
+          <input 
+            class="form-control form-control-sm col-sm-3" 
+            type="text" 
+            id="ingredient" 
+            name="ingredient" 
+            placeholder="Zutat" 
+            required .value="${this.name}"
+          />
+          <input 
+            class="form-control form-control-sm col-sm-1" 
+            type="number" 
+            id="quantity" 
+            name="quantity" 
+            placeholder="0" 
+            required  
+            .value="${this.quantity}" 
+          />
           <select class="form-control form-control-sm col-sm-1" id="unit" name="unit" .value="${this.unit}">
             <option value="emtpy"></option>
             <option value="gram">Gram</option>
@@ -56,7 +68,7 @@ class RecipeDetailsComponent extends WidgetMixin(LitElement) {
             </div>
           </div>
         </div>
-        `
+        `;
   }
 
   getUnitText(){
@@ -75,5 +87,4 @@ class RecipeDetailsComponent extends WidgetMixin(LitElement) {
       }
     }
   }
-
 }

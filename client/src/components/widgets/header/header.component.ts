@@ -1,6 +1,6 @@
 /* Autor: Victor Corbet */
 
-import { css, customElement, html, LitElement, property, internalProperty, unsafeCSS } from 'lit-element';
+import { css, customElement, html, LitElement, property, internalProperty, unsafeCSS, query } from 'lit-element';
 import { classMap } from 'lit-html/directives/class-map';
 import { PageMixin } from '../../page.mixin';
 import { EventEmitter } from 'events';
@@ -10,7 +10,6 @@ export const headerEmitter = new HeaderEmitter();
 
 const sharedCSS = require('../../shared.scss');
 const headerCSs = require('./header.component.scss');
-
 
 @customElement('app-header')
 export class HeaderComponent extends PageMixin(LitElement) {
@@ -22,6 +21,13 @@ export class HeaderComponent extends PageMixin(LitElement) {
       ${unsafeCSS(headerCSs)}
     `
   ];
+
+  @query('#search-select')
+  searchSelect!: HTMLSelectElement;
+
+  @query('#search-field')
+  searchInput!: HTMLInputElement;
+
   @property()
   title = '';
 
@@ -35,15 +41,14 @@ export class HeaderComponent extends PageMixin(LitElement) {
   private navbarOpen = false;
 
   @property()
-  private exclude : string[]; 
+  private exclude: string[];
 
   private headerEmitter;
-
 
   constructor() {
     super();
     this.userId = document.cookie;
-    this.exclude = ["Konto erstellen", "Anmelden"];
+    this.exclude = ['Konto erstellen', 'Anmelden'];
     this.headerEmitter = headerEmitter;
     this.headerEmitter.on('setId', (id: string) => {
       this.userId = id;
@@ -58,20 +63,6 @@ export class HeaderComponent extends PageMixin(LitElement) {
       <nav class="flex-box navbar fixed-top navbar-expand-lg navbar-dark bg-success">
         <span class="flex-item main-icon"></span>
         <a class="flex-item navbar-brand" href="/"><span class="logo"></span>${this.title}</a>
-        <form class="form-flex-box">
-          <input
-            id="search-field"
-            class="form-item form-control"
-            type="search"
-            placeholder="z.B. Pizza, Pasta ..."
-            aria-label="Search"
-          />
-          <select id="search-select" class="form-item form-select custom-select" id="inputGroupSelect01">
-            <option selected>in Rezepte</option>
-            <option value="1">in Kochbücher</option>
-          </select>
-          <button id="search-button" class="form-item btn btn-light my-2 my-sm-0" type="submit"></button>
-        </form>
         <button
           @click="${this.toggle}"
           class="flex-item navbar-toggler"
@@ -97,12 +88,12 @@ export class HeaderComponent extends PageMixin(LitElement) {
             ${this.linkItems.map(linkItem => {
               if (document.cookie) {
                 if (!this.exclude.includes(linkItem.title)) {
-                    return html`
-                      <li class="nav-item">
-                        <a class="nav-link" href="${linkItem.routePath}" @click=${this.close}>${linkItem.title}</a>
-                      </li>
-                    `;
-              }
+                  return html`
+                    <li class="nav-item">
+                      <a class="nav-link" href="${linkItem.routePath}" @click=${this.close}>${linkItem.title}</a>
+                    </li>
+                  `;
+                }
               } else {
                 if (this.exclude.includes(linkItem.title)) {
                   return html`

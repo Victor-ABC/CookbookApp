@@ -15,7 +15,7 @@ describe('/cookbooks', () => {
   });
 
   describe('#GET', () => {
-    it('should return an cookbook list', async () => {
+    it('should return a cookbook list', async () => {
       const resp = await userSession.get('/cookbooks');
       expect(resp.status).toBe(200);
       const json = await resp.json();
@@ -86,7 +86,7 @@ describe('/cookbooks', () => {
       expect(resp.status).toBe(400);
     });
 
-    it('should fail update a non-existing cookbook', async () => {
+    it('should fail to update a non-existing cookbook', async () => {
       const resp = await userSession.patch('/cookbooks', {
         id: 'X', // invalid uuid
         title: 'Mein Kochbuch 3'
@@ -124,8 +124,8 @@ describe('/cookbooks/:userId', () => {
       expect(json.results.cookbooks.length).toBeGreaterThanOrEqual(1);
     });
 
-    it('should fail to find cookbooks of invalid user', async () => {
-      const userId = 'X'; // invalid uuid;
+    it('should fail to find cookbooks of an invalid user', async () => {
+      const userId = 'X'; // invalid uuid
       const resp = await userSession.get(`/cookbooks/${userId}`);
       expect(resp.status).toBe(404);
     });
@@ -242,7 +242,7 @@ describe('/cookbooks/:cookbookId/:recipeId', () => {
       const json = await resp.json();
       const cookbookId = json.id;
 
-      // no recipe will be added. we use an invalid id instead
+      // no recipe will be added as an invalid recipe id is used
       const recipeId = 'X';
 
       // add recipe to cookbook
@@ -281,7 +281,7 @@ describe('/cookbooks/:cookbookId/:recipeId', () => {
       const json = await resp.json();
       const cookbookId = json.id;
 
-      // no recipe will be added. we use an invalid id instead
+      // no recipe will be deleted as an invalid recipe id is used
       const recipeId = 'X';
 
       resp = await userSession.delete(`/cookbooks/${cookbookId}/${recipeId}`);

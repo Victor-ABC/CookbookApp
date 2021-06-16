@@ -48,7 +48,7 @@ describe('/cookbooks/details/id', () => {
 
     // validate author
     const author = await page.textContent('span.author');
-    expect(author?.trim()).toBe(userSession.name);
+    expect(author!.trim()).toBe(userSession.name);
   });
 
   it('should update the cookbook', async () => {

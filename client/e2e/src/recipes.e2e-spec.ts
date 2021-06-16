@@ -49,37 +49,36 @@ describe('/recipes', () => {
     await page.fill('#description', 'Drölfte Rezept');
 
     await page.setInputFiles('#selectImage', './e2e/assets/RedPixel.png');
-    await page.click('#selectImageMock');    
+    await page.click('#selectImageMock');
 
-    await page.click('#addLine')    
-    await page.fill('app-ingredient input[id="ingredient"]', 'Möhre')
-    await page.fill('app-ingredient input[id="quantity"]', '1')
-    await page.selectOption('app-ingredient select[id="unit"]', 'piece')    
+    await page.click('#addLine');
+    await page.fill('app-ingredient input[id="ingredient"]', 'Möhre');
+    await page.fill('app-ingredient input[id="quantity"]', '1');
+    await page.selectOption('app-ingredient select[id="unit"]', 'piece');
     await page.click('#save');
 
-    await Promise.all([page.waitForNavigation(), await page.goto(config.clientUrl('/recipes'))]);    
+    await Promise.all([page.waitForNavigation(), await page.goto(config.clientUrl('/recipes'))]);
     expect(await page.textContent('app-recipe-list-item span[slot="title"]')).toBe('Rezept 2');
   });
 
   it('should open a recipe', async () => {
     await Promise.all([page.waitForNavigation(), await page.goto(config.clientUrl('/recipes/details/new'))]);
-    
+
     await page.fill('#title', 'Rezept 2');
     await page.fill('#description', 'Drölfte Rezept');
 
     await page.setInputFiles('#selectImage', './e2e/assets/RedPixel.png');
-    await page.click('#selectImageMock');    
+    await page.click('#selectImageMock');
 
-    await page.click('#addLine')    
-    await page.fill('app-ingredient input[id="ingredient"]', 'Möhre')
-    await page.fill('app-ingredient input[id="quantity"]', '1')
-    await page.selectOption('app-ingredient select[id="unit"]', 'piece')    
+    await page.click('#addLine');
+    await page.fill('app-ingredient input[id="ingredient"]', 'Möhre');
+    await page.fill('app-ingredient input[id="quantity"]', '1');
+    await page.selectOption('app-ingredient select[id="unit"]', 'piece');
     await page.click('#save');
 
     await Promise.all([page.waitForNavigation(), await page.goto(config.clientUrl('/recipes'))]);
     await page.click('app-recipe-list-item span[slot="title"]');
 
-    expect(page.url()).toContain('/recipes/details/')
+    expect(page.url()).toContain('/recipes/details/');
   });
-
 });

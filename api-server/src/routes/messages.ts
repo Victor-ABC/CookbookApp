@@ -56,21 +56,20 @@ router.get('', authService.expressMiddleware, async (req, res) => {
   const user = await userDAO.findOne({ id: res.locals.user.id });
   if (user) {
     const messages = await messageDAO.findAll({ to: user.name });
-    let decodedMessages : Message[] = [];
+    const decodedMessages: Message[] = [];
     if (messages) {
       // Decrypts message, so that it can be read
-      messages.forEach( ( message : Message ) => {
-        const decodedMessage : Message = {
+      messages.forEach((message: Message) => {
+        const decodedMessage: Message = {
           id: message.id,
-          createdAt : message.createdAt,
+          createdAt: message.createdAt,
           to: message.to,
           title: cryptoService.decrypt(message.title),
           content: cryptoService.decrypt(message.content),
           date: req.body.date
         };
         decodedMessages.push(decodedMessage);
-
-      })
+      });
       res.status(200).json({ results: decodedMessages });
     }
   } else {

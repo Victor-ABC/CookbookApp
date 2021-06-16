@@ -31,14 +31,14 @@ class RecipesComponent extends PageMixin(LitElement) {
   userId!: string;
 
   @property()
-  own!: boolean
-  
+  own!: boolean;
+
   @internalProperty()
   recipes: Recipe[] = [];
 
   async firstUpdated() {
     try {
-      const url = this.own? `/recipes/own` : this.userId ? `/recipes/${this.userId}` : '/recipes';
+      const url = this.own ? `/recipes/own` : this.userId ? `/recipes/${this.userId}` : '/recipes';
       const resp = await httpClient.get(url);
       const json = (await resp.json()).results;
       this.recipes = json.recipes;
@@ -50,27 +50,44 @@ class RecipesComponent extends PageMixin(LitElement) {
   render() {
     return html`
       ${this.renderNotification()}
-      <h1>${this.own? "Deine " : ""}Rezepte</h1>
+      <h1>${this.own ? 'Deine ' : ''}Rezepte</h1>
       <div>
         ${this.recipes.map(
           recipe => html`
             <app-recipe-list-item class="recipe" @apprecipedetailsclick=${() => this.showRecipe(recipe)}>
               <span slot="title">${recipe.title}</span>
-              <span slot="description">${recipe.description.length>=250 ? recipe.description.substring(0, 250) + "..." : recipe.description}</span>
-              <img class="img-fluid" slot="image" src="${recipe.image}"/>
+              <span slot="description"
+                >${recipe.description.length >= 250
+                  ? recipe.description.substring(0, 250) + '...'
+                  : recipe.description}</span
+              >
+              <img class="img-fluid" slot="image" src="${recipe.image}" />
             </app-recipe-list-item>
-          `)}
+          `
+        )}
       </div>
 
-      ${this.own ? html`     
-        <div>
-          <button class="btn btn-success" type="button" id="newRecipe" name="newRecipe" @click="${() => {router.navigate('/recipes/details/new');}}">Neues Rezept</button>
-        </div>
-      ` : html``}
-`;
+      ${this.own
+        ? html`
+            <div>
+              <button
+                class="btn btn-success"
+                type="button"
+                id="newRecipe"
+                name="newRecipe"
+                @click="${() => {
+                  router.navigate('/recipes/details/new');
+                }}"
+              >
+                Neues Rezept
+              </button>
+            </div>
+          `
+        : html``}
+    `;
   }
 
-  showRecipe(recipe: Recipe){
+  showRecipe(recipe: Recipe) {
     router.navigate(`/recipes/details/${recipe.id}` + (this.own ? "?own" : ""));
   }
 }

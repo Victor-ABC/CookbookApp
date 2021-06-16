@@ -1,3 +1,4 @@
 {
-    "allowedPage" : "http://localhost:8080"
+  "__comment": "Autor: Victor Corbet",
+  "allowedPage": "http://localhost:8080"
 }
