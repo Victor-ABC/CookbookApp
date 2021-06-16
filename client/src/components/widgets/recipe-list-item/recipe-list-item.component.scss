@@ -3,7 +3,7 @@
 :host {
     padding: 0.75rem;
     border: solid rgba(0, 0, 0, 0.125) 1px;
-    border-radius: 0.25rem;
+    border-radius: 0.25rem;    
   }
 
   .header {
@@ -12,6 +12,11 @@
 
   :host(:hover) {
     background-color: gainsboro;
+    cursor: pointer;
+
+    slot[name='title']::slotted(*) {
+      text-decoration: underline;
+    }
   
     span {
       color: white;

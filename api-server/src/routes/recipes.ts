@@ -91,8 +91,8 @@ router.post("/", authService.expressMiddleware, async (req, res) => {
         title: req.body.title
         , description: req.body.description
         , userId: res.locals.user.id
-        , ingredients: req.body.ingredients
         , cookbookIds: []
+        , ingredients: req.body.ingredients
         , image: req.body.image
     });
 
@@ -128,7 +128,6 @@ router.patch('/:recipeId', authService.expressMiddleware, async (req, res) => {
     recipe.title = req.body.title;
     recipe.description = req.body.description;
     recipe.ingredients = req.body.ingredients
-    recipe.cookbookIds = []
     recipe.image = req.body.image
 
     await recipeDAO.update(recipe);
@@ -155,25 +154,25 @@ router.delete('/:recipeId', authService.expressMiddleware, async (req, res) => {
     }
 });
 
-function hasRequiredFields(object: { [key: string]: unknown }, errors: string[]) {
+function hasRequiredFields(fields: { [key: string]: unknown }, errors: string[]) {
     let hasErrors = false;
 
-    if(!object['title']){
+    if(!fields['title'] && (<string> fields['title']) !== ''){
         errors.push('Title darf nicht leer sein.');
         hasErrors = true;
     }
 
-    if(!object['description']){
+    if(!fields['description'] && (<string> fields['description']) !== ''){
         errors.push('Description darf nicht leer sein.');
         hasErrors = true;
     }
 
-    if(!object['ingredients']){
+    if(!fields['ingredients'] && (<[]> fields['ingredients']).length === 0){
         errors.push('Ingredients darf nicht leer sein.');
         hasErrors = true;
     }
 
-    if(!object['image']){
+    if(!fields['image'] && !(<string> fields['image']).includes('data:image/')){
         errors.push('Image darf nicht leer sein.');
         hasErrors = true;
     }

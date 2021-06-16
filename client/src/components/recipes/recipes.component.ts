@@ -62,7 +62,7 @@ class RecipesComponent extends PageMixin(LitElement) {
           `)}
       </div>
 
-      ${this.own? html`     
+      ${this.own ? html`     
         <div>
           <button class="btn btn-success" type="button" id="newRecipe" name="newRecipe" @click="${() => {router.navigate('/recipes/details/new');}}">Neues Rezept</button>
         </div>
@@ -71,6 +71,6 @@ class RecipesComponent extends PageMixin(LitElement) {
   }
 
   showRecipe(recipe: Recipe){
-    router.navigate(`/recipes/details/${recipe.id}`);
+    router.navigate(`/recipes/details/${recipe.id}` + (this.own ? "?own" : ""));
   }
 }

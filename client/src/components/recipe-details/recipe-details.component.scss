@@ -7,7 +7,7 @@
     display: none;
 }
 
-img[src=""] {
+img[src="//:0"] {
     display: none;
  }
 
@@ -27,7 +27,9 @@ img[src=""] {
     z-index: 99;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) scale(2);
+    transform: translate(-50%, -50%);
+    width: 35vw;
+    height: 35vw;
  }
 
  .imgZoomCheck:checked~img  {

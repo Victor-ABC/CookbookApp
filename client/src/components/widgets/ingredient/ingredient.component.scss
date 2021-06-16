@@ -1,5 +1,16 @@
 /* Autor: Arne Hegemann */
 
-.row{
+.row {
     margin: 0.25rem;
+}
+
+.delete-ingredient::before {
+    font: normal normal normal 1.75rem/1 'Font Awesome 5 Free';
+    content: '\f2ed';
+    color:rgb(80,80,80)
+  }
+
+.ingredient {
+    color: darkgreen;
+    font-size: large;
 }
