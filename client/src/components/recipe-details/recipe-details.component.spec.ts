@@ -197,7 +197,6 @@ describe('app-recipes', () => {
       } as Response)
     );
 
-
     await element.requestUpdate();
     await (element as RecipeDetailsComponent).initializeComplete;
     expect(httpClient.get).toHaveBeenCalledTimes(2);

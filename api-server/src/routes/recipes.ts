@@ -154,27 +154,27 @@ router.delete('/:recipeId', authService.expressMiddleware, async (req, res) => {
 });
 
 function hasRequiredFields(fields: { [key: string]: unknown }, errors: string[]) {
-    let hasErrors = false;
+  let hasErrors = false;
 
-    if(!fields['title'] && (<string> fields['title']) !== ''){
-        errors.push('Title darf nicht leer sein.');
-        hasErrors = true;
-    }
+  if (!fields['title'] && <string>fields['title'] !== '') {
+    errors.push('Title darf nicht leer sein.');
+    hasErrors = true;
+  }
 
-    if(!fields['description'] && (<string> fields['description']) !== ''){
-        errors.push('Description darf nicht leer sein.');
-        hasErrors = true;
-    }
+  if (!fields['description'] && <string>fields['description'] !== '') {
+    errors.push('Description darf nicht leer sein.');
+    hasErrors = true;
+  }
 
-    if(!fields['ingredients'] && (<[]> fields['ingredients']).length === 0){
-        errors.push('Ingredients darf nicht leer sein.');
-        hasErrors = true;
-    }
+  if (!fields['ingredients'] && (<[]>fields['ingredients']).length === 0) {
+    errors.push('Ingredients darf nicht leer sein.');
+    hasErrors = true;
+  }
 
-    if(!fields['image'] && !(<string> fields['image']).includes('data:image/')){
-        errors.push('Image darf nicht leer sein.');
-        hasErrors = true;
-    }
+  if (!fields['image'] && !(<string>fields['image']).includes('data:image/')) {
+    errors.push('Image darf nicht leer sein.');
+    hasErrors = true;
+  }
 
   return !hasErrors;
 }

@@ -88,6 +88,6 @@ class RecipesComponent extends PageMixin(LitElement) {
   }
 
   showRecipe(recipe: Recipe) {
-    router.navigate(`/recipes/details/${recipe.id}` + (this.own ? "?own" : ""));
+    router.navigate(`/recipes/details/${recipe.id}` + (this.own ? '?own' : ''));
   }
 }

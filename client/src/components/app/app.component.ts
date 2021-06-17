@@ -1,4 +1,4 @@
-/* Autor: TODO */
+/* Autor: Victor Corbet */
 
 import { css, customElement, html, LitElement, internalProperty, unsafeCSS } from 'lit-element';
 import { router } from '../../router';

@@ -5,7 +5,7 @@ import { httpClient } from '../../http-client';
 import { router } from '../../router';
 import { PageMixin } from '../page.mixin';
 
-interface Ingredient {  
+interface Ingredient {
   name: string;
   unit: string;
   quantity: number;
@@ -87,11 +87,10 @@ export class RecipeDetailsComponent extends PageMixin(LitElement) {
   cookbookId!: string;
 
   @property()
-  own: boolean = false;
+  own = false;
 
   async firstUpdated() {
-    
-    try{
+    try {
       this.initializeComplete = new Promise<void>(resolve => {
         this.resolveInitialized = resolve;
       });
@@ -112,188 +111,211 @@ export class RecipeDetailsComponent extends PageMixin(LitElement) {
           this.recipeId = jsonR.id;
           this.title = jsonR.title;
           this.description = jsonR.description;
-          this.cookbookId = (jsonR.cookbookIds as []).length === 0 ? "" : jsonR.cookbookIds[0];
+          this.cookbookId = (jsonR.cookbookIds as []).length === 0 ? '' : jsonR.cookbookIds[0];
           this.image = jsonR.image;
           this.ingredients = jsonR.ingredients;
 
-          if(!this.own) {
+          if (!this.own) {
             this.own = location.search === '?own';
           }
-        }
-        catch ({ message }) {
+        } catch ({ message }) {
           this.setNotification({ errorMessage: message });
         }
-      }
-      else {
+      } else {
         this.own = true;
       }
-    }
-    finally {
+    } finally {
       this.resolveInitialized!();
     }
   }
 
   render() {
-    ingredientCount = 0;   
+    ingredientCount = 0;
     const rVal = html`
       ${this.renderNotification()}
-      <h1 id="recipeName">${this.own ? 'Ihr ' : ''}Rezept${this.title!=='' ? ' "' + this.title + '"' : ''}</h1>
+      <h1 id="recipeName">${this.own ? 'Ihr ' : ''}Rezept${this.title !== '' ? ' "' + this.title + '"' : ''}</h1>
 
-      ${this.own ? html`
-        <form id="form" @submit="${this.submit}">        
-          <div class="row">
-            <input 
-              class="form-control form-control-md" 
-              type="text" 
-              id="title" 
-              name="title" 
-              placeholder="Ihr neues Rezept"
-              spellcheck="true" 
-              autofocus 
-              required 
-              @change="${this.title_change}" 
-              .value=${this.title} 
-            />
-          </div>
-        
-          <div class="row">
-            <textarea 
-              class="form-control form-control-md" 
-              id="description" 
-              name="description"
-              placeholder="Beschreiben Sie hier Ihr neues Rezept" 
-              spellcheck="true" 
-              rows="5" 
-              required
-              .value=${this.description}
-            >
-            </textarea>
-          </div>
+      ${this.own
+        ? html`
+            <form id="form" @submit="${this.submit}">
+              <div class="row">
+                <input
+                  class="form-control form-control-md"
+                  type="text"
+                  id="title"
+                  name="title"
+                  placeholder="Ihr neues Rezept"
+                  spellcheck="true"
+                  autofocus
+                  required
+                  @change="${this.title_change}"
+                  .value=${this.title}
+                />
+              </div>
 
-          <div class="row">
-            <select class="form-control form-control-md" id="cookbook" name="cookbook" .value="${this.cookbookId}">
-              <option value=""></option>
-              ${this.cookbooks.map(cookbook => html`
-                <option 
-                  value="${cookbook.id}" 
-                  ?selected=${cookbook.id == this.cookbookId}
+              <div class="row">
+                <textarea
+                  class="form-control form-control-md"
+                  id="description"
+                  name="description"
+                  placeholder="Beschreiben Sie hier Ihr neues Rezept"
+                  spellcheck="true"
+                  rows="5"
+                  required
+                  .value=${this.description}
                 >
-                  ${cookbook.title}
-                </option>
-                `)}
-            </select>
-          </div>
-        
-          <div class="row">
-            <input 
-              class="form-control-file" 
-              type="file" 
-              id="selectImage" 
-              name="selectImage" 
-              accept=".jpg,.png"
-              style="display: none;" 
-              @change="${this.selectImage_change}"
-            />
-        
-            <button 
-              class="btn btn-success" 
-              type="button" 
-              id="selectImageMock" 
-              name="selectImageMock"
-              @click="${this.selectImageMock_Click}"
-            >
-              Bild Hinzufügen...
-            </button>
-          </div>
-        
-          <div class="row">
-            <div class="col-sm-2">
-              <label>
-                <input class="imgZoomCheck" type="checkbox" id="imgZoomed" .value="false" />
-                <img class="imgOriginal img-fluid" id="selectedImage" src=${this.recipeId === "new" ? "//:0" : this.image} />
-                <img class="imgCopy img-fluid" id="selectedImageCopy" src=${this.image} />
-              </label>
-            </div>
-        
-            <div class="col-sm-5">
-              ${this.ingredients.map(
-                  ingredient => html`
-                    <app-ingredient 
-                      id="ingredient${ingredientCount++}" 
-                      .name="${ingredient.name}" 
-                      .quantity="${ingredient.quantity}" 
-                      .unit="${ingredient.unit}"
-                      @appDeleteIngredientClick="${() => this.deleteIngredient(ingredient)}"
-                    >                           
-                      <input 
-                        slot="ingredient"
-                        class="form-control form-control-sm col-sm-6 ingredient-margin" 
-                        type="text" 
-                        placeholder="Zutat" 
-                        required 
-                        .value="${ingredient.name}"
-                      />
-                      <input 
-                        slot="quantity"
-                        class="form-control form-control-sm col-sm-2 ingredient-margin" 
-                        type="number" 
-                        placeholder="0" 
-                        required  
-                        .value="${ingredient.quantity}" 
-                      />
-                      <select slot="unit" class="form-control form-control-sm col-sm-3 ingredient-margin" .value="${ingredient.unit}">
-                        <option value="emtpy"></option>
-                        <option value="gram">Gram</option>
-                        <option value="milliliter">Milliliter</option>
-                        <option value="piece">Stück</option>
-                      </select>
-                  `            
-              )}
-            </div>
-          </div>
-          
-          <div class="row">
-            <button class="btn btn-success" type="button" id="addLine" name="addLine" @click="${this.addLine_Click}">
-              Zutat Hinzufügen...
-            </button>
-          </div>
-        
-          <div class="row">
-            <button class="btn btn-success" id="save" name="save">Speichern</button>
-        
-            ${this.recipeId === "new" ? "" : html`
-              <button class="btn btn-success" type="button" id="delete" name="delete" @click="${this.delete}">
-                Löschen
-              </button>`
-            }
-          </div>
-        </form>
-      ` : html`
-        <div class="row">
-          <textarea
-            class="form-control form-control-lg"
-            id="description"
-            name="description"
-            placeholder="Beschreiben Sie hier Ihr neues Rezept"
-            spellcheck="true" 
-            rows="5" 
-            readonly
-            .value=${this.description}
-          >
-          </textarea>
-        </div>
+                </textarea>
+              </div>
 
-        <div class="row">
-          <div class="col-sm-2">
-            <label>
-              <input class="imgZoomCheck" type="checkbox" id="imgZoomed" .value="false" />
-              <img class="imgOriginal img-fluid" id="selectedImage" src=${this.recipeId === "new" ? "//:0" : this.image} />
-              <img class="imgCopy img-fluid" id="selectedImageCopy" src=${this.image} />
-            </label>
-          </div>
-          <div class="col-sm-5">
-            ${this.ingredients.map(
-              ingredient => html`
+              <div class="row">
+                <select class="form-control form-control-md" id="cookbook" name="cookbook" .value="${this.cookbookId}">
+                  <option value=""></option>
+                  ${this.cookbooks.map(
+                    cookbook => html`
+                      <option value="${cookbook.id}" ?selected=${cookbook.id == this.cookbookId}>
+                        ${cookbook.title}
+                      </option>
+                    `
+                  )}
+                </select>
+              </div>
+
+              <div class="row">
+                <input
+                  class="form-control-file"
+                  type="file"
+                  id="selectImage"
+                  name="selectImage"
+                  accept=".jpg,.png"
+                  style="display: none;"
+                  @change="${this.selectImage_change}"
+                />
+
+                <button
+                  class="btn btn-success"
+                  type="button"
+                  id="selectImageMock"
+                  name="selectImageMock"
+                  @click="${this.selectImageMock_Click}"
+                >
+                  Bild Hinzufügen...
+                </button>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-2">
+                  <label>
+                    <input class="imgZoomCheck" type="checkbox" id="imgZoomed" .value="false" />
+                    <img
+                      class="imgOriginal img-fluid"
+                      id="selectedImage"
+                      src=${this.recipeId === 'new' ? '//:0' : this.image}
+                    />
+                    <img class="imgCopy img-fluid" id="selectedImageCopy" src=${this.image} />
+                  </label>
+                </div>
+
+                <div class="col-sm-5">
+                  ${this.ingredients.map(
+                    ingredient => html`
+                      <app-ingredient
+                        id="ingredient${ingredientCount++}"
+                        .name="${ingredient.name}"
+                        .quantity="${ingredient.quantity}"
+                        .unit="${ingredient.unit}"
+                        @appDeleteIngredientClick="${() => this.deleteIngredient(ingredient)}"
+                      >
+                        <input
+                          slot="ingredient"
+                          class="form-control form-control-sm col-sm-6 ingredient-margin"
+                          type="text"
+                          placeholder="Zutat"
+                          required
+                          .value="${ingredient.name}"
+                        />
+                        <input
+                          slot="quantity"
+                          class="form-control form-control-sm col-sm-2 ingredient-margin"
+                          type="number"
+                          placeholder="0"
+                          required
+                          .value="${ingredient.quantity}"
+                        />
+                        <select
+                          slot="unit"
+                          class="form-control form-control-sm col-sm-3 ingredient-margin"
+                          .value="${ingredient.unit}"
+                        >
+                          <option value="emtpy"></option>
+                          <option value="gram">Gram</option>
+                          <option value="milliliter">Milliliter</option>
+                          <option value="piece">Stück</option>
+                        </select>
+                      </app-ingredient>
+                    `
+                  )}
+                </div>
+              </div>
+
+              <div class="row">
+                <button
+                  class="btn btn-success"
+                  type="button"
+                  id="addLine"
+                  name="addLine"
+                  @click="${this.addLine_Click}"
+                >
+                  Zutat Hinzufügen...
+                </button>
+              </div>
+
+              <div class="row">
+                <button class="btn btn-success" id="save" name="save">Speichern</button>
+
+                ${this.recipeId === 'new'
+                  ? ''
+                  : html` <button
+                      class="btn btn-success"
+                      type="button"
+                      id="delete"
+                      name="delete"
+                      @click="${this.delete}"
+                    >
+                      Löschen
+                    </button>`}
+              </div>
+            </form>
+          `
+        : html`
+            <div class="row">
+              <textarea
+                class="form-control form-control-lg"
+                id="description"
+                name="description"
+                placeholder="Beschreiben Sie hier Ihr neues Rezept"
+                spellcheck="true"
+                rows="5"
+                readonly
+                .value=${this.description}
+              >
+              </textarea>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-2">
+                <label>
+                  <input class="imgZoomCheck" type="checkbox" id="imgZoomed" .value="false" />
+                  <img
+                    class="imgOriginal img-fluid"
+                    id="selectedImage"
+                    src=${this.recipeId === 'new' ? '//:0' : this.image}
+                  />
+                  <img class="imgCopy img-fluid" id="selectedImageCopy" src=${this.image} />
+                </label>
+              </div>
+              <div class="col-sm-5">
+                ${this.ingredients.map(
+                  ingredient => html`
                 <app-ingredient 
                   id="ingredient${ingredientCount++}" 
                   .own="${this.own}"
@@ -306,16 +328,16 @@ export class RecipeDetailsComponent extends PageMixin(LitElement) {
                   <span slot="ingredient2" class="col-sm-7 border rounded">${ingredient.name}</span>
                 </app-ingredient>   
               `
-            )}   
-          </div>
-        </div>       
-        
-        <div class="row">        
-          <button class="btn btn-success" type="button" id="back" name="back" @click="${this.goBack}">
-            Zurück
-          </button>
-        </div>
-      `}
+                )}
+              </div>
+            </div>
+
+            <div class="row">
+              <button class="btn btn-success" type="button" id="back" name="back" @click="${this.goBack}">
+                Zurück
+              </button>
+            </div>
+          `}
     `;
 
     return rVal;
@@ -353,21 +375,21 @@ export class RecipeDetailsComponent extends PageMixin(LitElement) {
     this.imageSelectorElement.click();
   }
 
-  deleteIngredient(ingredient: Ingredient){    
-    const newIngredients = this.ingredientsToArray()
-    if(newIngredients) {
+  deleteIngredient(ingredient: Ingredient) {
+    const newIngredients = this.ingredientsToArray();
+    if (newIngredients) {
       this.ingredients = newIngredients.filter(i => i.name !== ingredient.name);
     }
   }
 
   addLine_Click() {
-    const ingredient: Ingredient = {name: "", quantity: 0, unit: ""};
+    const ingredient: Ingredient = { name: '', quantity: 0, unit: '' };
     this.ingredients = [...this.ingredients, ingredient];
   }
 
   async submit(event: Event) {
     event.preventDefault();
-    if (this.form.checkValidity() && this.checkAdditionalValidity())  {
+    if (this.form.checkValidity() && this.checkAdditionalValidity()) {
       const recipe = {
         id: '',
         title: this.titleElement.value,
@@ -397,11 +419,10 @@ export class RecipeDetailsComponent extends PageMixin(LitElement) {
           this.setNotification({ errorMessage: message });
         }
       }
-      
-      router.navigate(`/recipes/details/${this.recipeId}?own`);      
+
+      router.navigate(`/recipes/details/${this.recipeId}?own`);
       // router.navigate(`/my-recipes`);
-    }
-    else {      
+    } else {
       this.form.classList.add('was-validated');
     }
   }
@@ -417,55 +438,54 @@ export class RecipeDetailsComponent extends PageMixin(LitElement) {
     }
   }
 
-  goBack(){
+  goBack() {
     router.navigate(`/recipes`);
   }
 
   checkAdditionalValidity() {
     try {
       //Checks if Image is set
-      if(this.imageElement.src === "//:0") {
-        this.setNotification({ errorMessage: "Es muss ein Bild hinzugefügt werden" });
+      if (this.imageElement.src === '//:0') {
+        this.setNotification({ errorMessage: 'Es muss ein Bild hinzugefügt werden' });
         return false;
       }
 
       //Checks if at least one ingredient element is present
-      let ingredientElements = this.shadowRoot!.querySelectorAll('app-ingredient');
-      if(ingredientElements.length === 0) {
-        this.setNotification({ errorMessage: "Es muss mindestens eine Zutat hinzugefügt werden" });
-        return false;      
+      const ingredientElements = this.shadowRoot!.querySelectorAll('app-ingredient');
+      if (ingredientElements.length === 0) {
+        this.setNotification({ errorMessage: 'Es muss mindestens eine Zutat hinzugefügt werden' });
+        return false;
       }
 
       //checks if all ingredient elements have at least the name set
-      for(let i = 0; i < ingredientElements.length; ++i){
-        let name = (<HTMLInputElement>ingredientElements[i].querySelector('input[slot="ingredient"]'))?.value;
-        if(name.length === 0) {
-          this.setNotification({ errorMessage: "Zutaten benötigen mindestens einen Namen" });
+      for (let i = 0; i < ingredientElements.length; ++i) {
+        const name = (<HTMLInputElement>ingredientElements[i].querySelector('input[slot="ingredient"]'))?.value;
+        if (name.length === 0) {
+          this.setNotification({ errorMessage: 'Zutaten benötigen mindestens einen Namen' });
           return false;
         }
       }
-    }
-    catch ({ message }){
-      console.log("error*: " + message)
+    } catch ({ message }) {
+      console.log('error*: ' + message);
       this.setNotification({ errorMessage: message });
       return false;
     }
     return true;
   }
 
-  getUnitText(unit: string){
+  getUnitText(unit: string) {
     switch (unit) {
-      case "gram":{
-        return "Gram";
+      case 'gram': {
+        return 'Gram';
       }
-      case "milliliter":{
-        return "Milliliter";
+      case 'milliliter': {
+        return 'Milliliter';
       }
-      case "piece":{
-        return "Stück";
+      case 'piece': {
+        return 'Stück';
       }
       default: {
-        return "";
+        return '';
       }
     }
   }
@@ -483,7 +503,7 @@ export class RecipeDetailsComponent extends PageMixin(LitElement) {
       ingredients.push(ingredient);
     }
 
-    if(ingredients.length === 0){
+    if (ingredients.length === 0) {
       return null;
     }
 

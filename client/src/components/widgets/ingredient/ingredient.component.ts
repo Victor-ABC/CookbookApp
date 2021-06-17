@@ -19,10 +19,10 @@ class RecipeDetailsComponent extends WidgetMixin(LitElement) {
   ];
 
   @property()
-  own: boolean = true;
+  own = true;
 
   @property()
-  name: string = "";
+  name = '';
 
   @property()
   quantity = 0;
@@ -31,20 +31,21 @@ class RecipeDetailsComponent extends WidgetMixin(LitElement) {
   unit = '';
 
   render() {
-    return this.own ? html`
-        <div class="row">
-          <slot name="ingredient"></slot>
-          <slot name="quantity"></slot>
-          <slot name="unit"></slot>
-          <span class="delete-ingredient" @click="${() => this.emit('appDeleteIngredientClick')}"></span>
-        </div>      
-        ` : html`
-        <div class="row">
-          <slot name="quantity2"></slot>
-          <slot name="unit2"></slot>
-          <slot name="ingredient2"></slot>
-        </div>  
+    return this.own
+      ? html`
+          <div class="row">
+            <slot name="ingredient"></slot>
+            <slot name="quantity"></slot>
+            <slot name="unit"></slot>
+            <span class="delete-ingredient" @click="${() => this.emit('appDeleteIngredientClick')}"></span>
+          </div>
+        `
+      : html`
+          <div class="row">
+            <slot name="quantity2"></slot>
+            <slot name="unit2"></slot>
+            <slot name="ingredient2"></slot>
+          </div>
         `;
   }
-
 }

@@ -12,7 +12,7 @@ describe('sign-out', () => {
   it('should succeed given proper credentials', async () => {
     await userSession.registerUser();
     await userSession.post('/users/sign-in', userSession.signInData());
-    let response = await userSession.delete('users/sign-out');
+    const response = await userSession.delete('users/sign-out');
     expect(response.status).toBe(200);
     userSession.deleteUser();
   });

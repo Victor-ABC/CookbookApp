@@ -120,6 +120,7 @@ describe('app-cookbooks', () => {
   });
 
   it('should add a cookbook', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (element as any).own = true; // enable own cookbooks
 
     spyOn(httpClient, 'get').and.returnValue(
@@ -172,6 +173,7 @@ describe('app-cookbooks', () => {
   });
 
   it('should refuse to add an empty cookbook', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (element as any).own = true;
 
     spyOn(httpClient, 'get').and.returnValue(
@@ -203,6 +205,7 @@ describe('app-cookbooks', () => {
   });
 
   it('should fail to add a cookbook', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (element as any).own = true;
 
     spyOn(httpClient, 'get').and.returnValue(
@@ -235,6 +238,7 @@ describe('app-cookbooks', () => {
   });
 
   it('should delete a cookbook', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (element as any).own = true;
 
     spyOn(httpClient, 'get').and.returnValue(
