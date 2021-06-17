@@ -1,7 +1,6 @@
 /* Autor: Arne Hegemann */
 
-import { nothing } from 'lit-html';
-import { css, customElement, html, LitElement, property, unsafeCSS } from 'lit-element';
+import { css, customElement, html, LitElement, unsafeCSS } from 'lit-element';
 import { WidgetMixin } from '../../widget.mixin';
 
 const sharedCSS = require('../../shared.scss');

@@ -1,6 +1,6 @@
 /* Autor: Arne Hegemann */
 
-import { css, customElement, html, internalProperty, LitElement, property, query, unsafeCSS } from 'lit-element';
+import { css, customElement, html, LitElement, property, query, unsafeCSS } from 'lit-element';
 import { httpClient } from '../../http-client';
 import { router } from '../../router';
 import { PageMixin } from '../page.mixin';
@@ -33,10 +33,6 @@ export class RecipeDetailsComponent extends PageMixin(LitElement) {
       ${unsafeCSS(recipeCSS)}
     `
   ];
-
-  public initializeComplete?: Promise<void>;
-
-  private resolveInitialized!: () => void;
 
   @property()
   recipeId!: string;
@@ -88,6 +84,10 @@ export class RecipeDetailsComponent extends PageMixin(LitElement) {
 
   @property()
   own = false;
+
+  public initializeComplete?: Promise<void>;
+
+  private resolveInitialized!: () => void;
 
   async firstUpdated() {
     try {
@@ -406,7 +406,7 @@ export class RecipeDetailsComponent extends PageMixin(LitElement) {
           this.recipeId = json.id;
         } else {
           recipe.id = this.recipeId;
-          const response = await httpClient.patch(`/recipes/${this.recipeId}`, recipe);
+          await httpClient.patch(`/recipes/${this.recipeId}`, recipe);
         }
       } catch ({ message }) {
         this.setNotification({ errorMessage: message });

@@ -3,7 +3,6 @@
 import { Browser, BrowserContext, Page, chromium } from 'playwright';
 import { UserSession } from './user-session';
 import config from './config';
-import { exception } from 'node:console';
 
 describe('/recipes/details', () => {
   let browser: Browser;

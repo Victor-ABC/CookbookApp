@@ -1,7 +1,6 @@
 /* Autor: Arne Hegemann */
 
 import { LitElement } from 'lit-element';
-import { exception } from 'node:console';
 import { httpClient } from '../../http-client';
 import { RecipeDetailsComponent } from './recipe-details.component';
 import './recipe-details.component';
