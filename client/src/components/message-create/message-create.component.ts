@@ -44,7 +44,7 @@ export class CreateMessageComponent extends PageMixin(LitElement) {
         <div class="form-group">
           <label class="control-label" for="name">An</label>
           <div id="name-check" value="">placeHolder</div>
-          <input class="form-control" type="" autofocus required id="name" name="name" />
+          <input maxlength="30" class="form-control" type="" autofocus required id="name" name="name" />
           <div class="invalid-feedback">Addresat ist zwingend einzutragen</div>
           <button
             @click="${this.checkIfNameExists}"
@@ -57,7 +57,7 @@ export class CreateMessageComponent extends PageMixin(LitElement) {
         </div>
         <div class="form-group">
           <label class="control-label" for="title">Titel</label>
-          <input class="form-control" type="" required id="title" name="title" />
+          <input maxlength="100" class="form-control" type="" required id="title" name="title" />
           <div class="invalid-feedback">Titel ist erforderlich</div>
         </div>
         <button
@@ -70,7 +70,15 @@ export class CreateMessageComponent extends PageMixin(LitElement) {
         </button>
         <div class="form-group">
           <label class="control-label" for="content">Inhalt</label>
-          <textarea rows="8" class="form-control" type="text" required id="content" name="content"></textarea>
+          <textarea
+            maxlength="500"
+            rows="8"
+            class="form-control"
+            type="text"
+            required
+            id="content"
+            name="content"
+          ></textarea>
           <div class="invalid-feedback">Das Textfeld sollte nicht leer sein</div>
         </div>
         <button class="btn btn-success" type="button" @click="${this.submit}">Senden</button>

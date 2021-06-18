@@ -45,12 +45,20 @@ export class SignInComponent extends PageMixin(LitElement) {
       <form>
         <div class="form-group">
           <label class="control-label" for="name">Name</label>
-          <input class="form-control" type="" autofocus required id="name" name="name" />
+          <input maxlength="30" class="form-control" type="" autofocus required id="name" name="name" />
           <div class="invalid-feedback">Name ist erforderlich</div>
         </div>
         <div class="form-group">
           <label class="control-label" for="password">Passwort</label>
-          <input class="form-control" type="password" required id="password" name="password" />
+          <input
+            maxlength="30"
+            minlength="10"
+            class="form-control"
+            type="password"
+            required
+            id="password"
+            name="password"
+          />
           <div class="invalid-feedback">Passwort ist erforderlich</div>
         </div>
         <button class="btn btn-success" type="button" @click="${this.submit}">Anmelden</button>

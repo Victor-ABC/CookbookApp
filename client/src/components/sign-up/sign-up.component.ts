@@ -48,7 +48,15 @@ class SignUpComponent extends PageMixin(LitElement) {
           <label class="control-label" for="name">User-Name</label>
           <div id="nameButton">
             <div id="name-check" value="">placeHolder</div>
-            <input class="name-fley-item form-control" type="text" autofocus required id="name" name="name" />
+            <input
+              maxlength="30"
+              class="name-fley-item form-control"
+              type="text"
+              autofocus
+              required
+              id="name"
+              name="name"
+            />
             <div class="invalid-feedback" id="nameBemerkung">Name ist erforderlich und muss eindeutig sein</div>
             <button
               @click="${this.checkIfNameExists}"
@@ -70,6 +78,7 @@ class SignUpComponent extends PageMixin(LitElement) {
             >Passwort <small>(wird nur akzeptiert, wenn es 100% sicher ist [siehe unten])</small></label
           >
           <input
+            maxlength="30"
             class="form-control"
             type="password"
             required
@@ -87,6 +96,7 @@ class SignUpComponent extends PageMixin(LitElement) {
         <div class="form-group">
           <label class="control-label" for="password-check">Passwort nochmals eingeben</label>
           <input
+            maxlength="30"
             title="Muss mit dem Password übereinstimmen"
             class="form-control"
             type="password"
