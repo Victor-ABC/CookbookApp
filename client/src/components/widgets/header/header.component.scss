@@ -19,7 +19,7 @@ content: '\f2e7';
   width: 30px;
 }
 #search-button::before {
-  color: green;
+  color: var(--app-default-green);
   font: normal normal normal 1.25rem/1 'Font Awesome 5 Free';
   content: '\f002';
   top: 40px;

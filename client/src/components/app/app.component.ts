@@ -1,4 +1,4 @@
-/* Autor: Victor Corbet */
+/* Autor: Prof. Dr. Norman Lahme-Hütig (FH Münster) */
 
 import { css, customElement, html, LitElement, internalProperty, unsafeCSS } from 'lit-element';
 import { router } from '../../router';
